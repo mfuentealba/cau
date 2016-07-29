@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ComboBox xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			xmlns:s="library://ns.adobe.com/flex/spark" 
+			xmlns:mx="library://ns.adobe.com/flex/mx" skinClass="assets.skins.ComboBoxLVSkin"  keyUp="fnFiltroEscritura(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.events.Event;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			
+			private var str:String = '';
+			
+			protected function fnFiltroEscritura(evento:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(evento.charCode == 8){
+					str = '';//this.textInput.text;
+				} else {
+					str += String.fromCharCode(evento.charCode);	
+				}
+				
+				trace('***' + str);
+				ArrayCollection(this.dataProvider).refresh();
+			}
+			
+			protected function fnFiltro(item:*):Boolean{
+				var b:Boolean;
+				b = String(item[this.labelField]).toLowerCase().indexOf(str.toLowerCase()) > -1 ? true : false;
+				return b;
+			}
+			
+			override protected function dataProvider_collectionChangeHandler(event:Event):void
+			{
+				// TODO Auto Generated method stub
+				super.dataProvider_collectionChangeHandler(event);
+				
+			}
+			
+			private function set fnAsociaFiltro(val:IList):void{
+				ArrayCollection(val).filterFunction = fnFiltro;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Binding source="dataProvider" destination="fnAsociaFiltro"/>
+</s:ComboBox>

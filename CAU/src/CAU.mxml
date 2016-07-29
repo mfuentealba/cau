@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="view.*" creationComplete="iniciaRO(event)"
+					   backgroundAlpha="0" backgroundColor="0x000000">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.utils.StringUtil;
+			
+			import controller.Controller;
+			
+			import event.ClienteEvent;
+			import event.MantenedoresEvent;
+			import event.SucursalEvent;
+			import event.UsuarioEvent;
+			
+			import model.ModelApp;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import vo.ClienteVO;
+			import vo.GrupoResolutorVO;
+			import vo.SucursalVO;
+			import vo.UserVO;
+			
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			
+			
+			protected function rmtObj_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function iniciaRO(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				var obj1:Object = {id: 1, valor: "Nivel 1"};
+				var obj2:Object = {id: 2, valor: "Nivel 2"};
+				var obj3:Object = {id: 3, valor: "Nivel 3"};
+				
+				
+				modelApp.arrTipoUsuario = new ArrayCollection([obj1, obj2, obj3]);
+				
+				modelApp.objTipoUsuario = {'1': obj1, '2': obj2, '3': obj3};
+				
+				
+				modelApp.rmtObjSucursales = rmtObjSucursales;
+				modelApp.rmtObjClientes = rmtObjClientes;
+				modelApp.rmtObjUsuarios = rmtObjUsuarios;
+				
+				var sucursalEvent:SucursalEvent = new SucursalEvent(SucursalEvent.LISTAR);
+				sucursalEvent.callback = fnListaClientes;
+				Controller.getInstance().dispatchEvent(sucursalEvent);
+				modelApp.fnSucursalesFilter = fnSucursalesFilter;
+				
+				var mantenedorEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_PERFILES);
+				//mantenedorEvent.callback = fnListaClientes;
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				//modelApp.fnGrupoResolutorFilter = fnGrupoResolutorFilter;
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				var usuarioEvent:UsuarioEvent = new UsuarioEvent(UsuarioEvent.LISTAR);
+				usuarioEvent.callback = fnListaClientes;
+				Controller.getInstance().dispatchEvent(usuarioEvent);
+				modelApp.fnSucursalesFilter = fnSucursalesFilter;
+				
+				
+				
+				/*
+				var mantenedor2Event:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
+				Controller.getInstance().dispatchEvent(mantenedor2Event);*/
+				
+				
+			}
+			
+			private function fnListaClientes():void{
+				var clienteEvent:ClienteEvent = new ClienteEvent(ClienteEvent.LISTAR);
+				Controller.getInstance().dispatchEvent(clienteEvent);
+				modelApp.fnClientesFilter = fnClientesFilter;
+			}
+			
+			
+			private function fnSucursalesFilter(item:SucursalVO):Boolean{
+				return item.sucursal.toLowerCase().indexOf(modelApp.sucursalesFilter.toLocaleLowerCase()) > -1 ? true : false;
+			}
+			
+			private function fnClientesFilter(item:ClienteVO):Boolean{
+				return item.apellidos.toLowerCase().indexOf(modelApp.clientesFilter.toLocaleLowerCase()) || item.nombres.toLowerCase().indexOf(modelApp.clientesFilter.toLocaleLowerCase()) > -1 ? true : false;
+			}
+			
+			private function fnUsuariosFilter(item:UserVO):Boolean{
+				return item.username.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) || item.nombre_completo.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) > -1 ? true : false;
+			}
+			
+			/*private function fnGrupoResolutorFilter(item:GrupoResolutorVO):Boolean{
+				return item.nombreGrupoResolutor.toLowerCase().indexOf(modelApp.grupoResolutorFilter.toLocaleLowerCase()) > -1 || modelApp.grupoResolutorFilter == '' ? true : false;
+			}*/
+			
+		]]>
+	</fx:Script>
+	<fx:Style source="./assets/css/style.css"/>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:RemoteObject id="rmtObjSucursales"
+						destination="SucursalesService"
+						showBusyCursor="true"
+						source="Weborb.cau.SucursalesService"						
+						fault="rmtObj_faultHandler(event)">
+		
+			<!--<s:method name="createSucursales" result="rmtObjSucursales_resultHandler(event)"/>
+			<s:method name="getAllSucursales" result="rmtObjSucursales_resultHandler(event)"/>
+			<s:method name="updateSucursales" result="rmtObjSucursales_resultHandler(event)"/>-->
+			
+		</s:RemoteObject>
+		<s:RemoteObject id="rmtObjClientes"
+						destination="ClientesService"
+						showBusyCursor="true"
+						source="Weborb.cau.ClientesService"						
+						fault="rmtObj_faultHandler(event)">
+			
+			<!--<s:method name="createSucursales" result="rmtObjSucursales_resultHandler(event)"/>
+			<s:method name="getAllSucursales" result="rmtObjSucursales_resultHandler(event)"/>
+			<s:method name="updateSucursales" result="rmtObjSucursales_resultHandler(event)"/>-->
+			
+		</s:RemoteObject>
+		<s:RemoteObject id="rmtObjUsuarios"
+						destination="UsuariosService"
+						showBusyCursor="true"
+						requestTimeout="5"
+						source="Weborb.cau.UsuariosService"						
+						fault="rmtObj_faultHandler(event)">
+			
+			<!--<s:method name="createSucursales" result="rmtObjSucursales_resultHandler(event)"/>
+			<s:method name="getAllSucursales" result="rmtObjSucursales_resultHandler(event)"/>
+			<s:method name="updateSucursales" result="rmtObjSucursales_resultHandler(event)"/>-->
+			
+		</s:RemoteObject>
+		
+		<!--<s:RemoteObject id="rmtObjMant"
+						destination="MantenedorService"
+						showBusyCursor="true"
+						source="Weborb.cau.MantenedorService"						
+						fault="rmtObj_faultHandler(event)">
+		</s:RemoteObject>-->
+		
+	</fx:Declarations>
+	<s:Group width="100%" height="100%">
+		<s:Rect width="100%" height="100%">
+			<s:fill>
+				<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>
+			</s:fill>
+		</s:Rect>
+		<view:FormUsuario width="100%" height="100%"/>	
+	</s:Group>
+	
+</s:WindowedApplication>

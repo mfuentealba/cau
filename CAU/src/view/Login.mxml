@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="600">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Panel x="222" y="150" width="357" height="209">
+		<s:Button x="34" y="145" label="Ingresar"/>
+		<mx:LinkButton x="146" y="149" label="Recuperar contraseña"/>
+		<s:TextInput x="34" y="8"/>
+		<s:TextInput x="34" y="38" displayAsPassword="true"/>
+		<s:CheckBox x="34" y="68" label="Recordar Contraseña"/>
+		<mx:LinkButton x="19" y="94" label="Registrarse"/>
+	</s:Panel>
+	
+</s:Group>

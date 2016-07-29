@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<update xmlns="http://ns.riaspace.com/air/framework/update/description/1.1">      
+	<!-- Win update -->
+	<exe>
+    	<version>1.0.19</version>
+	    <url>http://trajano/OrderCapturer/OrderCapturer.exe</url>
+	<description>
+	<![CDATA[
+	        
+	        ]]>
+	</description>
+	</exe>
+        
+</update>
