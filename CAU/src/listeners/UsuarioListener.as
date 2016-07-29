@@ -13,6 +13,9 @@ package listeners
 	import mx.controls.Alert;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.ResultEvent;
+	import mx.rpc.remoting.RemoteObject;
+	
+	import services.ServiceRO;
 	
 	public class UsuarioListener //implements IBaseListener
 	{
@@ -23,23 +26,24 @@ package listeners
 		
 		public static function exec(_evento:Event):void{
 			param['evento'] = UsuarioEvent(_evento);
-			modelApp.rmtObjUsuarios.addEventListener(ResultEvent.RESULT, result);
+			var rmtObjUsuarios:RemoteObject = ServiceRO.fnRmtObjUsuarios();
+			rmtObjUsuarios.addEventListener(ResultEvent.RESULT, result);
 			switch(param['evento'].type){
 				case UsuarioEvent.LISTAR:
-					modelApp.rmtObjUsuarios.getAllUsers();
+					rmtObjUsuarios.getAllUsers();
 					
 					break;
 				case UsuarioEvent.CREAR:
 					var s:String = com.adobe.serialization.json.JSON.encode(param['evento'].userVO);
-					modelApp.rmtObjUsuarios.createUsers(param['evento'].userVO);
+					rmtObjUsuarios.createUsers(param['evento'].userVO);
 					
 					break;
 				case UsuarioEvent.MODIFICAR:
-					modelApp.rmtObjUsuarios.updateUsers(param['evento'].userVO);
+					rmtObjUsuarios.updateUsers(param['evento'].userVO);
 					
 					break;
 				case UsuarioEvent.ELIMINAR:
-					modelApp.rmtObjUsuarios.deleteUsers(param['evento'].userVO.id);
+					rmtObjUsuarios.deleteUsers(param['evento'].userVO.id);
 					
 					break;
 				

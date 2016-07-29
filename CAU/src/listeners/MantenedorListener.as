@@ -12,6 +12,8 @@ package listeners
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.remoting.RemoteObject;
 	
+	import services.ServiceRO;
+	
 	import vo.GrupoResolutorVO;
 	import vo.PerfilVO;
 	
@@ -23,8 +25,7 @@ package listeners
 		
 		public static function exec(_evento:Event):void{
 			evento = MantenedoresEvent(_evento);
-			var rmtObj:RemoteObject = new RemoteObject("MantenedorService");
-			rmtObj.source = 'Weborb.cau.MantenedorService';
+			var rmtObj:RemoteObject = ServiceRO.fnRmtObjMantenedores(); 
 			rmtObj.addEventListener(ResultEvent.RESULT, result);
 			switch(evento.type){
 				case MantenedoresEvent.LISTAR_PERFILES:

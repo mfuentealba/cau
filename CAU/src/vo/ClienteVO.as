@@ -2,7 +2,7 @@ package vo
 {
 	import model.ModelApp;
 
-	[RemoteClass(alias="Weborb.cau.ClienteVO")]
+	[RemoteClass(alias="Weborb.cau.cau.ClienteVO")]
 	[Bindable] 
 	dynamic public class ClienteVO
 	{

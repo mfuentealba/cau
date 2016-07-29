@@ -10,6 +10,9 @@ package listeners
 	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.ResultEvent;
+	import mx.rpc.remoting.RemoteObject;
+	
+	import services.ServiceRO;
 	
 	import vo.SucursalVO;
 	
@@ -21,23 +24,24 @@ package listeners
 		
 		
 		public static function exec(_evento:Event):void{
-			modelApp.rmtObjSucursales.addEventListener(ResultEvent.RESULT, result);
+			var rmtObjSucursales:RemoteObject = ServiceRO.fnRmtObjSucursales();
+			rmtObjSucursales.addEventListener(ResultEvent.RESULT, result);
 			evento = SucursalEvent(_evento);
 			switch(evento.type){
 				case SucursalEvent.LISTAR:
-					modelApp.rmtObjSucursales.getAllSucursales();
+					rmtObjSucursales.getAllSucursales();
 					
 					break;
 				case SucursalEvent.CREAR:
-					modelApp.rmtObjSucursales.createSucursales(evento.sucursalVO);
+					rmtObjSucursales.createSucursales(evento.sucursalVO);
 					
 					break;
 				case SucursalEvent.MODIFICAR:
-					modelApp.rmtObjSucursales.updateSucursales(evento.sucursalVO);
+					rmtObjSucursales.updateSucursales(evento.sucursalVO);
 					
 					break;
 				case SucursalEvent.ELIMINAR:
-					modelApp.rmtObjSucursales.deleteSucursales(evento.sucursalVO.id);
+					rmtObjSucursales.deleteSucursales(evento.sucursalVO.id);
 					
 					break;
 				

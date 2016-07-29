@@ -7,9 +7,9 @@ package model
 	public class ModelApp
 	{
 		private static var modelLocator:ModelApp;
-		public var rmtObjSucursales:RemoteObject;
+		/*public var rmtObjSucursales:RemoteObject;
 		public var rmtObjClientes:RemoteObject;
-		public var rmtObjUsuarios:RemoteObject;
+		public var rmtObjUsuarios:RemoteObject;*/
 		//public var rmtObjMant:RemoteObject;
 		
 		public var arrSucursales:ArrayCollection;

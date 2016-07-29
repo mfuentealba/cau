@@ -49,9 +49,9 @@
 				modelApp.objTipoUsuario = {'1': obj1, '2': obj2, '3': obj3};
 				
 				
-				modelApp.rmtObjSucursales = rmtObjSucursales;
+				/*modelApp.rmtObjSucursales = rmtObjSucursales;
 				modelApp.rmtObjClientes = rmtObjClientes;
-				modelApp.rmtObjUsuarios = rmtObjUsuarios;
+				modelApp.rmtObjUsuarios = rmtObjUsuarios;*/
 				
 				var sucursalEvent:SucursalEvent = new SucursalEvent(SucursalEvent.LISTAR);
 				sucursalEvent.callback = fnListaClientes;
@@ -108,26 +108,22 @@
 	<fx:Style source="./assets/css/style.css"/>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<s:RemoteObject id="rmtObjSucursales"
+		<!--<s:RemoteObject id="rmtObjSucursales"
 						destination="SucursalesService"
 						showBusyCursor="true"
-						source="Weborb.cau.SucursalesService"						
+						source="Weborb.cau.cau.SucursalesService"						
 						fault="rmtObj_faultHandler(event)">
 		
-			<!--<s:method name="createSucursales" result="rmtObjSucursales_resultHandler(event)"/>
-			<s:method name="getAllSucursales" result="rmtObjSucursales_resultHandler(event)"/>
-			<s:method name="updateSucursales" result="rmtObjSucursales_resultHandler(event)"/>-->
+			
 			
 		</s:RemoteObject>
 		<s:RemoteObject id="rmtObjClientes"
 						destination="ClientesService"
 						showBusyCursor="true"
-						source="Weborb.cau.ClientesService"						
+						source="Weborb.cau.cau.ClientesService"						
 						fault="rmtObj_faultHandler(event)">
 			
-			<!--<s:method name="createSucursales" result="rmtObjSucursales_resultHandler(event)"/>
-			<s:method name="getAllSucursales" result="rmtObjSucursales_resultHandler(event)"/>
-			<s:method name="updateSucursales" result="rmtObjSucursales_resultHandler(event)"/>-->
+			
 			
 		</s:RemoteObject>
 		<s:RemoteObject id="rmtObjUsuarios"
@@ -137,18 +133,9 @@
 						source="Weborb.cau.UsuariosService"						
 						fault="rmtObj_faultHandler(event)">
 			
-			<!--<s:method name="createSucursales" result="rmtObjSucursales_resultHandler(event)"/>
-			<s:method name="getAllSucursales" result="rmtObjSucursales_resultHandler(event)"/>
-			<s:method name="updateSucursales" result="rmtObjSucursales_resultHandler(event)"/>-->
-			
-		</s:RemoteObject>
-		
-		<!--<s:RemoteObject id="rmtObjMant"
-						destination="MantenedorService"
-						showBusyCursor="true"
-						source="Weborb.cau.MantenedorService"						
-						fault="rmtObj_faultHandler(event)">
 		</s:RemoteObject>-->
+		
+		
 		
 	</fx:Declarations>
 	<s:Group width="100%" height="100%">

@@ -4,7 +4,7 @@ package vo
 	
 	import model.ModelApp;
 
-	[RemoteClass(alias="Weborb.cau.UserVO")]
+	[RemoteClass(alias="Weborb.cau.cau.UserVO")]
 	[Bindable] 
 	public class UserVO
 	{

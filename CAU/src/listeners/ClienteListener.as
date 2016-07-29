@@ -10,6 +10,9 @@ package listeners
 	import mx.collections.ArrayCollection;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.ResultEvent;
+	import mx.rpc.remoting.RemoteObject;
+	
+	import services.ServiceRO;
 	
 	public class ClienteListener //implements IBaseListener
 	{
@@ -18,23 +21,24 @@ package listeners
 		
 		
 		public static function exec(_evento:Event):void{
-			modelApp.rmtObjClientes.addEventListener(ResultEvent.RESULT, result);
+			var rmtObjClientes:RemoteObject = ServiceRO.fnRmtObjClientes();
+			rmtObjClientes.addEventListener(ResultEvent.RESULT, result);
 			evento = ClienteEvent(_evento);
 			switch(evento.type){
 				case ClienteEvent.LISTAR:
-					modelApp.rmtObjClientes.getAllClientes();
+					rmtObjClientes.getAllClientes();
 					
 					break;
 				case ClienteEvent.CREAR:
-					modelApp.rmtObjClientes.createClientes(evento.clienteVO);
+					rmtObjClientes.createClientes(evento.clienteVO);
 					
 					break;
 				case ClienteEvent.MODIFICAR:
-					modelApp.rmtObjClientes.updateClientes(evento.clienteVO);
+					rmtObjClientes.updateClientes(evento.clienteVO);
 					
 					break;
 				case ClienteEvent.ELIMINAR:
-					modelApp.rmtObjClientes.deleteClientes(evento.clienteVO.id);
+					rmtObjClientes.deleteClientes(evento.clienteVO.id);
 					
 					break;
 				

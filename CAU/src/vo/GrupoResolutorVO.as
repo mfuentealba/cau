@@ -1,6 +1,6 @@
 package vo
 {
-	[RemoteClass(alias="Weborb.cau.GrupoResolutorVO")]
+	[RemoteClass(alias="Weborb.cau.cau.GrupoResolutorVO")]
 	[Bindable] 
 	public class GrupoResolutorVO
 	{

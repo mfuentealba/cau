@@ -14,6 +14,9 @@
 			
 			import model.ModelApp;
 			
+			import mx.controls.Alert;
+			import mx.validators.EmailValidator;
+			
 			import spark.events.GridEvent;
 			import spark.events.IndexChangeEvent;
 			
@@ -23,6 +26,26 @@
 			[Bindable] public var usuarioVO:UserVO = new UserVO();
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
 			
+			
+			protected function fnValidaUsuario(evento:MouseEvent):void{
+				/*var mailValidator:EmailValidator = new EmailValidator();
+				mailValidator.*/
+				
+				var i:int = txtEmail.text.search(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/);
+				if(i < 0){
+					Alert.show("debe ingresar mail", "Atención");
+					return;
+				}
+				if(usuarioVO.email == '' || usuarioVO.grupoResolutorVO == null || usuarioVO.nombre_completo == '' || usuarioVO.password == '' || usuarioVO.perfilVO == null || usuarioVO.tema == ''|| usuarioVO.tipoUsuarioVO == null || usuarioVO.username == ''){
+					Alert.show("Debe completar todos los campos", "Atención");
+					return;
+				}
+				fnOperarUsuario(evento);
+				
+			}
+			
+			
+			
 			protected function fnOperarUsuario(evento:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
@@ -30,6 +53,7 @@
 				switch(evento.target){
 					case btnEnviar:
 						if(btnEnviar.label == 'Crear'){
+							
 							usuarioEvent = new UsuarioEvent(UsuarioEvent.CREAR, usuarioVO, fnNuevoUsuario);						
 						} else {
 							usuarioEvent = new UsuarioEvent(UsuarioEvent.MODIFICAR, usuarioVO, fnActualizaGrilla);
@@ -148,13 +172,25 @@
 	<fx:Binding source="txtNombreCompleto.text" destination="usuarioVO.nombre_completo" twoWay="true"/>
 	<fx:Binding source="txtTema.text" destination="usuarioVO.tema" twoWay="true"/>
 	<fx:Binding source="cmbTipoUsuario.selectedItem.id" destination="usuarioVO.tipoUsuario" twoWay="true"/>
-	<fx:Binding source="usuarioVO.tipoUsuarioVO" destination="cmbTipoUsuario.selectedItem" twoWay="true"/>
-	
+	<fx:Binding source="usuarioVO.tipoUsuarioVO" destination="cmbTipoUsuario.selectedItem" twoWay="true"/>	
 	<fx:Binding source="usuarioVO.grupoResolutorVO" destination="cmbIdGrupoResolutor.selectedItem"/>
+	
+	<!--<fx:Declarations>
+		<mx:EmailValidator source="{txtEmail}" property="text" 
+						   trigger="{txtEmail}" triggerEvent="focusOut"
+						   invalidDomainError="Mal"
+						   invalidCharError="Caracter malo"
+						   invalidIPDomainError="IP"
+						   required="true"
+						   requiredFieldError="lll"
+						   invalidPeriodsInDomainError="Periodo"
+						   valid="Alert.show('Validation Succeeded!')"/>
+	</fx:Declarations>-->
+	
 	<s:layout>
 		<s:HorizontalLayout/>
 	</s:layout>
-	<components:CustomPanelSpark title="Clientes" width="35%" height="100%" color="#eeeeee" imgBl="true">
+	<components:CustomPanelSpark title="Usuarios" width="35%" height="100%" color="#eeeeee" imgBl="true">
 		<s:Form height="100%" width="100%">
 			<s:FormItem label="ID" width="100%" height="30">
 				<s:Label id="idLbl" height="30" width="100%"/>
@@ -189,7 +225,7 @@
 			</s:FormItem>
 			
 			<s:FormItem label="" width="100%" height="50">
-				<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{usuarioVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarUsuario(event)" height="50" skinClass="assets.skins.ButtonSendLVSkin" width="100%"/>
+				<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{usuarioVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnValidaUsuario(event)" height="50" skinClass="assets.skins.ButtonSendLVSkin" width="100%"/>
 			</s:FormItem>
 			<s:FormItem label="" width="100%" height="50">
 				<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo Cliente" click="fnNuevoUsuario(event)" height="50" width="100%"/>
