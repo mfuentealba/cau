@@ -125,6 +125,10 @@ a:active {
 #mixed-items .mix {
   display: none;
 }
+
+#mixed-itemsSpanish .mix {
+  display: none;
+}
 /* animation keyfrem */
 @-webkit-keyframes wiggle {
   from {
@@ -1437,6 +1441,55 @@ footer p {
   color: #777;
 }
 #blog-post .content .btn-read {
+  background: #80d6a3;
+  color: #fff;
+  padding:10px 20px;
+  font-size: 13px;
+  margin-top: 15px;
+  border-radius: 25px;
+}
+
+
+
+
+
+
+#blog-postSpanish  .content {
+  padding:30px 25px; 
+  text-align: center;
+}
+#blog-postSpanish .content h4 {
+  text-transform: capitalize;
+  position: relative;
+  margin: 20px 0 10px;
+  padding: 10px 0;
+}
+#blog-postSpanish .content h4 a {
+  color: #333;
+}
+#blog-postSpanish .content h4 a:hover {
+ color: #80d6a3; 
+}
+#blog-postSpanish .content h4::before {
+    content: '';
+    position: absolute;
+    left: 45%;
+    top: -6px;
+    width: 30px;
+    height: 2px;
+    background-color: #80d6a3;
+    -webkit-transition: .3s all;
+    -o-transition: .3s all;
+    transition: .3s all;
+}
+#blog-postSpanish .content small {
+  color: #999;
+}
+#blog-postSpanish .content p {
+  margin-top: 10px;
+  color: #777;
+}
+#blog-postSpanish .content .btn-read {
   background: #80d6a3;
   color: #fff;
   padding:10px 20px;
