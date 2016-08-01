@@ -14,8 +14,12 @@ package listeners
 	
 	import services.ServiceRO;
 	
+	import vo.CategoriaVO;
+	import vo.ClasificacionVO;
+	import vo.DescripcionVO;
 	import vo.GrupoResolutorVO;
 	import vo.PerfilVO;
+	import vo.SubCategoriaVO;
 	
 	public class MantenedorListener //implements IBaseListener
 	{
@@ -36,6 +40,27 @@ package listeners
 				case MantenedoresEvent.LISTAR_GRUPORESOLUTOR:
 					trace("LISTAR_GRUPORESOLUTOR_INI");
 					rmtObj.getAllGrupoResolutor();
+					
+					break;
+				
+				case MantenedoresEvent.LISTAR_CLASIFICACION:
+					trace("LISTAR_CLASIFICACION_INI");
+					rmtObj.getAllClasificacion();
+					//modelApp.rmtObjMant.getAllPerfiles();
+					break;
+				case MantenedoresEvent.LISTAR_CATEGORIAS:
+					trace("LISTAR_CATEGORIAS_INI");
+					rmtObj.getAllCategoria();
+					
+					break;
+				case MantenedoresEvent.LISTAR_SUBCATEGORIAS:
+					trace("LISTAR_SUBCATEGORIAS_INI");
+					rmtObj.getAllSubCategoria();
+					//modelApp.rmtObjMant.getAllPerfiles();
+					break;
+				case MantenedoresEvent.LISTAR_DESCRIPCION:
+					trace("LISTAR_DESCRIPCION_INI");
+					rmtObj.getAllDescripcion();
 					
 					break;
 				/*case MantenedoresEvent.MODIFICAR:
@@ -61,9 +86,28 @@ package listeners
 					break;
 				case MantenedoresEvent.LISTAR_GRUPORESOLUTOR:
 					modelApp.arrGrupoResolutor = new ArrayCollection(data.result as Array);
-					//modelApp.arrGrupoResolutor.filterFunction = modelApp.fnGrupoResolutorFilter;
 					modelApp.arrGrupoResolutor.source.forEach(fnDictGrupoResolutor);
 					trace("LISTAR_GRUPORESOLUTOR");
+					break;
+				case MantenedoresEvent.LISTAR_CLASIFICACION:
+					modelApp.arrClasificacion = new ArrayCollection(data.result as Array);
+					modelApp.arrClasificacion.source.forEach(fnDictClasificacion);
+					trace("LISTAR_CLASIFICACION");
+					break;
+				case MantenedoresEvent.LISTAR_CATEGORIAS:
+					modelApp.arrCategoria = new ArrayCollection(data.result as Array);
+					modelApp.arrCategoria.source.forEach(fnDictCategoria);
+					trace("LISTAR_CATEGORIAS");
+					break;
+				case MantenedoresEvent.LISTAR_SUBCATEGORIAS:
+					modelApp.arrSubCategoria = new ArrayCollection(data.result as Array);
+					modelApp.arrSubCategoria.source.forEach(fnDictSubCategoria);
+					trace("LISTAR_CATEGORIAS");
+					break;
+				case MantenedoresEvent.LISTAR_DESCRIPCION:
+					modelApp.arrDescripcion = new ArrayCollection(data.result as Array);
+					modelApp.arrDescripcion.source.forEach(fnDictDescripcion);
+					trace("LISTAR_DESCRIPCION");
 					break;
 				/*case SucursalEvent.MODIFICAR:
 					evento.callback.call(this, data.result);
@@ -81,6 +125,22 @@ package listeners
 		
 		private static function fnDictGrupoResolutor(item:GrupoResolutorVO, index:int, arr:Array):void{
 			modelApp.objGrupoResolutor[item.idGrupoResolutor + ''] = item;
+		}
+		
+		private static function fnDictClasificacion(item:ClasificacionVO, index:int, arr:Array):void{
+			modelApp.objClasificacion[item.idClasificacion + ''] = item;
+		}
+		
+		private static function fnDictCategoria(item:CategoriaVO, index:int, arr:Array):void{
+			modelApp.objCategoria[item.idCategoria + ''] = item;
+		}
+		
+		private static function fnDictSubCategoria(item:SubCategoriaVO, index:int, arr:Array):void{
+			modelApp.objSubCategoria[item.idSubCategoria + ''] = item;
+		}
+		
+		private static function fnDictDescripcion(item:DescripcionVO, index:int, arr:Array):void{
+			modelApp.objDescripcion[item.idDescripcion + ''] = item;
 		}
 		
 		

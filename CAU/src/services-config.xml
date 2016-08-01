@@ -18,7 +18,7 @@
           <channel ref="my-amf"/>
         </channels>
         <properties>
-          <source>Weborb.cau.SucursalesService</source>
+          <source>Weborb.cau.cau.SucursalesService</source>
         </properties>
       </destination>
       <destination id="ClientesService">
@@ -26,7 +26,7 @@
           <channel ref="my-amf"/>
         </channels>
         <properties>
-          <source>Weborb.cau.ClientesService</source>
+          <source>Weborb.cau.cau.ClientesService</source>
         </properties>
       </destination>
       <destination id="MantenedorService">
@@ -34,7 +34,7 @@
           <channel ref="my-amf"/>
         </channels>
         <properties>
-          <source>Weborb.cau.MantenedorService</source>
+          <source>Weborb.cau.cau.MantenedorService</source>
         </properties>
       </destination>
       
@@ -43,7 +43,7 @@
           <channel ref="my-amf"/>
         </channels>
         <properties>
-          <source>Weborb.cau.UsuariosService</source>
+          <source>Weborb.cau.cau.UsuariosService</source>
         </properties>
       </destination>
       

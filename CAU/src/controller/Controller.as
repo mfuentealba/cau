@@ -61,6 +61,10 @@ package controller
 			
 			addEventListenerNew(MantenedoresEvent.LISTAR_PERFILES, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.LISTAR_GRUPORESOLUTOR, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.LISTAR_CLASIFICACION, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.LISTAR_CATEGORIAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.LISTAR_SUBCATEGORIAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.LISTAR_DESCRIPCION, MantenedorListener);
 		}	
 	}
 }

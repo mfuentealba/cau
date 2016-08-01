@@ -25,12 +25,19 @@ package model
 		
 		public var arrPerfiles:ArrayCollection;
 		public var arrGrupoResolutor:ArrayCollection;
-		//public var fnGrupoResolutorFilter:Function;
 		public var arrTipoUsuario:ArrayCollection;
+		public var arrClasificacion:ArrayCollection;
+		public var arrCategoria:ArrayCollection;
+		public var arrSubCategoria:ArrayCollection;
+		public var arrDescripcion:ArrayCollection;
 		
 		public var objTipoUsuario:Object = {};
 		public var objGrupoResolutor:Object = {};
 		public var objPerfiles:Object = {};
+		public var objClasificacion:Object = {};
+		public var objCategoria:Object = {};
+		public var objSubCategoria:Object = {};
+		public var objDescripcion:Object = {};
 		
 		public var arrUsuarios:ArrayCollection;
 		public var objUsuarios:Object = {};
