@@ -119,7 +119,7 @@
 			
 			private function fnRemueveGrilla(id:String):void{
 				var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
-				modelApp.arrClientes.removeItemAt(modelApp.arrUsuarios.getItemIndex(auxUsuario));
+				modelApp.arrUsuarios.removeItemAt(modelApp.arrUsuarios.getItemIndex(auxUsuario));
 				fnNuevoUsuario(null);
 			}
 			
@@ -128,11 +128,11 @@
 			protected function fnFiltrarCliente(event:*):void
 			{
 				// TODO Auto-generated method stub
-				modelApp.arrClientes.refresh();
+				modelApp.arrUsuarios.refresh();
 			}
 			
 			
-			protected function cmbIdGrupoResolutor_changeHandler(evento:IndexChangeEvent):void
+			/*protected function cmbIdGrupoResolutor_changeHandler(evento:IndexChangeEvent):void
 			{
 				// TODO Auto-generated method stub
 				if(evento.newIndex < 0){
@@ -140,7 +140,7 @@
 				} else {
 					usuarioVO.grupoResolutorVO = cmbIdGrupoResolutor.selectedItem;
 				}
-			}
+			}*/
 			
 			protected function cmbIdGrupoResolutor_changingHandler(evento:IndexChangeEvent):void
 			{
@@ -158,8 +158,26 @@
 				
 			}
 			
-			
+			private function set fnCambioGruporesolutor(val:int):void{
+				trace('OPCION 1 ' + val);
+				if(val > -1){
+					usuarioVO.idGrupoResolutor = '' + cmbIdGrupoResolutor.selectedItem['idGrupoResolutor'];
+					trace('NUEVO GRUPO ' + usuarioVO.grupoResolutorVO.nombreGrupoResolutor);
+				} else {
+					cmbIdGrupoResolutor.selectedIndex = -1;
+				}
+			}
 			 
+		/*	private function set fnCambioGruporesolutor2(val:*):void{
+				trace('OPCION 2 ' + cmbIdGrupoResolutor.selectedItem['idGrupoResolutor']);
+				
+				if(val && !(val is String)){
+					usuarioVO.idGrupoResolutor = '' + cmbIdGrupoResolutor.selectedItem['IdGrupoResolutor'];
+					trace('NUEVO GRUPO ' + usuarioVO.grupoResolutorVO.nombreGrupoResolutor);
+				} else {
+					cmbIdGrupoResolutor.selectedIndex = -1;
+				}
+			}*/
 			
 		]]>
 	</fx:Script>
@@ -174,6 +192,8 @@
 	<fx:Binding source="cmbTipoUsuario.selectedItem.id" destination="usuarioVO.tipoUsuario" twoWay="true"/>
 	<fx:Binding source="usuarioVO.tipoUsuarioVO" destination="cmbTipoUsuario.selectedItem" twoWay="true"/>	
 	<fx:Binding source="usuarioVO.grupoResolutorVO" destination="cmbIdGrupoResolutor.selectedItem"/>
+	<fx:Binding source="cmbIdGrupoResolutor.selectedIndex" destination="fnCambioGruporesolutor"/>
+	<!--<fx:Binding source="cmbIdGrupoResolutor.selectedItem" destination="fnCambioGruporesolutor2"/>-->
 	
 	<!--<fx:Declarations>
 		<mx:EmailValidator source="{txtEmail}" property="text" 
@@ -196,7 +216,7 @@
 				<s:Label id="idLbl" height="30" width="100%"/>
 			</s:FormItem>
 			<s:FormItem label="perfil" width="100%" height="30">
-				<s:ComboBox id="cmbPerfil" color="#333333" skinClass="assets.skins.ComboBoxLVSkin" dataProvider="{modelApp.arrPerfiles}" labelField="perfil" width="100%"></s:ComboBox>
+				<s:ComboBox id="cmbPerfil" color="#333333" skinClass="assets.skins.ComboBoxLVNoEditSkin" dataProvider="{modelApp.arrPerfiles}" labelField="perfil" width="100%"></s:ComboBox>
 			</s:FormItem>
 			<s:FormItem label="username" width="100%" height="30">
 				<s:TextInput id="txtUsername" height="30" width="100%"/>
@@ -217,21 +237,21 @@
 				<s:TextInput id="txtTema" height="30" width="100%"/>
 			</s:FormItem>
 			<s:FormItem label="tipoUsuario" width="100%" height="30">
-				<s:ComboBox id="cmbTipoUsuario" color="#333333" skinClass="assets.skins.ComboBoxLVSkin" dataProvider="{modelApp.arrTipoUsuario}" labelField="valor" width="100%"></s:ComboBox>
+				<s:ComboBox id="cmbTipoUsuario" color="#333333" skinClass="assets.skins.ComboBoxLVNoEditSkin" dataProvider="{modelApp.arrTipoUsuario}" labelField="valor" width="100%"></s:ComboBox>
 			</s:FormItem>
 			<s:FormItem label="idGrupoResolutor" width="100%" height="30">
 				<!--<s:ComboBox id="cmbIdGrupoResolutor" keyUp="cmbIdGrupoResolutor_keyUpHandler(event)" color="#333333" skinClass="assets.skins.ComboBoxLVSkin" changing="cmbIdGrupoResolutor_changingHandler(event)" change="cmbIdGrupoResolutor_changeHandler(event)" dataProvider="{modelApp.arrGrupoResolutor}" labelField="nombreGrupoResolutor" width="100%"></s:ComboBox>-->
-				<components:CustomComboBox id="cmbIdGrupoResolutor" color="#333333" changing="cmbIdGrupoResolutor_changingHandler(event)" change="cmbIdGrupoResolutor_changeHandler(event)" dataProvider="{modelApp.arrGrupoResolutor}" labelField="nombreGrupoResolutor" width="100%"></components:CustomComboBox>
+				<components:CustomComboBox id="cmbIdGrupoResolutor" color="#333333" dataProvider="{modelApp.arrGrupoResolutor}" labelField="nombreGrupoResolutor" width="100%"></components:CustomComboBox>
 			</s:FormItem>
 			
 			<s:FormItem label="" width="100%" height="50">
 				<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{usuarioVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnValidaUsuario(event)" height="50" skinClass="assets.skins.ButtonSendLVSkin" width="100%"/>
 			</s:FormItem>
 			<s:FormItem label="" width="100%" height="50">
-				<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo Cliente" click="fnNuevoUsuario(event)" height="50" width="100%"/>
+				<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo Cliente" click="fnNuevoUsuario(event)" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
 			</s:FormItem>
 			<s:FormItem label="" width="100%" height="50">
-				<s:Button id="btnEliminar" color="white" fontWeight="bold" label="Eliminar" click="fnOperarUsuario(event)" enabled="{dgUsuarios.selectedItem != null ? true : false}" height="50" width="100%"/>
+				<s:Button id="btnEliminar" color="white" fontWeight="bold" label="Eliminar" click="fnOperarUsuario(event)" enabled="{dgUsuarios.selectedItem != null ? true : false}" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
 			</s:FormItem>
 			
 		</s:Form>	
