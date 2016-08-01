@@ -21,6 +21,10 @@
  
  require_once("PerfilVO.php");
  require_once("GrupoResolutorVO.php");
+ require_once("ClasificasionVO.php");
+ require_once("CategoriaVO.php");
+ require_once("SubCategoriaVO.php");
+ require_once("DescripcionVO.php");
  
  
 class MantenedorService {
@@ -123,6 +127,143 @@ class MantenedorService {
 		return $rows;
 		//return $resp;
 	}
+	
+		public function getAllClasificacion() {
+		//echo "hfdfgjsfgskdf";
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Clasificacion");		
+		$this->throwExceptionOnError();
+		
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError();
+		
+		$rows = array();
+		//$rows = new stdClass();
+		$row = new ClasificacionVO();
+		mysqli_stmt_bind_result($stmt, $row->idClasificacion, $row->NombreClasificacion);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      //$row = new stdClass();
+		  $row = new ClasificacionVO();
+	      mysqli_stmt_bind_result($stmt, $row->idClasificacion, $row->NombreClasificacion);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		/*$prueba = new SucursalVO();
+		$prueba->id = 10;
+		$prueba->direccion = 'hola';
+		$prueba->sucursal = 'hola';
+		return array($prueba);*/
+		return $rows;
+		//return $resp;
+	}
+	
+		public function getAllCategoria() {
+		//echo "hfdfgjsfgskdf";
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Categoria");		
+		$this->throwExceptionOnError();
+		
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError();
+		
+		$rows = array();
+		//$rows = new stdClass();
+		$row = new CategoriaVO();
+		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->NombreCategoria);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      //$row = new stdClass();
+		  $row = new CategoriaVO();
+	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->NombreCategoria);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		/*$prueba = new SucursalVO();
+		$prueba->id = 10;
+		$prueba->direccion = 'hola';
+		$prueba->sucursal = 'hola';
+		return array($prueba);*/
+		return $rows;
+		//return $resp;
+	}
+	
+	
+		public function getAllSubCategoria() {
+		//echo "hfdfgjsfgskdf";
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  SubCategoria");		
+		$this->throwExceptionOnError();
+		
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError();
+		
+		$rows = array();
+		//$rows = new stdClass();
+		$row = new SubCategoriaVO();
+		mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->nombreSubCategoria);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      //$row = new stdClass();
+		  $row = new SubCategoriaVO();
+	      mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->nombreSubCategoria);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		/*$prueba = new SucursalVO();
+		$prueba->id = 10;
+		$prueba->direccion = 'hola';
+		$prueba->sucursal = 'hola';
+		return array($prueba);*/
+		return $rows;
+		//return $resp;
+	}
+	
+	
+		public function getAllDescripcion() {
+		//echo "hfdfgjsfgskdf";
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Descripcion");		
+		$this->throwExceptionOnError();
+		
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError();
+		
+		$rows = array();
+		//$rows = new stdClass();
+		$row = new DescripcionVO();
+		mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->nombreDescripcion, $row->idFormaAtencion, $row->idTiempoSolucion);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      //$row = new stdClass();
+		  $row = new DescripcionVO();
+	      mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->nombreDescripcion, $row->idFormaAtencion, $row->idTiempoSolucion);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		/*$prueba = new SucursalVO();
+		$prueba->id = 10;
+		$prueba->direccion = 'hola';
+		$prueba->sucursal = 'hola';
+		return array($prueba);*/
+		return $rows;
+		//return $resp;
+	}
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * Returns the item corresponding to the value specified for the primary key.

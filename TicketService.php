@@ -28,7 +28,7 @@ class TicketService {
 	var $server = "localhost";
 	var $port = "3306";
 	var $databasename = "cau";
-	var $tablename = "Ticket";
+	var $tablename = "Reportes";
 
 	var $connection;
 
@@ -56,7 +56,7 @@ class TicketService {
 	 *
 	 * @return array
 	 */
-	public function getAllUsers() {
+	public function getAllTickets() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename");		
 		$this->throwExceptionOnError();
@@ -123,7 +123,7 @@ class TicketService {
 	 * 
 	 * @return stdClass
 	 */
-	public function createUsers($row) {
+	public function createTickets($row) {
 		//return 0;
 
 		$stmt = mysqli_prepare($this->connection, "INSERT INTO $this->tablename (perfil, username, email, password, nombre_completo, tema, tipoUsuario, idGrupoResolutor) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
@@ -163,7 +163,7 @@ class TicketService {
 	 * @param stdClass $item
 	 * @return void
 	 */
-	public function updateUsers($item) {
+	public function updateTickets($item) {
 	
 		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET perfil=?, username=?, email=?, password=?, nombre_completo=?, tema=?, tipoUsuario=?, idGrupoResolutor=? WHERE id=?");		
 		$msg = $this->throwExceptionOnError();
@@ -198,7 +198,7 @@ class TicketService {
 	 * 
 	 * @return void
 	 */
-	public function deleteUsers($itemID) {
+	public function deleteTickets($itemID) {
 				
 		$stmt = mysqli_prepare($this->connection, "DELETE FROM $this->tablename WHERE id = ?");
 		$msg = $this->throwExceptionOnError();

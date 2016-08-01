@@ -66,6 +66,22 @@
 				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
 				Controller.getInstance().dispatchEvent(mantenedorEvent);
 				
+				/*mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_CLASIFICACION);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_CATEGORIAS);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_SUBCATEGORIAS);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_DESCRIPCION);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				*/
+				
+				
+				
+				
 				var usuarioEvent:UsuarioEvent = new UsuarioEvent(UsuarioEvent.LISTAR);
 				usuarioEvent.callback = fnListaClientes;
 				Controller.getInstance().dispatchEvent(usuarioEvent);
