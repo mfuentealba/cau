@@ -1,6 +1,6 @@
 package listeners
 {
-	import com.adobe.serialization.json.JSON;
+	//import com.adobe.serialization.json.JSON;
 	
 	import event.UsuarioEvent;
 	
@@ -34,7 +34,7 @@ package listeners
 					
 					break;
 				case UsuarioEvent.CREAR:
-					var s:String = com.adobe.serialization.json.JSON.encode(param['evento'].userVO);
+					//var s:String = com.adobe.serialization.json.JSON.encode(param['evento'].userVO);
 					rmtObjUsuarios.createUsers(param['evento'].userVO);
 					
 					break;

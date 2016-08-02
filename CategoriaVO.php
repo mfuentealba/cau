@@ -1,5 +1,5 @@
 <?php
-class PerfilVO {
+class CategoriaVO {
 	  	
 	var $idCategoria;
 	var $NombreCategoria;	

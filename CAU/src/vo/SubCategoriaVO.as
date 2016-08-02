@@ -1,6 +1,6 @@
 package vo
 {
-	[RemoteClass(alias="Weborb.cau.cau.SubCategoriaVO")]
+	[RemoteClass(alias="Weborb.cau.SubCategoriaVO")]
 	[Bindable] 
 	public class SubCategoriaVO
 	{

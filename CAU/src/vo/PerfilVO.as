@@ -1,6 +1,6 @@
 package vo
 {
-	[RemoteClass(alias="Weborb.cau.cau.PerfilVO")]
+	[RemoteClass(alias="Weborb.cau.PerfilVO")]
 	[Bindable] 
 	public class PerfilVO
 	{

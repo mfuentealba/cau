@@ -1,6 +1,6 @@
 package vo
 {
-	[RemoteClass(alias="Weborb.cau.cau.DictSucursal")]
+	[RemoteClass(alias="Weborb.cau.DictSucursal")]
 	public dynamic class DictSucursal
 	{
 		

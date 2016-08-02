@@ -1,6 +1,6 @@
 package vo
 {
-	[RemoteClass(alias="Weborb.cau.cau.SucursalVO")]
+	[RemoteClass(alias="Weborb.cau.SucursalVO")]
 	[Bindable] 
 	public class SucursalVO
 	{

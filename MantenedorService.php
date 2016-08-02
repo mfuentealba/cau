@@ -21,7 +21,7 @@
  
  require_once("PerfilVO.php");
  require_once("GrupoResolutorVO.php");
- require_once("ClasificasionVO.php");
+ require_once("ClasificacionVO.php");
  require_once("CategoriaVO.php");
  require_once("SubCategoriaVO.php");
  require_once("DescripcionVO.php");
@@ -85,11 +85,6 @@ class MantenedorService {
 		
 		mysqli_stmt_free_result($stmt);
 	    mysqli_close($this->connection);
-		/*$prueba = new SucursalVO();
-		$prueba->id = 10;
-		$prueba->direccion = 'hola';
-		$prueba->sucursal = 'hola';
-		return array($prueba);*/
 		return $rows;
 		//return $resp;
 	}
@@ -119,16 +114,12 @@ class MantenedorService {
 		
 		mysqli_stmt_free_result($stmt);
 	    mysqli_close($this->connection);
-		/*$prueba = new SucursalVO();
-		$prueba->id = 10;
-		$prueba->direccion = 'hola';
-		$prueba->sucursal = 'hola';
-		return array($prueba);*/
 		return $rows;
 		//return $resp;
 	}
 	
-		public function getAllClasificacion() {
+	
+	public function getAllClasificacion() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Clasificacion");		
 		$this->throwExceptionOnError();
@@ -151,16 +142,11 @@ class MantenedorService {
 		
 		mysqli_stmt_free_result($stmt);
 	    mysqli_close($this->connection);
-		/*$prueba = new SucursalVO();
-		$prueba->id = 10;
-		$prueba->direccion = 'hola';
-		$prueba->sucursal = 'hola';
-		return array($prueba);*/
 		return $rows;
 		//return $resp;
 	}
 	
-		public function getAllCategoria() {
+	public function getAllCategoria() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Categoria");		
 		$this->throwExceptionOnError();
@@ -183,17 +169,12 @@ class MantenedorService {
 		
 		mysqli_stmt_free_result($stmt);
 	    mysqli_close($this->connection);
-		/*$prueba = new SucursalVO();
-		$prueba->id = 10;
-		$prueba->direccion = 'hola';
-		$prueba->sucursal = 'hola';
-		return array($prueba);*/
 		return $rows;
 		//return $resp;
 	}
 	
 	
-		public function getAllSubCategoria() {
+	public function getAllSubCategoria() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  SubCategoria");		
 		$this->throwExceptionOnError();
@@ -216,17 +197,12 @@ class MantenedorService {
 		
 		mysqli_stmt_free_result($stmt);
 	    mysqli_close($this->connection);
-		/*$prueba = new SucursalVO();
-		$prueba->id = 10;
-		$prueba->direccion = 'hola';
-		$prueba->sucursal = 'hola';
-		return array($prueba);*/
 		return $rows;
 		//return $resp;
 	}
 	
 	
-		public function getAllDescripcion() {
+	public function getAllDescripcion() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Descripcion");		
 		$this->throwExceptionOnError();
@@ -249,11 +225,6 @@ class MantenedorService {
 		
 		mysqli_stmt_free_result($stmt);
 	    mysqli_close($this->connection);
-		/*$prueba = new SucursalVO();
-		$prueba->id = 10;
-		$prueba->direccion = 'hola';
-		$prueba->sucursal = 'hola';
-		return array($prueba);*/
 		return $rows;
 		//return $resp;
 	}

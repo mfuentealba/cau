@@ -5,7 +5,7 @@
 					   backgroundAlpha="0" backgroundColor="0x000000">
 	<fx:Script>
 		<![CDATA[
-			import com.adobe.utils.StringUtil;
+			//import com.adobe.utils.StringUtil;
 			
 			import controller.Controller;
 			
@@ -66,7 +66,7 @@
 				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
 				Controller.getInstance().dispatchEvent(mantenedorEvent);
 				
-				/*mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_CLASIFICACION);				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_CLASIFICACION);				
 				Controller.getInstance().dispatchEvent(mantenedorEvent);
 				
 				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_CATEGORIAS);				
@@ -77,7 +77,7 @@
 				
 				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_DESCRIPCION);				
 				Controller.getInstance().dispatchEvent(mantenedorEvent);
-				*/
+				
 				
 				
 				
