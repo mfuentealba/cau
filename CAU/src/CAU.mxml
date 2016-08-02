@@ -83,10 +83,15 @@
 				
 				
 				var usuarioEvent:UsuarioEvent = new UsuarioEvent(UsuarioEvent.LISTAR);
-				usuarioEvent.callback = fnListaClientes;
+				//usuarioEvent.callback = fnLista;
 				Controller.getInstance().dispatchEvent(usuarioEvent);
 				modelApp.fnSucursalesFilter = fnSucursalesFilter;
 				
+				
+				var clienteEvent:ClienteEvent = new ClienteEvent(ClienteEvent.LISTAR);
+				clienteEvent.callback = fnListaClientes;
+				Controller.getInstance().dispatchEvent(clienteEvent);
+				modelApp.fnSucursalesFilter = fnSucursalesFilter;
 				
 				
 				/*
@@ -160,7 +165,22 @@
 				<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>
 			</s:fill>
 		</s:Rect>
-		<view:FormUsuario width="100%" height="100%"/>	
+		<s:VGroup width="100%" height="100%">
+			<s:ButtonBar dataProvider="{vsGeneral}"/>
+			<mx:ViewStack id="vsGeneral" width="100%" height="100%">
+				<s:NavigatorContent label="Usuarios">
+					<view:FormUsuario width="100%" height="100%"/>		
+				</s:NavigatorContent>
+				<s:NavigatorContent label="Clientes">
+					<view:FormCliente width="100%" height="100%"/>		
+				</s:NavigatorContent>
+				<s:NavigatorContent label="Mantenedores">
+					<view:FormTipificaciones width="100%" height="100%"/>		
+				</s:NavigatorContent>
+			</mx:ViewStack>	
+		</s:VGroup>
+		
+			
 	</s:Group>
 	
 </s:WindowedApplication>

@@ -272,20 +272,125 @@ class MantenedorService {
 	 * 
 	 * @return stdClass
 	 */
-	public function createSucursales($item) {
+	public function createClasificacion($item) {
 		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO $this->tablename (sucursal, direccion) VALUES (?, ?)");
-		$this->throwExceptionOnError();
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO Clasificacion (NombreClasificacion) VALUES (?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 
 		/*$item->sucursal = 'hola';
 		$item->direccion = 'hola';*/
 		
-		mysqli_stmt_bind_param($stmt, 'ss', $item->sucursal, $item->direccion);
-		$this->throwExceptionOnError();
+		mysqli_stmt_bind_param($stmt, 's', $item->NombreClasificacion);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 
 		mysqli_stmt_execute($stmt);		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		$autoid = mysqli_stmt_insert_id($stmt);
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$item->id = $autoid;
+		return $item;
+	}
+	
+	public function createCategoria($item) {
+		//return 0;
+
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO Categoria (NombreCategoria) VALUES (?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		/*$item->sucursal = 'hola';
+		$item->direccion = 'hola';*/
+		
+		mysqli_stmt_bind_param($stmt, 's', $item->NombreCategoria);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		$autoid = mysqli_stmt_insert_id($stmt);
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$item->id = $autoid;
+		return $item;
+	}
+	
+	public function createSubCategoria($item) {
+		//return 0;
+
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO SubCategoria (nombreSubCategoria) VALUES (?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		/*$item->sucursal = 'hola';
+		$item->direccion = 'hola';*/
+		
+		mysqli_stmt_bind_param($stmt, 's', $item->nombreSubCategoria);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		$autoid = mysqli_stmt_insert_id($stmt);
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$item->id = $autoid;
+		return $item;
+	}
+	
+	public function createDescripcion($item) {
+		//return 0;
+
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO Descripcion (nombreDescripcion, idFormaAtencion, idTiempoSolucion) VALUES (?, ?, ?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		/*$item->sucursal = 'hola';
+		$item->direccion = 'hola';*/
+		
+		mysqli_stmt_bind_param($stmt, 'sii', $item->nombreDescripcion, $item->idFormaAtencion, $item->idTiempoSolucion);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 
 		$autoid = mysqli_stmt_insert_id($stmt);
 
@@ -306,13 +411,22 @@ class MantenedorService {
 	public function updateSucursales($item) {
 	
 		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET sucursal=?, direccion=? WHERE id=?");		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_bind_param($stmt, 'ssi', $item->sucursal, $item->direccion, $item->id);		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 
 		mysqli_stmt_execute($stmt);		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_free_result($stmt);		
 		mysqli_close($this->connection);
@@ -331,11 +445,17 @@ class MantenedorService {
 	public function deleteSucursales($itemID) {
 				
 		$stmt = mysqli_prepare($this->connection, "DELETE FROM $this->tablename WHERE id = ?");
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_bind_param($stmt, 'i', $itemID);
 		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_free_result($stmt);		
 		mysqli_close($this->connection);
@@ -416,7 +536,11 @@ class MantenedorService {
 		}
 		if(mysqli_error($link)) {
 			$msg = mysqli_errno($link) . ": " . mysqli_error($link);
+			return 'MySQL Error - '. $msg;
 			throw new Exception('MySQL Error - '. $msg);
+			
+		} else {
+			return '';
 		}		
 	}
 }
