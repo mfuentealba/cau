@@ -1,24 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <services-config>
-
   <services>
     <service id="amfphp-flashremoting-service"
         class="flex.messaging.services.RemotingService"
         messageTypes="flex.messaging.messages.RemotingMessage">
-      <destination id="GenericDestination">
-        <channels>
-          <channel ref="my-amf"/>
-        </channels>
-        <properties>
-          <source>*</source>
-        </properties>
-      </destination>
+      
       <destination id="SucursalesService">
         <channels>
           <channel ref="my-amf"/>
         </channels>
         <properties>
-          <source>Weborb.cau.cau.SucursalesService</source>
+          <source>Weborb.cau.SucursalesService</source>
         </properties>
       </destination>
       <destination id="ClientesService">
@@ -26,7 +18,7 @@
           <channel ref="my-amf"/>
         </channels>
         <properties>
-          <source>Weborb.cau.cau.ClientesService</source>
+          <source>Weborb.cau.ClientesService</source>
         </properties>
       </destination>
       <destination id="MantenedorService">
@@ -34,7 +26,7 @@
           <channel ref="my-amf"/>
         </channels>
         <properties>
-          <source>Weborb.cau.cau.MantenedorService</source>
+          <source>Weborb.cau.MantenedorService</source>
         </properties>
       </destination>
       
@@ -43,10 +35,17 @@
           <channel ref="my-amf"/>
         </channels>
         <properties>
-          <source>Weborb.cau.cau.UsuariosService</source>
+          <source>Weborb.cau.UsuariosService</source>
         </properties>
       </destination>
-      
+      <destination id="GenericDestination">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>*</source>
+        </properties>
+      </destination>
     </service>  
     
   </services>
