@@ -1,5 +1,7 @@
 package listeners
 {
+	import com.adobe.serialization.json.JSON;
+	
 	import event.MantenedoresEvent;
 	
 	import flash.events.Event;
@@ -63,6 +65,13 @@ package listeners
 					rmtObj.getAllDescripcion();
 					
 					break;
+				
+				case MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS:
+					trace("BUSCA_CATEGORIAS_ASOCIADAS_INI");
+					var str:String = com.adobe.serialization.json.JSON.encode(evento.item);
+					rmtObj.getClasificacionCategorias(evento.item);
+					//rmtObj.operations.item = evento.item;
+					break;
 				/*case MantenedoresEvent.MODIFICAR:
 					modelApp.rmtObjSucursales.updateSucursales(evento.sucursalVO);
 					
@@ -108,6 +117,16 @@ package listeners
 					modelApp.arrDescripcion = new ArrayCollection(data.result as Array);
 					modelApp.arrDescripcion.source.forEach(fnDictDescripcion);
 					trace("LISTAR_DESCRIPCION");
+					break;
+				case MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS:
+					var arr:Array = data.result as Array;
+					for each(var obj:* in arr){
+						if(modelApp.objCategoria.hasOwnProperty(obj['idCategoria'])){
+							ClasificacionVO(data.target.operations['item']).arrCategorias.addItem(modelApp.objCategoria[obj['idCategoria']]);
+						}
+						
+					}
+					trace("BUSCA_CATEGORIAS_ASOCIADAS");
 					break;
 				/*case SucursalEvent.MODIFICAR:
 					evento.callback.call(this, data.result);

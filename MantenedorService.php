@@ -65,10 +65,16 @@ class MantenedorService {
 	public function getAllPerfiles() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM perfiles");		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		$rows = array();
 		//$rows = new stdClass();
@@ -94,10 +100,16 @@ class MantenedorService {
 	public function getAllGrupoResolutor() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  GrupoResolutor");		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		$rows = array();
 		//$rows = new stdClass();
@@ -122,10 +134,16 @@ class MantenedorService {
 	public function getAllClasificacion() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Clasificacion");		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		$rows = array();
 		//$rows = new stdClass();
@@ -149,10 +167,16 @@ class MantenedorService {
 	public function getAllCategoria() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Categoria");		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		$rows = array();
 		//$rows = new stdClass();
@@ -177,10 +201,16 @@ class MantenedorService {
 	public function getAllSubCategoria() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  SubCategoria");		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		$rows = array();
 		//$rows = new stdClass();
@@ -205,10 +235,16 @@ class MantenedorService {
 	public function getAllDescripcion() {
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Descripcion");		
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		$rows = array();
 		//$rows = new stdClass();
@@ -231,6 +267,49 @@ class MantenedorService {
 	
 	
 	
+	
+	
+	
+	
+	public function getClasificacionCategorias($item) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"NombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
+		//echo "hfdfgjsfgskdf";
+		$stmt = mysqli_prepare($this->connection, "SELECT idCategoria FROM  asocia_clasificacioncategoria WHERE idClasificacion = ?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 's', $item->idClasificacion);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$rows = array();
+		//$rows = new stdClass();
+		//$row = new CategoriaVO();
+		$row = new stdClass();
+		mysqli_stmt_bind_result($stmt, $row->idCategoria);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      //$row = new stdClass();
+		  $row = new stdClass();
+	      mysqli_stmt_bind_result($stmt, $row->idCategoria);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		return $rows;
+		//return $resp;
+	}
 	
 	
 	

@@ -11,17 +11,19 @@ package event
 		public static const LISTAR_CATEGORIAS:String = 'getAllCategoria';
 		public static const LISTAR_SUBCATEGORIAS:String = 'getAllSubCategoria';
 		public static const LISTAR_DESCRIPCION:String = 'getAllDescripcion';
+		public static const BUSCA_CATEGORIAS_ASOCIADAS:String = 'getClasificacionCategorias';
 		/*public static const MODIFICAR:String = 'updateSucursales';
 		public static const ELIMINAR:String = 'deleteSucursales';*/
 		
-		
+		public var item:*;
 		 
 		
-		public function MantenedoresEvent(type:String, _callback:Function = null)
+		public function MantenedoresEvent(type:String, _callback:Function = null, _item:* = null)
 		{
 			super(type, bubbles, cancelable);
 			clase = "MantenedoresEvent";
 			callback = _callback;
+			this.item = _item;
 		}
 	}
 }
