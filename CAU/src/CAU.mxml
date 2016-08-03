@@ -175,7 +175,7 @@
 					<view:FormCliente width="100%" height="100%"/>		
 				</s:NavigatorContent>
 				<s:NavigatorContent label="Mantenedores">
-					<view:FormTipificaciones width="100%" height="100%"/>		
+					<view:MantencionView width="100%" height="100%"/>		
 				</s:NavigatorContent>
 			</mx:ViewStack>	
 		</s:VGroup>

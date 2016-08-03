@@ -6,21 +6,19 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:HGroup>
-		<s:ButtonBar dataProvider="{vsTipificacion}">
+		<s:ButtonBar dataProvider="{vsMantencion}">
 			<s:layout>
 				<s:VerticalLayout/>
 			</s:layout>
 		</s:ButtonBar>  
-		<mx:ViewStack id="vsTipificacion">
-			<s:NavigatorContent>
-				<view:FormClasificacion width="100%" height="100%"/>
+		<mx:ViewStack id="vsMantencion">
+			<s:NavigatorContent label="Sucursales">
+				<view:FormSucursal width="100%" height="100%"/>
 			</s:NavigatorContent>
 			<s:NavigatorContent>
-				
+				<view:FormTipificaciones width="100%" height="100%"/>
 			</s:NavigatorContent>
-			<s:NavigatorContent>
-				
-			</s:NavigatorContent>
+			
 		</mx:ViewStack>
 	</s:HGroup>
 </s:Group>

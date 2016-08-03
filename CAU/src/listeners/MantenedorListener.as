@@ -102,7 +102,7 @@ package listeners
 				case MantenedoresEvent.LISTAR_SUBCATEGORIAS:
 					modelApp.arrSubCategoria = new ArrayCollection(data.result as Array);
 					modelApp.arrSubCategoria.source.forEach(fnDictSubCategoria);
-					trace("LISTAR_CATEGORIAS");
+					trace("LISTAR_SUBCATEGORIAS");
 					break;
 				case MantenedoresEvent.LISTAR_DESCRIPCION:
 					modelApp.arrDescripcion = new ArrayCollection(data.result as Array);
