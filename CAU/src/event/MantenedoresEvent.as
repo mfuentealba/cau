@@ -13,6 +13,10 @@ package event
 		public static const LISTAR_DESCRIPCION:String = 'getAllDescripcion';
 		public static const BUSCA_CATEGORIAS_ASOCIADAS:String = 'getClasificacionCategorias';
 		public static const AGREGAR_CATEGORIAS:String = 'setClasificacionCategorias';
+		public static const ELIMINAR_CLASIFICACION_CATEGORIAS:String = 'removeClasificacionCategorias';
+		public static const CREAR_CLASIFICACION:String = 'saveClasificacion';
+		public static const MODIFICAR_CLASIFICACION:String = 'updateClasificacion';
+		public static const ELIMINAR_CLASIFICACION:String = 'deleteClasificacion';
 		/*public static const MODIFICAR:String = 'updateSucursales';
 		public static const ELIMINAR:String = 'deleteSucursales';*/
 		

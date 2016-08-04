@@ -22,15 +22,31 @@
 			
 			import vo.ClasificacionVO;
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
-			
+			[Bindable] private var clasificacionVO:ClasificacionVO = new ClasificacionVO();
 			protected function fnBuscarCategoriasAsociadas(evento:GridEvent):void
 			{
 				// TODO Auto-generated method stub
 				if(evento.rowIndex > -1){
-					var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, null, dgClasificacion.selectedItem);
+					var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, dgClasificacion.selectedItem);
 					Controller.getInstance().dispatchEvent(manEvent);
+					
 				}
 				
+			}
+			
+			
+			private function fnActualizaGrilla(item:*):void{
+				var auxClasificacion:ClasificacionVO = dgClasificacion.selectedItem as ClasificacionVO;
+				auxClasificacion.NombreClasificacion = item.NombreClasificacion;
+			}
+			
+			private function fnActualizaData(auxClasificacionVO:ClasificacionVO):void{				
+				clasificacionVO.idClasificacion = auxClasificacionVO.idClasificacion; 
+				clasificacionVO.NombreClasificacion = auxClasificacionVO.NombreClasificacion;
+				clasificacionVO.arrCategoriasIn = auxClasificacionVO.arrCategoriasIn;
+				clasificacionVO.arrCategoriasOut = auxClasificacionVO.arrCategoriasOut;
+				auxClasificacionVO.arrCategoriasIn.refresh();
+				auxClasificacionVO.arrCategoriasOut.refresh();
 			}
 			
 			protected function fnPopCategorias(event:MouseEvent):void
@@ -38,12 +54,76 @@
 				// TODO Auto-generated method stub
 				var pop:PopupCategorias = new PopupCategorias();
 				pop.clasificacionVO = ClasificacionVO(dgClasificacion.selectedItem);
+				pop.fnActualizaData = fnActualizaData;
 				PopUpManager.addPopUp(pop, this.parentApplication as CAU, true);
 				PopUpManager.centerPopUp(pop);
 			}
 			
+			protected function fnEliminarNoSeleccionadas(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var arr:Array = [];
+				for each(var obj:Object in clasificacionVO.arrCategoriasIn){
+					if(obj.sel == false){
+						arr.push(obj['obj']['idCategoria']);	
+					}
+					
+				}
+				
+				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS, fnActualizaData, [dgClasificacion.selectedItem, arr]);
+				Controller.getInstance().dispatchEvent(manEvent);	
+			}
+			
+			protected function fnNuevaClasificacion(event:*):void
+			{
+				// TODO Auto-generated method stub				
+				clasificacionVO = new ClasificacionVO();
+				dgClasificacion.selectedItem = null;
+				modelApp.arrClasificacion.refresh();
+				btnEnviar.label = 'Crear';
+			}
+			
+			private function set fnIdClas(val:int):void{
+				idLbl.text = val + '';	
+			}
+			
+			
+			protected function fnOperarClasificacion(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var mantenedoresEvent:MantenedoresEvent;
+				switch(evento.target){
+					case btnEnviar:
+						if(btnEnviar.label == 'Crear'){
+							
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.CREAR_CLASIFICACION, fnNuevaClasificacion, [clasificacionVO, modelApp.arrClasificacion]);						
+						} else {
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.MODIFICAR_CLASIFICACION, fnActualizaGrilla, [clasificacionVO, modelApp.arrClasificacion]);
+						}
+						
+						break;
+					case btnEliminar:
+						mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION, fnRemueveGrilla, [dgClasificacion.selectedItem, modelApp.arrClasificacion]);
+						
+						break;
+				}
+				
+				Controller.getInstance().dispatchEvent(mantenedoresEvent);
+			}	
+			
+			private function fnRemueveGrilla(id:String):void{
+				var auxClasificacionVO:ClasificacionVO = dgClasificacion.selectedItem as ClasificacionVO;
+				auxClasificacionVO.arrCategoriasIn = null;
+				auxClasificacionVO.arrCategoriasOut = null;
+				modelApp.arrClasificacion.removeItemAt(modelApp.arrClasificacion.getItemIndex(auxClasificacionVO));
+				fnNuevaClasificacion(null);
+			}
+			
 		]]>
 	</fx:Script>
+	<fx:Binding source="clasificacionVO.idClasificacion" destination="fnIdClas"/>
+	<fx:Binding source="txtNombre.text" destination="clasificacionVO.NombreClasificacion" twoWay="true"/>
+	
 	<s:HGroup>
 		<s:Form defaultButton="{btnEnviar}">
 			<s:FormItem label="Id">
@@ -52,14 +132,21 @@
 			<s:FormItem label="Nombre">
 				<s:TextInput id="txtNombre"/>
 			</s:FormItem>
-			<s:Button id="btnEnviar" />
-			<s:Button id="btnNuevo" label="Nueva Sucursal"/>
-			<s:Button id="btnEliminar" label="Eliminar"/>
+			<s:Button id="btnEnviar" label="{clasificacionVO.idClasificacion == 0 ? 'Crear' : 'Actualizar'}" click="fnOperarClasificacion(event)"/>
+			<s:Button id="btnNuevo" label="Nueva Clasificación" click="fnNuevaClasificacion(event)"/>
+			<s:Button id="btnEliminar" label="Eliminar" click="fnOperarClasificacion(event)"/>
 			
 		</s:Form>
 		<s:VGroup>
 			<s:Label text="Clasificación"/>
-			<s:DataGrid id="dgClasificacion" dataProvider="{modelApp.arrClasificacion}" gridClick="fnBuscarCategoriasAsociadas(event)"/>
+			<s:DataGrid id="dgClasificacion" dataProvider="{modelApp.arrClasificacion}" gridClick="fnBuscarCategoriasAsociadas(event)">
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn dataField="idClasificacion" headerText="Nombre"/>
+						<s:GridColumn dataField="NombreClasificacion" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel"/>	
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>
 		</s:VGroup>
 		<s:VGroup>
 			<s:Label text="Categorías incluidas"/>
@@ -72,7 +159,11 @@
 				</s:columns>
 			</s:DataGrid>
 			
-			<mx:LinkButton label="Agregar Categorias" click="fnPopCategorias(event)"/>
+			<s:HGroup>
+				<s:Button label="Eliminar no seleccionadas" click="fnEliminarNoSeleccionadas(event)"/>
+				<mx:LinkButton label="Agregar Categorias" click="fnPopCategorias(event)"/>	
+			</s:HGroup>
+			
 		</s:VGroup>
 		
 		

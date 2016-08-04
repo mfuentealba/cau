@@ -336,20 +336,136 @@ FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria =
 
 		}
 		
+		return $this->getClasificacionCategorias($id);	
+		
+	}
 	
 	
-		$stmt = mysqli_prepare($this->connection, "SELECT c.idCategoria, case when idClasificacion is null then 0 else 1 end sel 
-FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria = asoc.idcategoria and asoc.idclasificacion = ?");		
+	public function removeClasificacionCategorias($id, $arr) {
+	
+		for($i = 0; $i < count($arr); $i++){
+			$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_clasificacioncategoria WHERE idClasificacion = ? AND idCategoria = ?");
+			$msg = $this->throwExceptionOnError();
+			if($msg != ''){
+				return $msg;
+			}
+
+			mysqli_stmt_bind_param($stmt, 'ii', $id, $arr[$i]);
+			$msg = $this->throwExceptionOnError();
+			if($msg != ''){
+				return $msg;
+			}
+
+			mysqli_stmt_execute($stmt);		
+			$msg = $this->throwExceptionOnError();
+			if($msg != ''){
+				return $msg;
+			}
+
+		}
+		
+		return $this->getClasificacionCategorias($id);	
+		
+	}
+	
+	public function saveClasificacion($row) {
+		//return 0;
+
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO Clasificacion (NombreClasificacion) VALUES (?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		/*$item->sucursal = 'hola';
+		$item->direccion = 'hola';*/
+		
+		mysqli_stmt_bind_param($stmt, 's', $row);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg . " ----" . $row;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg . " ----" . $row;
+		}
+
+		$autoid = mysqli_stmt_insert_id($stmt);
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row2 = new ClasificacionVO();
+		$row2->idClasificacion = $autoid;
+		$row2->NombreClasificacion = $row;
+		return $row2;
+	}
+	
+	
+	public function updateClasificacion($item) {
+	
+		$stmt = mysqli_prepare($this->connection, "UPDATE Clasificacion SET NombreClasificacion=? WHERE idClasificacion=?");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 		
-		mysqli_stmt_bind_param($stmt, 's', $id);		
+		mysqli_stmt_bind_param($stmt, 'si', $item[1], $item[0]);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
+		
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row2 = new ClasificacionVO();
+		$row2->idClasificacion = $item[0];
+		$row2->NombreClasificacion = $item[1];
+		return $row2;
+	}
+	
+	
+	public function deleteClasificacion($itemID) {
+		
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_clasificacioncategoria WHERE idClasificacion=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+				
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM `cau`.`clasificacion` WHERE `clasificacion`.`idClasificacion` = ?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
 		
 		mysqli_stmt_execute($stmt);
 		$msg = $this->throwExceptionOnError();
@@ -357,24 +473,9 @@ FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria =
 			return $msg;
 		}
 		
-		$rows = array();
-		//$rows = new stdClass();
-		//$row = new CategoriaVO();
-		$row = new stdClass();
-		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel);
-		
-	    while (mysqli_stmt_fetch($stmt)) {
-	      $rows[] = $row;
-		  //$rows->{$row->id} = $row;
-	      //$row = new stdClass();
-		  $row = new stdClass();
-	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel);
-	    }
-		
-		mysqli_stmt_free_result($stmt);
-	    mysqli_close($this->connection);
-		return $rows;
-		//return $resp;
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		return $itemID;
 	}
 	
 	

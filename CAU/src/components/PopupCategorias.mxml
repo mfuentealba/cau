@@ -17,6 +17,7 @@
 			import vo.CategoriaVO;
 			import vo.ClasificacionVO;
 			[Bindable] public var clasificacionVO:ClasificacionVO;
+			public var fnActualizaData:Function;
 			
 			protected function fnCerrar(event:MouseEvent):void
 			{
@@ -29,11 +30,15 @@
 				// TODO Auto-generated method stub
 				var arr:Array = [];
 				for each(var obj:Object in clasificacionVO.arrCategoriasOut){
-					arr.push(obj['obj']['idCategoria']);
+					if(obj.sel == true){
+						arr.push(obj['obj']['idCategoria']);	
+					}
+					
 				}
 				
-				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, null, [clasificacionVO.idClasificacion, arr]);
-				Controller.getInstance().dispatchEvent(manEvent);	
+				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, fnActualizaData, [clasificacionVO, arr]);
+				Controller.getInstance().dispatchEvent(manEvent);
+				fnCerrar(null);
 			}
 			
 		]]>

@@ -10,6 +10,7 @@ package listeners
 	import model.ModelApp;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.remoting.RemoteObject;
@@ -72,12 +73,44 @@ package listeners
 					var str:String = com.adobe.serialization.json.JSON.encode(evento.item);
 					rmtObj.getClasificacionCategorias(evento.item.idClasificacion);
 					rmtObj.item = evento.item;
+					rmtObj.callback = evento.callback;
 					break;
 				case MantenedoresEvent.AGREGAR_CATEGORIAS:
 					trace("AGREGAR_CATEGORIAS_INI");
 					
-					rmtObj.setClasificacionCategorias(evento.item[0], evento.item[1]);
-					rmtObj.item = evento.item;
+					rmtObj.setClasificacionCategorias(evento.item[0].idClasificacion, evento.item[1]);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					break;
+				case MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS:
+					trace("ELIMINAR_CATEGORIAS_INI");
+					
+					rmtObj.removeClasificacionCategorias(evento.item[0].idClasificacion, evento.item[1]);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					break;
+				
+				case MantenedoresEvent.CREAR_CLASIFICACION:
+					var obj:Object = {idClasificacion: evento.item[0].idClasificacion, NombreClasificacion: evento.item[0].NombreClasificacion};
+					str = com.adobe.serialization.json.JSON.encode(obj);
+					rmtObj.saveClasificacion(evento.item[0].NombreClasificacion);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					
+					break;
+				case MantenedoresEvent.MODIFICAR_CLASIFICACION:
+					obj = {idClasificacion: evento.item[0].idClasificacion, NombreClasificacion: evento.item[0].NombreClasificacion};
+					str = com.adobe.serialization.json.JSON.encode(obj);
+					rmtObj.updateClasificacion([evento.item[0].idClasificacion, evento.item[0].NombreClasificacion]);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					
+					break;
+				case MantenedoresEvent.ELIMINAR_CLASIFICACION:
+					rmtObj.deleteClasificacion(evento.item[0].idClasificacion);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					
 					break;
 				/*case MantenedoresEvent.MODIFICAR:
 					modelApp.rmtObjSucursales.updateSucursales(evento.sucursalVO);
@@ -140,6 +173,7 @@ package listeners
 						}
 						
 					}
+					data.target['callback'].call(null, data.target['item']); 
 					trace("BUSCA_CATEGORIAS_ASOCIADAS");
 					break;
 				case MantenedoresEvent.AGREGAR_CATEGORIAS:
@@ -147,18 +181,67 @@ package listeners
 					ClasificacionVO(data.target['item']).arrCategoriasIn = new ArrayCollection();
 					ClasificacionVO(data.target['item']).arrCategoriasOut = new ArrayCollection();
 					for each(obj in arr){
-					if(modelApp.objCategoria.hasOwnProperty(obj['idCategoria'])){
-						if(obj['sel'] == 1){
-							ClasificacionVO(data.target['item']).arrCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: true});	
-						} else {
-							ClasificacionVO(data.target['item']).arrCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: false});
+						if(modelApp.objCategoria.hasOwnProperty(obj['idCategoria'])){
+							if(obj['sel'] == 1){
+								ClasificacionVO(data.target['item']).arrCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: true});	
+							} else {
+								ClasificacionVO(data.target['item']).arrCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: false});
+							}
+							
 						}
 						
 					}
-					
-				}
+					data.target['callback'].call(null, data.target['item']);
 					trace("AGREGAR_CATEGORIAS");
 					break;
+				
+				case MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS:
+					arr = data.result as Array;
+					ClasificacionVO(data.target['item']).arrCategoriasIn = new ArrayCollection();
+					ClasificacionVO(data.target['item']).arrCategoriasOut = new ArrayCollection();
+					for each(obj in arr){
+						if(modelApp.objCategoria.hasOwnProperty(obj['idCategoria'])){
+							if(obj['sel'] == 1){
+								ClasificacionVO(data.target['item']).arrCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: true});	
+							} else {
+								ClasificacionVO(data.target['item']).arrCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: false});
+							}
+							
+						}
+						
+					}
+					data.target['callback'].call(null, data.target['item']);
+					trace("ELIMINAR_CATEGORIAS");
+					break;
+				
+				case MantenedoresEvent.CREAR_CLASIFICACION:
+					
+					if(data.result.hasOwnProperty('idClasificacion')){
+						modelApp.arrClasificacion.addItem(data.result);
+						data.target.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					break;
+				case MantenedoresEvent.MODIFICAR_CLASIFICACION:
+					if(data.result.hasOwnProperty('idClasificacion')){
+						data.target.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					break;
+				case MantenedoresEvent.ELIMINAR_CLASIFICACION:
+					if(data.result == data.target.item.idClasificacion){
+						data.target.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					
+					break;
+				
 				/*case SucursalEvent.MODIFICAR:
 					evento.callback.call(this, data.result);
 					break;
