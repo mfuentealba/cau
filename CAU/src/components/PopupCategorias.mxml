@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:CustomPanelSpark xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							 xmlns:s="library://ns.adobe.com/flex/spark" 
+							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" width="400" height="300">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import controller.Controller;
+			
+			import event.MantenedoresEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			
+			import vo.CategoriaVO;
+			import vo.ClasificacionVO;
+			[Bindable] public var clasificacionVO:ClasificacionVO;
+			
+			protected function fnCerrar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function fnAgregarcategorias(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var arr:Array = [];
+				for each(var obj:Object in clasificacionVO.arrCategoriasOut){
+					arr.push(obj['obj']['idCategoria']);
+				}
+				
+				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, null, [clasificacionVO.idClasificacion, arr]);
+				Controller.getInstance().dispatchEvent(manEvent);	
+			}
+			
+		]]>
+	</fx:Script>
+	<s:DataGrid id="dgCategoriasOut" dataProvider="{clasificacionVO.arrCategoriasOut}">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="obj.NombreCategoria" headerText="Nombre"/>
+				<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel"/>	
+			</s:ArrayList>
+		</s:columns>
+	</s:DataGrid>
+	<s:HGroup>
+		<s:Button label="Agregar" width="100" click="fnAgregarcategorias(event)"/>
+		<s:Button label="Cancelar" width="100" click="fnCerrar(event)"/>
+		
+	</s:HGroup>
+</components:CustomPanelSpark>

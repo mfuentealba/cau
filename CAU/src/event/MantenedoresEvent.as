@@ -12,6 +12,7 @@ package event
 		public static const LISTAR_SUBCATEGORIAS:String = 'getAllSubCategoria';
 		public static const LISTAR_DESCRIPCION:String = 'getAllDescripcion';
 		public static const BUSCA_CATEGORIAS_ASOCIADAS:String = 'getClasificacionCategorias';
+		public static const AGREGAR_CATEGORIAS:String = 'setClasificacionCategorias';
 		/*public static const MODIFICAR:String = 'updateSucursales';
 		public static const ELIMINAR:String = 'deleteSucursales';*/
 		

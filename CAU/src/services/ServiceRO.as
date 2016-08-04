@@ -1,32 +1,32 @@
 package services
 {
-	import mx.rpc.remoting.RemoteObject;
+	
 
 	public class ServiceRO
 	{
-		public static function fnRmtObjMantenedores():RemoteObject{
-			var rmtObj:RemoteObject = new RemoteObject("MantenedorService");
+		public static function fnRmtObjMantenedores():CustomRemoteObject{
+			var rmtObj:CustomRemoteObject = new CustomRemoteObject("MantenedorService");
 			rmtObj.source = 'Weborb.cau.MantenedorService';
 			rmtObj.showBusyCursor = true;
 			return rmtObj;
 		}
 		
-		public static function fnRmtObjUsuarios():RemoteObject{
-			var rmtObj:RemoteObject = new RemoteObject("UsuariosService");
+		public static function fnRmtObjUsuarios():CustomRemoteObject{
+			var rmtObj:CustomRemoteObject = new CustomRemoteObject("UsuariosService");
 			rmtObj.source = 'Weborb.cau.UsuariosService';
 			rmtObj.showBusyCursor = true;
 			return rmtObj;
 		}
 		
-		public static function fnRmtObjClientes():RemoteObject{
-			var rmtObj:RemoteObject = new RemoteObject("ClientesService");
+		public static function fnRmtObjClientes():CustomRemoteObject{
+			var rmtObj:CustomRemoteObject = new CustomRemoteObject("ClientesService");
 			rmtObj.source = 'Weborb.cau.ClientesService';
 			rmtObj.showBusyCursor = true;
 			return rmtObj;
 		}
 		
-		public static function fnRmtObjSucursales():RemoteObject{
-			var rmtObj:RemoteObject = new RemoteObject("SucursalesService");
+		public static function fnRmtObjSucursales():CustomRemoteObject{
+			var rmtObj:CustomRemoteObject = new CustomRemoteObject("SucursalesService");
 			rmtObj.source = 'Weborb.cau.SucursalesService';
 			rmtObj.showBusyCursor = true;
 			return rmtObj;

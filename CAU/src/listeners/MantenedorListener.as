@@ -14,6 +14,7 @@ package listeners
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.remoting.RemoteObject;
 	
+	import services.CustomRemoteObject;
 	import services.ServiceRO;
 	
 	import vo.CategoriaVO;
@@ -31,7 +32,7 @@ package listeners
 		
 		public static function exec(_evento:Event):void{
 			evento = MantenedoresEvent(_evento);
-			var rmtObj:RemoteObject = ServiceRO.fnRmtObjMantenedores(); 
+			var rmtObj:CustomRemoteObject = ServiceRO.fnRmtObjMantenedores(); 
 			rmtObj.addEventListener(ResultEvent.RESULT, result);
 			switch(evento.type){
 				case MantenedoresEvent.LISTAR_PERFILES:
@@ -69,8 +70,14 @@ package listeners
 				case MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS:
 					trace("BUSCA_CATEGORIAS_ASOCIADAS_INI");
 					var str:String = com.adobe.serialization.json.JSON.encode(evento.item);
-					rmtObj.getClasificacionCategorias(evento.item);
-					//rmtObj.operations.item = evento.item;
+					rmtObj.getClasificacionCategorias(evento.item.idClasificacion);
+					rmtObj.item = evento.item;
+					break;
+				case MantenedoresEvent.AGREGAR_CATEGORIAS:
+					trace("AGREGAR_CATEGORIAS_INI");
+					
+					rmtObj.setClasificacionCategorias(evento.item[0], evento.item[1]);
+					rmtObj.item = evento.item;
 					break;
 				/*case MantenedoresEvent.MODIFICAR:
 					modelApp.rmtObjSucursales.updateSucursales(evento.sucursalVO);
@@ -120,13 +127,37 @@ package listeners
 					break;
 				case MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS:
 					var arr:Array = data.result as Array;
+					ClasificacionVO(data.target['item']).arrCategoriasIn = new ArrayCollection();
+					ClasificacionVO(data.target['item']).arrCategoriasOut = new ArrayCollection();
 					for each(var obj:* in arr){
 						if(modelApp.objCategoria.hasOwnProperty(obj['idCategoria'])){
-							ClasificacionVO(data.target.operations['item']).arrCategorias.addItem(modelApp.objCategoria[obj['idCategoria']]);
+							if(obj['sel'] == 1){
+								ClasificacionVO(data.target['item']).arrCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: true});	
+							} else {
+								ClasificacionVO(data.target['item']).arrCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: false});
+							}
+							
 						}
 						
 					}
 					trace("BUSCA_CATEGORIAS_ASOCIADAS");
+					break;
+				case MantenedoresEvent.AGREGAR_CATEGORIAS:
+					arr = data.result as Array;
+					ClasificacionVO(data.target['item']).arrCategoriasIn = new ArrayCollection();
+					ClasificacionVO(data.target['item']).arrCategoriasOut = new ArrayCollection();
+					for each(obj in arr){
+					if(modelApp.objCategoria.hasOwnProperty(obj['idCategoria'])){
+						if(obj['sel'] == 1){
+							ClasificacionVO(data.target['item']).arrCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: true});	
+						} else {
+							ClasificacionVO(data.target['item']).arrCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: false});
+						}
+						
+					}
+					
+				}
+					trace("AGREGAR_CATEGORIAS");
 					break;
 				/*case SucursalEvent.MODIFICAR:
 					evento.callback.call(this, data.result);

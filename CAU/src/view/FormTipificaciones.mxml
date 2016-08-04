@@ -12,13 +12,16 @@
 			</s:layout>
 		</s:ButtonBar>  
 		<mx:ViewStack id="vsTipificacion">
-			<s:NavigatorContent>
+			<s:NavigatorContent label="Clasificación">
 				<view:FormClasificacion width="100%" height="100%"/>
 			</s:NavigatorContent>
-			<s:NavigatorContent>
+			<s:NavigatorContent label="Categorías">
 				
 			</s:NavigatorContent>
-			<s:NavigatorContent>
+			<s:NavigatorContent label="Subcategorías">
+				
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Problemas">
 				
 			</s:NavigatorContent>
 		</mx:ViewStack>

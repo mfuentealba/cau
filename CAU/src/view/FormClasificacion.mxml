@@ -7,13 +7,20 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import components.PopupCategorias;
+			
 			import controller.Controller;
 			
 			import event.MantenedoresEvent;
 			
 			import model.ModelApp;
 			
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			
 			import spark.events.GridEvent;
+			
+			import vo.ClasificacionVO;
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
 			
 			protected function fnBuscarCategoriasAsociadas(evento:GridEvent):void
@@ -24,6 +31,15 @@
 					Controller.getInstance().dispatchEvent(manEvent);
 				}
 				
+			}
+			
+			protected function fnPopCategorias(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:PopupCategorias = new PopupCategorias();
+				pop.clasificacionVO = ClasificacionVO(dgClasificacion.selectedItem);
+				PopUpManager.addPopUp(pop, this.parentApplication as CAU, true);
+				PopUpManager.centerPopUp(pop);
 			}
 			
 		]]>
@@ -47,8 +63,16 @@
 		</s:VGroup>
 		<s:VGroup>
 			<s:Label text="Categorías incluidas"/>
-			<s:List id="lstCategorias" dataProvider="{dgClasificacion.selectedItem.arrCategorias}"/>
-			<mx:LinkButton label="Agregar Categorias"/>
+			<s:DataGrid id="lstCategorias" dataProvider="{dgClasificacion.selectedItem.arrCategoriasIn}">
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn dataField="obj.NombreCategoria" headerText="Nombre"/>
+						<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel"/>	
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>
+			
+			<mx:LinkButton label="Agregar Categorias" click="fnPopCategorias(event)"/>
 		</s:VGroup>
 		
 		

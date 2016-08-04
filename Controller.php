@@ -13,15 +13,15 @@ if($_REQUEST['data'] != ""){
 	
 } else {
 	$resp = $objSuc->$_REQUEST['accion']();		
-	//print_r($resp);
+	print_r($resp);
 }
-
+print_r($resp);
 
 $count = count($resp);
 
 if($count > 1){
 	for($i = 0; $i <$count; $i++){		
-		print_r($resp[$i]);
+		//print_r($resp[$i]);
 		$resp[$i] = json_encode($resp[$i]);
 	}
 	
@@ -31,7 +31,7 @@ $result = new stdclass();
 $result->result = $resp;
 //$result->id = 0;
 
-echo json_encode($result);//$resp);
+//echo json_encode($result);//$resp);
 //echo $result;//$resp);
 
 /*

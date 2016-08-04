@@ -8,7 +8,8 @@ package vo
 	{
 		public var idClasificacion:int;
 		public var NombreClasificacion:String;
-		public var arrCategorias:ArrayCollection = new ArrayCollection();
+		public var arrCategoriasIn:ArrayCollection = new ArrayCollection();
+		public var arrCategoriasOut:ArrayCollection = new ArrayCollection();
 		
 		public function ClasificacionVO()
 		{

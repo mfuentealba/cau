@@ -271,15 +271,16 @@ class MantenedorService {
 	
 	
 	
-	public function getClasificacionCategorias($item) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"NombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
+	public function getClasificacionCategorias($id) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"NombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
 		//echo "hfdfgjsfgskdf";
-		$stmt = mysqli_prepare($this->connection, "SELECT idCategoria FROM  asocia_clasificacioncategoria WHERE idClasificacion = ?");		
+		$stmt = mysqli_prepare($this->connection, "SELECT c.idCategoria, case when idClasificacion is null then 0 else 1 end sel 
+FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria = asoc.idcategoria and asoc.idclasificacion = ?");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 		
-		mysqli_stmt_bind_param($stmt, 's', $item->idClasificacion);		
+		mysqli_stmt_bind_param($stmt, 's', $id);		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -295,14 +296,14 @@ class MantenedorService {
 		//$rows = new stdClass();
 		//$row = new CategoriaVO();
 		$row = new stdClass();
-		mysqli_stmt_bind_result($stmt, $row->idCategoria);
+		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  //$rows->{$row->id} = $row;
 	      //$row = new stdClass();
 		  $row = new stdClass();
-	      mysqli_stmt_bind_result($stmt, $row->idCategoria);
+	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -311,6 +312,70 @@ class MantenedorService {
 		//return $resp;
 	}
 	
+	
+	public function setClasificacionCategorias($id, $arr) {
+	
+		for($i = 0; $i < count($arr); $i++){
+			$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_clasificacioncategoria (idClasificacion, idCategoria) VALUES (?,?)");
+			$msg = $this->throwExceptionOnError();
+			if($msg != ''){
+				return $msg;
+			}
+
+			mysqli_stmt_bind_param($stmt, 'ii', $id, $arr[$i]);
+			$msg = $this->throwExceptionOnError();
+			if($msg != ''){
+				return $msg;
+			}
+
+			mysqli_stmt_execute($stmt);		
+			$msg = $this->throwExceptionOnError();
+			if($msg != ''){
+				return $msg;
+			}
+
+		}
+		
+	
+	
+		$stmt = mysqli_prepare($this->connection, "SELECT c.idCategoria, case when idClasificacion is null then 0 else 1 end sel 
+FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria = asoc.idcategoria and asoc.idclasificacion = ?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 's', $id);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$rows = array();
+		//$rows = new stdClass();
+		//$row = new CategoriaVO();
+		$row = new stdClass();
+		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      //$row = new stdClass();
+		  $row = new stdClass();
+	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		return $rows;
+		//return $resp;
+	}
 	
 	
 	

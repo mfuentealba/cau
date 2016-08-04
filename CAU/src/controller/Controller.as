@@ -66,6 +66,7 @@ package controller
 			addEventListenerNew(MantenedoresEvent.LISTAR_SUBCATEGORIAS, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.LISTAR_DESCRIPCION, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.AGREGAR_CATEGORIAS, MantenedorListener);
 		}	
 	}
 }
