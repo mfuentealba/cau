@@ -2,11 +2,9 @@
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="view.*" creationComplete="iniciaRO(event)"
-					   backgroundAlpha="0" backgroundColor="0x000000">
+					   backgroundAlpha="0" backgroundColor="0x000000" xmlns:components="components.*">
 	<fx:Script>
 		<![CDATA[
-			//import com.adobe.utils.StringUtil;
-			
 			import controller.Controller;
 			
 			import event.ClienteEvent;
@@ -20,6 +18,8 @@
 			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
+			
+			import spark.effects.Resize;
 			
 			import vo.ClienteVO;
 			import vo.GrupoResolutorVO;
@@ -120,14 +120,43 @@
 				return item.username.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) || item.nombre_completo.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) > -1 ? true : false;
 			}
 			
+			
+			private function fnNavegar(evento:MouseEvent):void{
+				
+			}
+			
 			/*private function fnGrupoResolutorFilter(item:GrupoResolutorVO):Boolean{
 				return item.nombreGrupoResolutor.toLowerCase().indexOf(modelApp.grupoResolutorFilter.toLocaleLowerCase()) > -1 || modelApp.grupoResolutorFilter == '' ? true : false;
 			}*/
+			
+			/*protected function togglebutton1_clickHandler(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(ToggleButton(evento.target).selected){
+					var res:Resize = new Resize(tam);
+					res.duration = 300;
+					res.heightTo = vgContenedorTotal.height;
+					res.play();
+					rectCostado.width = 5;
+					//rectCostado.height = vgContenedorTotal.height;
+				} else {
+					//res.reverse();
+					res = new Resize(tam);
+					res.duration = 300;
+					res.heightTo = 50;
+					res.play();
+					rectCostado.width = 0;
+				}
+				
+			}*/
+			
+			
 			
 		]]>
 	</fx:Script>
 	<fx:Style source="./assets/css/style.css"/>
 	<fx:Declarations>
+		
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		<!--<s:RemoteObject id="rmtObjSucursales"
 						destination="SucursalesService"
@@ -166,8 +195,33 @@
 				<s:SolidColor color="#f3f3f4"/>
 			</s:fill>
 		</s:Rect>
+		
 		<s:HGroup width="100%" height="100%">
+			
 			<s:VGroup gap="0" height="100%">
+				
+				<components:ListaAcordeon label="Tipificacion" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}, {icono: '', data: [{icono: 'assets/icons/tipificacion.png', data: {label: 'Clasificación', accion: fnNavegar}}]}]}"/>
+				<!--<s:Group id="tam" height="50" width="100%">
+					<s:layout>
+						<s:HorizontalLayout gap="0"/>
+					</s:layout>
+					<s:Rect width="0" height="100%" id="rectCostado">
+						<s:fill>
+							<s:SolidColor color="#19aa8d"/>
+						</s:fill>
+					</s:Rect>
+					<s:VGroup gap="0" width="100%" id="vgContenedorTotal">
+						<components:CustomToggleButtonLista label="Prueba" img="assets/icons/tipificacion.png" click="togglebutton1_clickHandler(event)" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
+						<s:VGroup width="100%" id="vgContenedor" gap="0">
+							<s:ToggleButton label="Prueba1" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
+							<s:ToggleButton label="Prueba2" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
+							<s:ToggleButton label="Prueba3" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
+							<s:ToggleButton label="Prueba4" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
+						</s:VGroup>	
+					</s:VGroup>
+					
+					
+				</s:Group>-->
 				<s:Group width="200" height="150">
 					<s:Rect width="100%" height="100%">
 						<s:fill>
@@ -184,6 +238,7 @@
 							<s:SolidColor color="#2f4050"/>
 						</s:fill>
 					</s:Rect>
+					
 					<s:ButtonBar dataProvider="{vsGeneral}" skinClass="assets.skins.CustomButtonBarPrincipalSkin" width="200">
 						<s:layout>
 							<s:VerticalLayout gap="0"/>

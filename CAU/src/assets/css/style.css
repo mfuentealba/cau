@@ -32,7 +32,10 @@ components|CustomPanelSpark{
 }
 
 
-
+components|CustomToggleButtonLista{
+	skinClass: ClassReference("assets.skins.CustomToggleButtonListadoSkin");
+	
+}
 
 
 
