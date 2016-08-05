@@ -143,7 +143,7 @@
 				<s:columns>
 					<s:ArrayList>
 						<s:GridColumn dataField="idClasificacion" headerText="Nombre"/>
-						<s:GridColumn dataField="NombreClasificacion" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel"/>	
+						<s:GridColumn dataField="NombreClasificacion" headerText="Nombre"/>	
 					</s:ArrayList>
 				</s:columns>
 			</s:DataGrid>
