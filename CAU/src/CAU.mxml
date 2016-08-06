@@ -200,7 +200,7 @@
 			
 			<s:VGroup gap="0" height="100%">
 				
-				<components:ListaAcordeon label="Tipificacion" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}, {icono: '', data: [{icono: 'assets/icons/tipificacion.png', data: {label: 'Clasificación', accion: fnNavegar}}]}]}"/>
+				<components:ListaAcordeon label="Tipificacion" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}, {img: 'assets/icons/tipificacion.png', label: 'Prueba', data: [{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}]}]}"/>
 				<!--<s:Group id="tam" height="50" width="100%">
 					<s:layout>
 						<s:HorizontalLayout gap="0"/>

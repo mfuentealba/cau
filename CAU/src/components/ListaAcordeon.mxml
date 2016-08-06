@@ -12,13 +12,14 @@
 			[Bindable] public var arrData:Array;
 			[Bindable] public var img:String; 
 			[Bindable] public var label:String;
-			[Bindable] public var selected:Boolean;
+			[Bindable] public var selected:int;
 			[Bindable] public var arrElementos:ArrayCollection = new ArrayCollection();
 			
-			protected function fnDespliegue(evento:MouseEvent):void
+			protected function fnDespliegue():void
 			{
 				// TODO Auto-generated method stub
-				if(CustomToggleButtonLista(evento.target).selected){
+				
+				if(btnDespliegue.selected){
 					if(this.parentDocument is ListaAcordeon){
 						this.parentDocument.height += vgContenedor.height;
 					}
@@ -27,7 +28,7 @@
 					res.heightTo = vgContenedorTotal.height;
 					res.play();
 					rectCostado.width = 5;
-					
+					selected = 1;
 					//rectCostado.height = vgContenedorTotal.height;
 				} else {
 					//res.reverse();
@@ -39,6 +40,7 @@
 					res.heightTo = 50;
 					res.play();
 					rectCostado.width = 0;
+					selected = 2;
 					
 				}
 			}
@@ -58,7 +60,8 @@
 							var list:ListaAcordeon = new ListaAcordeon();
 							vgContenedor.addElement(list);
 							list.arrData = obj['data'];
-							list.img = obj['icono'];
+							list.img = obj['img'];
+							list.label = obj['label'];
 							list.percentWidth = 100;
 							arrElementos.addItem(list);
 						}
@@ -72,8 +75,8 @@
 			{
 				// TODO Auto-generated method stub
 				
-				evento.stopImmediatePropagation();
-				evento.stopPropagation();
+				/*evento.stopImmediatePropagation();
+				evento.stopPropagation();*/
 				if(arrElementos.getItemIndex(evento.target) > -1){
 					var objAux:* = arrElementos.removeItemAt(arrElementos.getItemIndex(evento.target));
 				} else {
@@ -81,7 +84,12 @@
 				}
 				
 				for each(var obj:* in arrElementos){
-					obj.selected = false;
+					if(obj is ListaAcordeon){
+						obj.selected = 2;
+					} else {
+						obj.selected = false;	
+					}
+					
 				} 
 				arrElementos.addItem(objAux);
 				
@@ -97,8 +105,22 @@
 			}*/
 			
 			
-			private function set fnActivar(val:Boolean):void{
-				btnDespliegue.selected = val;
+			private function set fnActivar(val:int):void{
+				if(val != 0){
+					btnDespliegue.selected = val == 1 ? true : false;
+					fnDespliegue();	
+				}
+				
+			}
+			
+			protected function btnDespliegue_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(btnDespliegue.selected){
+					selected = 1;
+				} else {
+					selected = 2;
+				}
 			}
 			
 		]]>
@@ -121,7 +143,7 @@
 	</s:Rect>
 	<!--<components:CustomToggleButtonLista icon="@Embed(source='assets/icons/tipificacion.png')" width="50" height="50" skinClass="assets.skins.CustomToggleButtonListadoSkin"/>-->
 	<s:VGroup gap="0" width="100%" id="vgContenedorTotal">
-		<components:CustomToggleButtonLista label="{label}" img="{img}" click="fnDespliegue(event)" skinClass="assets.skins.CustomToggleButtonListadoSkin" id="btnDespliegue" width="100%" selected="{selected}"/>
+		<components:CustomToggleButtonLista label="{label}" img="{img}" click="btnDespliegue_clickHandler(event)" skinClass="assets.skins.CustomToggleButtonEncabezadoSkin" id="btnDespliegue" width="100%" selected="{selected == 1? true : false}"/>
 		<s:VGroup width="100%" id="vgContenedor" gap="0" click="fnReestablecerBotones(event)">
 			<!--<s:ToggleButton label="Prueba1" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
 			<s:ToggleButton label="Prueba2" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>

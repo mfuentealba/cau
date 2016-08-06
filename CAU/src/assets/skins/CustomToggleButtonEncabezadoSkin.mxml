@@ -69,7 +69,7 @@
     <!--- @private -->
     <s:Rect id="fill" left="0" right="0" top="0" bottom="0" radiusX="0">
         <s:fill>
-			<s:SolidColor color="#293846"/>
+			<s:SolidColor color="#2f4050" color.downStates="#293846" color.selectedUpStates="#293846" color.overAndSelected="#293846"/>
         </s:fill>
     </s:Rect>
     
@@ -169,7 +169,7 @@
 			<s:Image id="imgReal" width="30" height="30"/>
 			<s:Rect width="100%" height="100%">
 				<s:fill>
-					<s:SolidColor alpha=".5" color="#293846" alpha.downStates="0" alpha.selectedUpStates="0" alpha.overAndSelected="0"/>
+					<s:SolidColor alpha=".5" color="#2f4050" alpha.downStates="0" alpha.selectedUpStates="0" alpha.overAndSelected="0"/>
 				</s:fill>
 			</s:Rect>
 				

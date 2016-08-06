@@ -31,13 +31,15 @@ components|CustomPanelSpark{
 	dropShadowVisible: true;
 }
 
-
+/*
 components|CustomToggleButtonLista{
 	skinClass: ClassReference("assets.skins.CustomToggleButtonListadoSkin");
 	
 }
-
-
+*/
+components|ListaAcordeon components|CustomToggleButtonLista{
+	skinClass: ClassReference("assets.skins.CustomToggleButtonListadoSkin");
+}
 
 /*components|CustomTextInput{
 	skinClass: ClassReference("assets.skins.TextInputActSkin");
