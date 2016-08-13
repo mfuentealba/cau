@@ -2,7 +2,7 @@
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="view.*" creationComplete="iniciaRO(event)"
-					   backgroundAlpha="0" backgroundColor="0x000000" xmlns:components="components.*">
+					   backgroundAlpha="0" width="100%" height="100%" backgroundColor="0x000000" xmlns:components="components.*">
 	<fx:Script>
 		<![CDATA[
 			import controller.Controller;
@@ -27,7 +27,7 @@
 			import vo.UserVO;
 			
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
-			
+			private var arrElementos:ArrayCollection = new ArrayCollection();
 			
 			protected function rmtObj_faultHandler(event:FaultEvent):void
 			{
@@ -122,6 +122,45 @@
 			
 			
 			private function fnNavegar(evento:MouseEvent):void{
+				switch(evento.target.label){
+					case 'Usuarios':
+						vsGeneral.selectedIndex = 0;
+						break;
+					case 'Clientes':
+						vsGeneral.selectedIndex = 1;
+						break;
+					case 'Sucursales':
+						vsGeneral.selectedIndex = 2;
+						break;
+					case 'Clasificación':
+						vsGeneral.selectedIndex = 3;
+						break;
+					case 'Categorías':
+						vsGeneral.selectedIndex = 4;
+						break;
+					case 'Subcategorías':
+						vsGeneral.selectedIndex = 5;
+						break;
+					case 'Problemas':
+						vsGeneral.selectedIndex = 6;
+						break;
+				}
+				
+				if(arrElementos.getItemIndex(evento.target) > -1){
+					var objAux:* = arrElementos.removeItemAt(arrElementos.getItemIndex(evento.target));
+				} else {
+					objAux = arrElementos.removeItemAt(arrElementos.getItemIndex(evento.target.parentDocument));	
+				}
+				
+				for each(var obj:* in arrElementos){
+					if(obj is ListaAcordeon){
+						obj.selected = 2;
+					} else {
+						obj.selected = false;	
+					}
+					
+				} 
+				arrElementos.addItem(objAux);
 				
 			}
 			
@@ -152,116 +191,111 @@
 			
 			
 			
+			
+			
+			protected function fnArr(evento:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				for(var i:int = 0; i < vgbotones.numElements; i++){
+					arrElementos.addItem(vgbotones.getElementAt(i));	
+				}
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Style source="./assets/css/style.css"/>
 	<fx:Declarations>
 		
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<!--<s:RemoteObject id="rmtObjSucursales"
-						destination="SucursalesService"
-						showBusyCursor="true"
-						source="Weborb.cau.cau.SucursalesService"						
-						fault="rmtObj_faultHandler(event)">
-		
-			
-			
-		</s:RemoteObject>
-		<s:RemoteObject id="rmtObjClientes"
-						destination="ClientesService"
-						showBusyCursor="true"
-						source="Weborb.cau.cau.ClientesService"						
-						fault="rmtObj_faultHandler(event)">
-			
-			
-			
-		</s:RemoteObject>
-		<s:RemoteObject id="rmtObjUsuarios"
-						destination="UsuariosService"
-						showBusyCursor="true"
-						requestTimeout="5"
-						source="Weborb.cau.UsuariosService"						
-						fault="rmtObj_faultHandler(event)">
-			
-		</s:RemoteObject>-->
-		
-		
 		
 	</fx:Declarations>
-	<s:Group width="100%" height="100%">
-		<s:Rect width="100%" height="100%">
-			<s:fill>
-				<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
-				<s:SolidColor color="#f3f3f4"/>
-			</s:fill>
-		</s:Rect>
-		
-		<s:HGroup width="100%" height="100%">
+	<s:VGroup width="100%" height="100%" gap="0">
+		<s:Group width="100%" height="50">
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor color="#000000"/>
+				</s:fill>
+			</s:Rect>
+			<s:Label text="HelpDesk - Sistema de Gestión de Incidencias" fontSize="20" color="#ffffff" verticalCenter="0" horizontalCenter="0"/>
+		</s:Group>
+		<s:Group width="100%" height="2">
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor color="#19aa8d"/>
+				</s:fill>
+			</s:Rect>
+		</s:Group>
+		<s:Group width="100%" height="100%">
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+					<s:SolidColor color="#f3f3f4"/>
+				</s:fill>
+			</s:Rect>
 			
-			<s:VGroup gap="0" height="100%">
+			<s:HGroup width="100%" height="100%">
 				
-				<components:ListaAcordeon label="Tipificacion" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}, {img: 'assets/icons/tipificacion.png', label: 'Prueba', data: [{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}]}]}"/>
-				<!--<s:Group id="tam" height="50" width="100%">
-					<s:layout>
-						<s:HorizontalLayout gap="0"/>
-					</s:layout>
-					<s:Rect width="0" height="100%" id="rectCostado">
-						<s:fill>
-							<s:SolidColor color="#19aa8d"/>
-						</s:fill>
-					</s:Rect>
-					<s:VGroup gap="0" width="100%" id="vgContenedorTotal">
-						<components:CustomToggleButtonLista label="Prueba" img="assets/icons/tipificacion.png" click="togglebutton1_clickHandler(event)" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
-						<s:VGroup width="100%" id="vgContenedor" gap="0">
-							<s:ToggleButton label="Prueba1" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
-							<s:ToggleButton label="Prueba2" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
-							<s:ToggleButton label="Prueba3" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
-							<s:ToggleButton label="Prueba4" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
-						</s:VGroup>	
-					</s:VGroup>
+				<s:VGroup gap="0" height="100%">
+					<s:Group width="200" height="150">
+						<s:Rect width="100%" height="100%">
+							<s:fill>
+								<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+								<s:SolidColor color="#293846"/>
+							</s:fill>
+						</s:Rect>	
+					</s:Group>
 					
-					
-				</s:Group>-->
-				<s:Group width="200" height="150">
-					<s:Rect width="100%" height="100%">
-						<s:fill>
-							<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
-							<s:SolidColor color="#273a4a"/>
-						</s:fill>
-					</s:Rect>	
-				</s:Group>
-				
-				<s:Group width="200" height="100%">
-					<s:Rect width="100%" height="100%">
-						<s:fill>
-							<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
-							<s:SolidColor color="#2f4050"/>
-						</s:fill>
-					</s:Rect>
-					
-					<s:ButtonBar dataProvider="{vsGeneral}" skinClass="assets.skins.CustomButtonBarPrincipalSkin" width="200">
-						<s:layout>
-							<s:VerticalLayout gap="0"/>
-						</s:layout>
-					</s:ButtonBar>
-				</s:Group>
-					
-			</s:VGroup>
+					<s:Group width="200" height="100%">
+						<s:Rect width="100%" height="100%">
+							<s:fill>
+								<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+								<s:SolidColor color="#2f4050"/>
+							</s:fill>
+						</s:Rect>
+						<s:VGroup id="vgbotones" click="fnNavegar(event)" width="100%" gap="0" creationComplete="fnArr(event)">
+							<components:ListaAcordeon label="Usuarios" img="assets/icons/usuarios.png"/>
+							<components:ListaAcordeon label="Sucursales"/>
+							<components:ListaAcordeon label="Clientes"/>
+							<components:ListaAcordeon height="50" label="Tipificacion" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}]}"/>
+						</s:VGroup>
 			
-			<mx:ViewStack id="vsGeneral" width="100%" height="100%">
-				<s:NavigatorContent label="Usuarios">
-					<view:FormUsuario width="100%" height="100%"/>		
-				</s:NavigatorContent>
-				<s:NavigatorContent label="Clientes">
-					<view:FormCliente width="100%" height="100%"/>		
-				</s:NavigatorContent>
-				<s:NavigatorContent label="Mantenedores">
-					<view:MantencionView width="100%" height="100%"/>		
-				</s:NavigatorContent>
-			</mx:ViewStack>	
-		</s:HGroup>
-		
+					</s:Group>
+					
+				</s:VGroup>
+				<s:VGroup width="100%" height="100%">
+					<s:Group width="100%" height="50">
+						
+					</s:Group>
+					<mx:ViewStack id="vsGeneral" width="100%" height="100%">
+						<s:NavigatorContent label="Usuarios">
+							<view:FormUsuario width="100%" height="100%"/>		
+						</s:NavigatorContent>
+						<s:NavigatorContent label="Clientes">
+							<view:FormCliente width="100%" height="100%"/>		
+						</s:NavigatorContent>
+						<s:NavigatorContent label="Sucursales">
+							<view:FormSucursal width="100%" height="100%"/>		
+						</s:NavigatorContent>
+						<s:NavigatorContent>
+							<view:FormClasificacion width="100%" height="100%"/>
+						</s:NavigatorContent>
+						<s:NavigatorContent>
+							<view:FormClasificacion width="100%" height="100%"/>
+						</s:NavigatorContent>
+						<s:NavigatorContent>
+							<view:FormClasificacion width="100%" height="100%"/>
+						</s:NavigatorContent>
+						<s:NavigatorContent>
+							<view:FormClasificacion width="100%" height="100%"/>	
+						</s:NavigatorContent>
+					</mx:ViewStack>	
+				</s:VGroup>
+					
+			</s:HGroup>
 			
-	</s:Group>
+			
+		</s:Group>	
+	</s:VGroup>
+	
 	
 </s:WindowedApplication>

@@ -69,7 +69,7 @@
     <!--- @private -->
     <s:Rect id="fill" left="0" right="0" top="0" bottom="0" radiusX="0">
         <s:fill>
-			<s:SolidColor color="#2f4050" color.downStates="#293846" color.selectedUpStates="#293846" color.overAndSelected="#293846"/>
+			<s:SolidColor id="colorFondo" color="#2f4050" color.downStates="#293846" color.selectedUpStates="#293846" color.overAndSelected="#293846"/>
         </s:fill>
     </s:Rect>
     

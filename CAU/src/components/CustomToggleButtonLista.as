@@ -1,12 +1,19 @@
 package components
 {
+	import mx.graphics.SolidColor;
+	
 	import spark.components.Image;
 	import spark.components.ToggleButton;
+	import spark.primitives.Rect;
 	
 	public class CustomToggleButtonLista extends ToggleButton
 	{
-		[SkinPart(required="true")] 
+		[SkinPart(required="false")] 
 		public var imgReal:Image;
+		[SkinPart(required="false")]
+		public var colorFondo:SolidColor;
+		
+		
 		[Bindable] public var img:String; 
 		public function CustomToggleButtonLista()
 		{
@@ -19,6 +26,7 @@ package components
 			// TODO Auto Generated method stub
 			super.measure();
 			imgReal.source = img;
+			//colorFondo.color = 0x293846;
 		}
 		
 		override protected function partAdded(partName:String, instance:Object):void

@@ -1,54 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<mx:Canvas xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="50" xmlns:components="components.*">
+		 verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="50" xmlns:components="components.*" creationComplete="fnDefineContenedor(event)">
 	
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.effects.Parallel;
+			import mx.effects.Sequence;
+			import mx.events.EffectEvent;
+			import mx.events.FlexEvent;
 			
 			import spark.effects.Resize;
 			
 			[Bindable] public var arrData:Array;
 			[Bindable] public var img:String; 
-			[Bindable] public var label:String;
+			[Bindable] public var label2:String;
 			[Bindable] public var selected:int;
 			[Bindable] public var arrElementos:ArrayCollection = new ArrayCollection();
 			
 			protected function fnDespliegue():void
 			{
 				// TODO Auto-generated method stub
-				
+				var sec:Parallel = new Parallel();
 				if(btnDespliegue.selected){
 					if(this.parentDocument is ListaAcordeon){
-						this.parentDocument.height += vgContenedor.height;
+						this.height = vgContenedorTotal.height;
+						rectCostado.width = 5;
+						//this.parentDocument.height += vgContenedor.height;
+						var res2:Resize = new Resize(this.parentDocument);
+						res2.duration = 300;
+						res2.heightTo = this.parentDocument.height + vgContenedor.height;
+						//sec.addChild(res2);
+						res2.play();
+						
+						
+					} else {
+						var res:Resize = new Resize(this);
+						res.duration = 300;
+						res.heightTo = vgContenedorTotal.height;
+						res.play();
+						rectCostado.width = 5;
+						/*sec.addChild(res);
+						sec.play();*/	
+						if(selected != 1){
+							selected = 1;	
+						}	
 					}
-					var res:Resize = new Resize(this);
-					res.duration = 300;
-					res.heightTo = vgContenedorTotal.height;
-					res.play();
-					rectCostado.width = 5;
-					selected = 1;
+					
 					//rectCostado.height = vgContenedorTotal.height;
 				} else {
 					//res.reverse();
 					if(this.parentDocument is ListaAcordeon){
-						this.parentDocument.height -= vgContenedor.height;
+						if(this.height != btnDespliegue.height){							
+							//this.height = vgContenedor.height;
+							res2 = new Resize(this.parentDocument);
+							res2.duration = 300;
+							res2.heightTo = this.parentDocument.height - vgContenedor.height;
+							res2.addEventListener(EffectEvent.EFFECT_END, function(evento:EffectEvent):void{
+								this.height = vgContenedor.height;
+								rectCostado.width = 0;
+							});
+							res2.play();
+						}
+						
+					} else {
+						res = new Resize(this);
+						res.duration = 300;
+						res.heightTo = 50;
+						res.play();
+						rectCostado.width = 0;
+						if(selected != 2){
+							selected = 2;	
+						}
+						for each(var obj:* in arrElementos){
+							if(obj is ListaAcordeon){
+								obj.selected = 2;
+							} else {
+								obj.selected = false;	
+							}
+							
+						} 
 					}
-					res = new Resize(this);
-					res.duration = 300;
-					res.heightTo = 50;
-					res.play();
-					rectCostado.width = 0;
-					selected = 2;
-					
 				}
 			}
 			
-			public function set crearHijos(arr:Array):void{
-				if(arr){
+			public function crearHijos():void{
+				if(arrData){
 					vgContenedor.removeAllElements();
-					for each(var obj:* in arr){
+					for each(var obj:* in arrData){
 						if(obj['data'].hasOwnProperty('label')){
 							var cusbtn:CustomToggleButtonLista = new CustomToggleButtonLista();
 							cusbtn.label = obj['data'].label;
@@ -123,32 +164,43 @@
 				}
 			}
 			
+			protected function fnDefineContenedor(evento:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(evento.target.parentDocument is ListaAcordeon){
+					btnDespliegue.colorFondo.color = 0x293846;
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<fx:Binding source="arrData" destination="crearHijos"/>
+	<!--<fx:Binding source="arrData" destination="crearHijos"/>-->
 	<!--<fx:Binding source="height" destination="fnRedimencionar"/>-->
 	<fx:Binding source="selected" destination="fnActivar"/>
-	<s:layout>
+	<!--<s:layout>
 		<s:HorizontalLayout gap="0"/>
-	</s:layout>
-	<s:Rect width="0" height="100%" id="rectCostado">
-		<s:fill>
-			<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
-			<s:SolidColor color="#19aa8d"/>
-		</s:fill>
-	</s:Rect>
-	<!--<components:CustomToggleButtonLista icon="@Embed(source='assets/icons/tipificacion.png')" width="50" height="50" skinClass="assets.skins.CustomToggleButtonListadoSkin"/>-->
-	<s:VGroup gap="0" width="100%" id="vgContenedorTotal">
-		<components:CustomToggleButtonLista label="{label}" img="{img}" click="btnDespliegue_clickHandler(event)" skinClass="assets.skins.CustomToggleButtonEncabezadoSkin" id="btnDespliegue" width="100%" selected="{selected == 1? true : false}"/>
-		<s:VGroup width="100%" id="vgContenedor" gap="0" click="fnReestablecerBotones(event)">
-			<!--<s:ToggleButton label="Prueba1" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
-			<s:ToggleButton label="Prueba2" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
-			<s:ToggleButton label="Prueba3" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
-			<s:ToggleButton label="Prueba4" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>-->
+	</s:layout>-->
+	<s:HGroup gap="0" width="100%">
+		<s:Rect width="0" height="100%" id="rectCostado">
+			<s:fill>
+				<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+				<s:SolidColor color="#19aa8d"/>
+			</s:fill>
+		</s:Rect>
+		<!--<components:CustomToggleButtonLista icon="@Embed(source='assets/icons/tipificacion.png')" width="50" height="50" skinClass="assets.skins.CustomToggleButtonListadoSkin"/>-->
+		<s:VGroup gap="0" width="100%" id="vgContenedorTotal">
+			<components:CustomToggleButtonLista label="{label}" img="{img}" click="btnDespliegue_clickHandler(event)" skinClass="assets.skins.CustomToggleButtonEncabezadoSkin" id="btnDespliegue" width="100%" selected="{selected == 1? true : false}"/>
+			<s:VGroup width="100%" id="vgContenedor" gap="0" click="fnReestablecerBotones(event)" creationComplete="crearHijos()">
+				<!--<s:ToggleButton label="Prueba1" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
+				<s:ToggleButton label="Prueba2" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
+				<s:ToggleButton label="Prueba3" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>
+				<s:ToggleButton label="Prueba4" skinClass="assets.skins.CustomToggleButtonListadoSkin" width="100%"/>-->
+			</s:VGroup>	
 		</s:VGroup>	
-	</s:VGroup>
-</s:Group>
+	</s:HGroup>
+	
+</mx:Canvas>
