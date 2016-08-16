@@ -237,7 +237,7 @@
 			
 			<s:HGroup width="100%" height="100%">
 				
-				<s:VGroup gap="0" height="100%">
+				<s:VGroup gap="0" height="100%" visible="{vsVistas.selectedIndex > 0 ? true : false}" includeInLayout="{vsVistas.selectedIndex > 0 ? true : false}">
 					<s:Group width="200" height="150">
 						<s:Rect width="100%" height="100%">
 							<s:fill>
@@ -256,43 +256,53 @@
 						</s:Rect>
 						<s:VGroup id="vgbotones" click="fnNavegar(event)" width="100%" gap="0" creationComplete="fnArr(event)">
 							<components:ListaAcordeon label="Usuarios" img="assets/icons/usuarios.png"/>
-							<components:ListaAcordeon label="Sucursales"/>
-							<components:ListaAcordeon label="Clientes"/>
+							<components:ListaAcordeon label="Sucursales" img="assets/icons/sucursal.png"/>
+							<components:ListaAcordeon label="Clientes" img="assets/icons/clientes.png"/>
 							<components:ListaAcordeon height="50" label="Tipificacion" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}]}"/>
 						</s:VGroup>
 			
 					</s:Group>
 					
 				</s:VGroup>
-				<s:VGroup width="100%" height="100%">
-					<s:Group width="100%" height="50">
-						<s:Button verticalCenter="0" left="10" label="Button" skinClass="assets.skins.CustomButtonLogout"/>
-					</s:Group>
-					<components:Titulos id="titulos" titulo="{vsGeneral.selectedChild.label}"/>
-					<mx:ViewStack id="vsGeneral" width="100%" height="100%">
-						<s:NavigatorContent label="Usuarios">
-							<view:FormUsuario width="100%" height="100%"/>		
-						</s:NavigatorContent>
-						<s:NavigatorContent label="Clientes">
-							<view:FormCliente width="100%" height="100%"/>		
-						</s:NavigatorContent>
-						<s:NavigatorContent label="Sucursales">
-							<view:FormSucursal width="100%" height="100%"/>		
-						</s:NavigatorContent>
-						<s:NavigatorContent label="Clasificación">
-							<view:FormClasificacion width="100%" height="100%"/>
-						</s:NavigatorContent>
-						<s:NavigatorContent>
-							<view:FormClasificacion width="100%" height="100%"/>
-						</s:NavigatorContent>
-						<s:NavigatorContent>
-							<view:FormClasificacion width="100%" height="100%"/>
-						</s:NavigatorContent>
-						<s:NavigatorContent>
-							<view:FormClasificacion width="100%" height="100%"/>	
-						</s:NavigatorContent>
-					</mx:ViewStack>	
-				</s:VGroup>
+				
+				<mx:ViewStack id="vsVistas" width="100%" height="100%">
+					<s:NavigatorContent>
+						<view:Login width="100%" height="100%"/>
+					</s:NavigatorContent>
+					<s:NavigatorContent>
+						<s:VGroup width="100%" height="100%">
+							<s:Group width="100%" height="50">
+								<s:Button verticalCenter="0" right="10" skinClass="assets.skins.CustomButtonLogout"/>
+							</s:Group>
+							<components:Titulos id="titulos" titulo="{vsGeneral.selectedChild.label}"/>
+							<mx:ViewStack id="vsGeneral" width="100%" height="100%">
+								<s:NavigatorContent label="Usuarios">
+									<view:FormUsuario width="100%" height="100%"/>		
+								</s:NavigatorContent>
+								<s:NavigatorContent label="Clientes">
+									<view:FormCliente width="100%" height="100%"/>		
+								</s:NavigatorContent>
+								<s:NavigatorContent label="Sucursales">
+									<view:FormSucursal width="100%" height="100%"/>		
+								</s:NavigatorContent>
+								<s:NavigatorContent label="Clasificación">
+									<view:FormClasificacion width="100%" height="100%"/>
+								</s:NavigatorContent>
+								<s:NavigatorContent label="Categoría">
+									<view:FormClasificacion width="100%" height="100%"/>
+								</s:NavigatorContent>
+								<s:NavigatorContent label="Subcategoría">
+									<view:FormClasificacion width="100%" height="100%"/>
+								</s:NavigatorContent>
+								<s:NavigatorContent label="Problema">
+									<view:FormClasificacion width="100%" height="100%"/>	
+								</s:NavigatorContent>
+							</mx:ViewStack>	
+						</s:VGroup>	
+					</s:NavigatorContent>
+						
+				</mx:ViewStack>
+				
 					
 			</s:HGroup>
 			

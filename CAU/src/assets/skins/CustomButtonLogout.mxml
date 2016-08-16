@@ -204,9 +204,9 @@
     
     <!-- layer 8: text -->
     <!--- @copy spark.components.supportClasses.ButtonBase#labelDisplay  -->
-	<s:HGroup color="#333333" verticalAlign="middle" paddingBottom="3" paddingLeft="6" paddingRight="3" paddingTop="3">
+	<s:HGroup color="#333333" verticalAlign="middle" paddingBottom="3" paddingLeft="6" paddingRight="6" paddingTop="3">
 		<s:Image id="img" 
-				 source="@Embed('assets/icons/logout.png')" width="20" height="20"/>
+				 source="@Embed('assets/icons/logout.png')" source.down="@Embed('assets/icons/logoutdown.png')" source.over="@Embed('assets/icons/logoutover.png')" width="20" height="20"/>
 		<s:Label id="labelDisplay"
 				 fontWeight="bold"
 				 text="Log out"

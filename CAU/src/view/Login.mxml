@@ -2,16 +2,37 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="600">
+	
+	<fx:Script>
+		<![CDATA[
+			protected function fnIngresar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				CAU(this.parentApplication)['vsVistas'].selectedindex = 1;
+			}
+		]]>
+	</fx:Script>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Panel x="222" y="150" width="357" height="209">
-		<s:Button x="34" y="145" label="Ingresar"/>
-		<mx:LinkButton x="146" y="149" label="Recuperar contraseña"/>
-		<s:TextInput x="34" y="8"/>
-		<s:TextInput x="34" y="38" displayAsPassword="true"/>
-		<s:CheckBox x="34" y="68" label="Recordar Contraseña"/>
-		<mx:LinkButton x="19" y="94" label="Registrarse"/>
+	<s:Panel width="357" title="Login" horizontalCenter="0" verticalCenter="0" color="#444444">
+		<s:layout>
+			<s:VerticalLayout paddingTop="15" paddingLeft="15" paddingBottom="20"/>
+		</s:layout>
+		
+		<s:Label text="User" fontWeight="bold"/>
+		<s:TextInput id="txtUser" prompt="Ingrese Username"/>
+		<s:Label text="Password" fontWeight="bold"/>
+		<s:TextInput id="txtPass" displayAsPassword="true" prompt="Ingrese contraseña"/>
+		<s:CheckBox id="chkPass" label="Recordar Contraseña"/>
+		
+		<mx:LinkButton id="btnRegistrar" label="Registrarse"/>
+		<s:HGroup>
+			<s:Button x="34" y="145" label="Ingresar" click="fnIngresar(event)"/>
+			<mx:LinkButton x="146" y="149" label="Recuperar contraseña"/>	
+		</s:HGroup>
+		
 	</s:Panel>
 	
 </s:Group>
