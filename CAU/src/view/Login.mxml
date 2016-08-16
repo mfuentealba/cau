@@ -8,7 +8,7 @@
 			protected function fnIngresar(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				CAU(this.parentApplication)['vsVistas'].selectedindex = 1;
+				CAU(this.parentApplication)['vsVistas'].selectedIndex = 1;
 			}
 		]]>
 	</fx:Script>
