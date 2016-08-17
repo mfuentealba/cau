@@ -124,18 +124,19 @@
 	<fx:Binding source="clasificacionVO.idClasificacion" destination="fnIdClas"/>
 	<fx:Binding source="txtNombre.text" destination="clasificacionVO.NombreClasificacion" twoWay="true"/>
 	
+	
 	<s:HGroup>
-		<components:CustomPanelSpark skinClass="assets.skins.CustomPanelBlancoSkin" title="{idLbl.text != '0' &amp;&amp; idLbl.text != '' ? 'Actualizar' : 'Nuevo'}">
+		<components:CustomPanelSpark skinClass="assets.skins.CustomPanelBlancoSkin" title="{dgClasificacion.selectedIndex > -1 ? 'Actualizar' : 'Nuevo'}">
 			<s:Form defaultButton="{btnEnviar}">
 				<s:FormItem label="Id">
 					<s:Label id="idLbl" />
 				</s:FormItem>
 				<s:FormItem label="Nombre">
-					<s:TextInput id="txtNombre"/>
+					<s:TextInput id="txtNombre" height="30"/>
 				</s:FormItem>
-				<s:Button id="btnEnviar" label="{clasificacionVO.idClasificacion == 0 ? 'Crear' : 'Actualizar'}" click="fnOperarClasificacion(event)"/>
-				<s:Button id="btnNuevo" label="Nueva Clasificación" click="fnNuevaClasificacion(event)"/>
-				<s:Button id="btnEliminar" label="Eliminar" click="fnOperarClasificacion(event)"/>
+				<s:Button id="btnEnviar" label="{clasificacionVO.idClasificacion == 0 ? 'Crear' : 'Actualizar'}" click="fnOperarClasificacion(event)" skinClass="assets.skins.CustomButtonEnviar" width="150" height="30"/>
+				<s:Button id="btnNuevo" label="Nueva Clasificación" click="fnNuevaClasificacion(event)" skinClass="assets.skins.CustomButtonEnviar" width="150" height="30"/>
+				<s:Button id="btnEliminar" label="Eliminar" click="fnOperarClasificacion(event)" skinClass="assets.skins.CustomButtonEnviar" width="150" height="30"/>
 				
 			</s:Form>	
 		</components:CustomPanelSpark>
