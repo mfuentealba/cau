@@ -210,7 +210,7 @@
 	<s:layout>
 		<s:HorizontalLayout/>
 	</s:layout>
-	<components:CustomPanelSpark title="Usuarios" width="35%" height="100%" color="#eeeeee" imgBl="true">
+	<components:CustomPanelSpark title="{dgUsuarios.selectedIndex > -1 ? 'Actualizar' : 'Nuevo'}" width="35%" height="100%" color="#eeeeee" imgBl="true">
 		<s:Form height="100%" width="100%">
 			<s:FormItem label="ID" width="100%" height="30">
 				<s:Label id="idLbl" height="30" width="100%"/>
@@ -268,7 +268,7 @@
 				<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
 			</s:HGroup>
 		</s:Group>
-		<s:DataGrid id="dgUsuarios" width="100%" height="600" skinClass="assets.skins.CustomDataGrid2Skin"
+		<s:DataGrid id="dgUsuarios" width="100%" height="600"
 					requestedRowCount="4" dataProvider="{modelApp.arrUsuarios}" gridClick="fnSelectUsuario(event)"
 					rowHeight="35" resizableColumns="false">
 			<s:columns>

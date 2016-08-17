@@ -27,7 +27,7 @@ global
 
 
 components|CustomPanelSpark{
-	skinClass: ClassReference("assets.skins.CustomPanelSkin");
+	skinClass: ClassReference("assets.skins.CustomPanelBlancoSkin");
 	dropShadowVisible: true;
 }
 
@@ -39,6 +39,15 @@ components|CustomToggleButtonLista{
 */
 components|ListaAcordeon components|CustomToggleButtonLista{
 	skinClass: ClassReference("assets.skins.CustomToggleButtonListadoSkin");
+}
+
+s|DataGrid{
+	skinClass: ClassReference("assets.skins.CustomDataGrid3Skin");
+}
+
+
+s|Button{
+	skinClass:ClassReference("assets.skins.CustomButtonEnviar");	
 }
 
 /*components|CustomTextInput{

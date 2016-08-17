@@ -58,6 +58,7 @@ package controller
 			addEventListenerNew(UsuarioEvent.CREAR, UsuarioListener);
 			addEventListenerNew(UsuarioEvent.MODIFICAR, UsuarioListener);
 			addEventListenerNew(UsuarioEvent.ELIMINAR, UsuarioListener);
+			addEventListenerNew(UsuarioEvent.LOGIN, UsuarioListener);
 			
 			addEventListenerNew(MantenedoresEvent.LISTAR_PERFILES, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.LISTAR_GRUPORESOLUTOR, MantenedorListener);

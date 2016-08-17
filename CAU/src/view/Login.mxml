@@ -5,9 +5,24 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import controller.Controller;
+			
+			import event.UsuarioEvent;
+			
+			import vo.UserVO;
 			protected function fnIngresar(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
+				
+				//CAU(this.parentApplication)['vsVistas'].selectedIndex = 1;
+				var auxUsuario:UserVO = new UserVO();
+				auxUsuario.username = txtUser.text;
+				auxUsuario.password = txtPass.text;
+				var usuarioEvent:UsuarioEvent = new UsuarioEvent(UsuarioEvent.LOGIN, auxUsuario, fnIngresaSistema);
+				Controller.getInstance().dispatchEvent(usuarioEvent);
+			}
+			
+			private function fnIngresaSistema():void{
 				CAU(this.parentApplication)['vsVistas'].selectedIndex = 1;
 			}
 		]]>
@@ -22,9 +37,9 @@
 		</s:layout>
 		
 		<s:Label text="User" fontWeight="bold"/>
-		<s:TextInput id="txtUser" prompt="Ingrese Username"/>
+		<s:TextInput id="txtUser" prompt="Ingrese Username" text="pzambrt"/>
 		<s:Label text="Password" fontWeight="bold"/>
-		<s:TextInput id="txtPass" displayAsPassword="true" prompt="Ingrese contraseña"/>
+		<s:TextInput id="txtPass" displayAsPassword="true" prompt="Ingrese contraseña" text="12345678"/>
 		<s:CheckBox id="chkPass" label="Recordar Contraseña"/>
 		
 		<mx:LinkButton id="btnRegistrar" label="Registrarse"/>

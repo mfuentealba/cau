@@ -10,6 +10,7 @@ package event
 		public static const CREAR:String = 'createUsers';
 		public static const MODIFICAR:String = 'updateUsers';
 		public static const ELIMINAR:String = 'deleteUsers';
+		public static const LOGIN:String = 'login';
 		
 		
 		 

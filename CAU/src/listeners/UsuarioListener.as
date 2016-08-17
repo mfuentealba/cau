@@ -17,6 +17,8 @@ package listeners
 	
 	import services.ServiceRO;
 	
+	import vo.UserVO;
+	
 	public class UsuarioListener //implements IBaseListener
 	{
 		private static var param:Object = {};		
@@ -44,6 +46,10 @@ package listeners
 					break;
 				case UsuarioEvent.ELIMINAR:
 					rmtObjUsuarios.deleteUsers(param['evento'].userVO.id);
+					
+					break;
+				case UsuarioEvent.LOGIN:
+					rmtObjUsuarios.login(UsuarioEvent(param['evento']).userVO.username, UsuarioEvent(param['evento']).userVO.password);
 					
 					break;
 				
@@ -80,6 +86,15 @@ package listeners
 						param['evento'].callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					break;
+				case UsuarioEvent.LOGIN:
+					if(data.result is UserVO){
+						modelApp.usuarioActivo = data.result as UserVO; 	
+						param['evento'].callback.call(null);	
+					} else {
+						Alert.show(data.result + "" == 'null' ? "Usuario no encontrado" : data.result + "", 'Atencion');	
 					}
 					
 					break;

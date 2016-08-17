@@ -21,6 +21,6 @@
 		]]>
 	</fx:Script>
 	
-	<s:CheckBox id="chbData" click="chbData_clickHandler(event)"/>
+	<s:CheckBox id="chbData" click="chbData_clickHandler(event)" horizontalCenter="0"/>
 	
 </s:GridItemRenderer>

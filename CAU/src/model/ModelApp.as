@@ -2,6 +2,8 @@ package model
 {
 	import mx.collections.ArrayCollection;
 	import mx.rpc.remoting.RemoteObject;
+	
+	import vo.UserVO;
 
 	[Bindable]
 	public class ModelApp
@@ -43,6 +45,7 @@ package model
 		public var objUsuarios:Object = {};
 		public var fnUsuariosFilter:Function;
 		public var usuarioFilter:String;
+		public var usuarioActivo:UserVO;
 		//public var grupoResolutorFilter:String;
 		
 		
