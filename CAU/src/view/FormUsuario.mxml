@@ -193,6 +193,7 @@
 	<fx:Binding source="usuarioVO.tipoUsuarioVO" destination="cmbTipoUsuario.selectedItem" twoWay="true"/>	
 	<fx:Binding source="usuarioVO.grupoResolutorVO" destination="cmbIdGrupoResolutor.selectedItem"/>
 	<fx:Binding source="cmbIdGrupoResolutor.selectedIndex" destination="fnCambioGruporesolutor"/>
+	<fx:Binding source="txtFiltro.text" destination="modelApp.usuarioFilter"/>
 	<!--<fx:Binding source="cmbIdGrupoResolutor.selectedItem" destination="fnCambioGruporesolutor2"/>-->
 	
 	<!--<fx:Declarations>
@@ -256,37 +257,41 @@
 			
 		</s:Form>	
 	</components:CustomPanelSpark>
-	<s:VGroup width="100%" height="100%">
-		<s:Group>
-			<s:Rect width="100%" height="100%">
-				<s:fill>
-					<s:SolidColor color="#333333"/>
-				</s:fill>
-			</s:Rect>
-			<s:HGroup paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
-				<s:Label text="Filtro"/>
-				<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
-			</s:HGroup>
-		</s:Group>
-		<s:DataGrid id="dgUsuarios" width="100%" height="600"
-					requestedRowCount="4" dataProvider="{modelApp.arrUsuarios}" gridClick="fnSelectUsuario(event)"
-					rowHeight="35" resizableColumns="false">
-			<s:columns>
-				<s:ArrayList>
-					<s:GridColumn dataField="id" headerText="Id"></s:GridColumn>
-					<s:GridColumn dataField="perfilVO.perfil" headerText="Perfil"></s:GridColumn>
-					<s:GridColumn dataField="username" headerText="Username"></s:GridColumn>
-					<s:GridColumn dataField="email" headerText="Email"></s:GridColumn>
-					<s:GridColumn dataField="password" headerText="Password"></s:GridColumn>
-					<s:GridColumn dataField="nombre_completo" headerText="Nombre_completo"></s:GridColumn>
-					<s:GridColumn dataField="tema" headerText="Tema"></s:GridColumn>
-					<s:GridColumn dataField="tipoUsuarioVO.valor" headerText="Tipo Usuario"></s:GridColumn>
-					<s:GridColumn dataField="grupoResolutorVO.nombreGrupoResolutor" headerText="Grupo Resolutor"></s:GridColumn>
-				</s:ArrayList>
-			</s:columns>
-			
-		</s:DataGrid>
-	</s:VGroup>
+	
+	<components:CustomPanelSpark title="Lista de usuarios generados" width="100%" height="100%">
+		<s:VGroup width="100%" height="100%">
+			<s:Group width="100%">
+				<s:Rect width="100%" height="100%">
+					<s:fill>
+						<s:SolidColor color="#333333"/>
+					</s:fill>
+				</s:Rect>
+				<s:HGroup color="#fefefe" verticalAlign="middle" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
+					<s:Label text="Filtro" fontWeight="bold"/>
+					<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
+				</s:HGroup>
+			</s:Group>
+			<s:DataGrid id="dgUsuarios" width="100%" height="600"
+						requestedRowCount="4" dataProvider="{modelApp.arrUsuarios}" gridClick="fnSelectUsuario(event)"
+						rowHeight="35">
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn dataField="id" headerText="Id"></s:GridColumn>
+						<s:GridColumn dataField="perfilVO.perfil" headerText="Perfil"></s:GridColumn>
+						<s:GridColumn dataField="username" headerText="Username"></s:GridColumn>
+						<s:GridColumn dataField="email" headerText="Email"></s:GridColumn>
+						<!--<s:GridColumn dataField="password" headerText="Password"></s:GridColumn>-->
+						<s:GridColumn dataField="nombre_completo" headerText="Nombre_completo"></s:GridColumn>
+						<s:GridColumn dataField="tema" headerText="Tema"></s:GridColumn>
+						<s:GridColumn dataField="tipoUsuarioVO.valor" headerText="Tipo Usuario"></s:GridColumn>
+						<s:GridColumn dataField="grupoResolutorVO.nombreGrupoResolutor" headerText="Grupo Resolutor"></s:GridColumn>
+					</s:ArrayList>
+				</s:columns>
+				
+			</s:DataGrid>
+		</s:VGroup>	
+	</components:CustomPanelSpark>
+	
 	
 	
 </s:Group>

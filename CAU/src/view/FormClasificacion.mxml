@@ -148,7 +148,7 @@
 					<s:DataGrid id="dgClasificacion" dataProvider="{modelApp.arrClasificacion}" gridClick="fnBuscarCategoriasAsociadas(event)" width="200" height="300">
 						<s:columns>
 							<s:ArrayList>
-								<s:GridColumn dataField="idClasificacion" headerText="Nombre"/>
+								<s:GridColumn dataField="idClasificacion" headerText="Id"/>
 								<s:GridColumn dataField="NombreClasificacion" headerText="Nombre"/>	
 							</s:ArrayList>
 						</s:columns>

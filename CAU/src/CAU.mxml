@@ -85,13 +85,13 @@
 				var usuarioEvent:UsuarioEvent = new UsuarioEvent(UsuarioEvent.LISTAR);
 				//usuarioEvent.callback = fnLista;
 				Controller.getInstance().dispatchEvent(usuarioEvent);
-				modelApp.fnSucursalesFilter = fnSucursalesFilter;
+				modelApp.fnUsuariosFilter = fnUsuariosFilter;
 				
 				
 				var clienteEvent:ClienteEvent = new ClienteEvent(ClienteEvent.LISTAR);
 				clienteEvent.callback = fnListaClientes;
 				Controller.getInstance().dispatchEvent(clienteEvent);
-				modelApp.fnSucursalesFilter = fnSucursalesFilter;
+				modelApp.fnClientesFilter = fnClientesFilter;
 				
 				
 				/*
@@ -117,7 +117,7 @@
 			}
 			
 			private function fnUsuariosFilter(item:UserVO):Boolean{
-				return item.username.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) || item.nombre_completo.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) > -1 ? true : false;
+				return item.username.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) > -1 || item.nombre_completo.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) > -1 ? true : false;
 			}
 			
 			
@@ -208,6 +208,7 @@
 			{
 				// TODO Auto-generated method stub
 				vsVistas.selectedIndex = 0;
+				modelApp.usuarioActivo = null;
 			}
 			
 		]]>
