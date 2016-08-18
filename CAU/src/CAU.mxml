@@ -2,7 +2,7 @@
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
 					   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="view.*" creationComplete="iniciaRO(event)"
-					   backgroundAlpha="0" width="100%" height="100%" backgroundColor="0x000000" xmlns:components="components.*">
+					   backgroundAlpha="0" width="100%" height="100%" backgroundColor="0x000000" xmlns:components="components.*" resize="fnRedimencion(event)">
 	<fx:Script>
 		<![CDATA[
 			import controller.Controller;
@@ -16,6 +16,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
@@ -211,6 +212,18 @@
 				modelApp.usuarioActivo = null;
 			}
 			
+			protected function fnRedimencion(event:ResizeEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(vgPrincipal){
+					vgPrincipal.width = this.width;
+					vgPrincipal.height = this.height;
+					sc.width = this.width;
+					sc.height = this.height;
+				}
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Style source="./assets/css/style.css"/>
@@ -218,104 +231,108 @@
 		
 		
 	</fx:Declarations>
-	<s:VGroup width="100%" height="100%" gap="0">
-		<s:Group width="100%" height="50">
-			<s:Rect width="100%" height="100%">
-				<s:fill>
-					<s:SolidColor color="#000000"/>
-				</s:fill>
-			</s:Rect>
-			<s:Label text="HelpDesk - Sistema de Gestión de Incidencias" fontSize="20" color="#ffffff" verticalCenter="0" horizontalCenter="0"/>
-		</s:Group>
-		<s:Group width="100%" height="2">
-			<s:Rect width="100%" height="100%">
-				<s:fill>
-					<s:SolidColor color="#19aa8d"/>
-				</s:fill>
-			</s:Rect>
-		</s:Group>
-		<s:Group width="100%" height="100%">
-			<s:Rect width="100%" height="100%">
-				<s:fill>
-					<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
-					<s:SolidColor color="#f3f3f4"/>
-				</s:fill>
-			</s:Rect>
-			
-			<s:HGroup width="100%" height="100%">
+	<s:Scroller id="sc">
+		<s:VGroup id="vgPrincipal" gap="0">
+			<s:Group width="100%" height="50">
+				<s:Rect width="100%" height="100%">
+					<s:fill>
+						<s:SolidColor color="#000000"/>
+					</s:fill>
+				</s:Rect>
+				<s:Label text="HelpDesk - Sistema de Gestión de Incidencias" fontSize="20" color="#ffffff" verticalCenter="0" horizontalCenter="0"/>
+			</s:Group>
+			<s:Group width="100%" height="2">
+				<s:Rect width="100%" height="100%">
+					<s:fill>
+						<s:SolidColor color="#19aa8d"/>
+					</s:fill>
+				</s:Rect>
+			</s:Group>
+			<s:Group width="100%" height="100%">
+				<s:Rect width="100%" height="100%">
+					<s:fill>
+						<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+						<s:SolidColor color="#f3f3f4"/>
+					</s:fill>
+				</s:Rect>
 				
-				<s:VGroup gap="0" height="100%" visible="{vsVistas.selectedIndex > 0 ? true : false}" includeInLayout="{vsVistas.selectedIndex > 0 ? true : false}">
-					<s:Group width="200" height="150">
-						<s:Rect width="100%" height="100%">
-							<s:fill>
-								<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
-								<s:SolidColor color="#293846"/>
-							</s:fill>
-						</s:Rect>	
-					</s:Group>
+				<s:HGroup width="100%" height="100%">
 					
-					<s:Group width="200" height="100%">
-						<s:Rect width="100%" height="100%">
-							<s:fill>
-								<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
-								<s:SolidColor color="#2f4050"/>
-							</s:fill>
-						</s:Rect>
-						<s:VGroup id="vgbotones" click="fnNavegar(event)" width="100%" gap="0" creationComplete="fnArr(event)">
-							<components:ListaAcordeon label="Usuarios" img="assets/icons/usuarios.png"/>
-							<components:ListaAcordeon label="Sucursales" img="assets/icons/sucursal.png"/>
-							<components:ListaAcordeon label="Clientes" img="assets/icons/clientes.png"/>
-							<components:ListaAcordeon height="50" label="Tipificacion" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}]}"/>
-						</s:VGroup>
-			
-					</s:Group>
-					
-				</s:VGroup>
-				
-				<mx:ViewStack id="vsVistas" width="100%" height="100%">
-					<s:NavigatorContent>
-						<view:Login width="100%" height="100%"/>
-					</s:NavigatorContent>
-					<s:NavigatorContent>
-						<s:VGroup width="100%" height="100%">
-							<s:Group width="100%" height="50">
-								<s:Button verticalCenter="0" right="10" skinClass="assets.skins.CustomButtonLogout" click="fnLogout(event)"/>
-							</s:Group>
-							<components:Titulos id="titulos" titulo="{vsGeneral.selectedChild.label}"/>
-							<mx:ViewStack id="vsGeneral" width="100%" height="100%">
-								<s:NavigatorContent label="Usuarios">
-									<view:FormUsuario width="100%" height="100%"/>		
-								</s:NavigatorContent>
-								<s:NavigatorContent label="Clientes">
-									<view:FormCliente width="100%" height="100%"/>		
-								</s:NavigatorContent>
-								<s:NavigatorContent label="Sucursales">
-									<view:FormSucursal width="100%" height="100%"/>		
-								</s:NavigatorContent>
-								<s:NavigatorContent label="Clasificación">
-									<view:FormClasificacion width="100%" height="100%"/>
-								</s:NavigatorContent>
-								<s:NavigatorContent label="Categoría">
-									<view:FormClasificacion width="100%" height="100%"/>
-								</s:NavigatorContent>
-								<s:NavigatorContent label="Subcategoría">
-									<view:FormClasificacion width="100%" height="100%"/>
-								</s:NavigatorContent>
-								<s:NavigatorContent label="Problema">
-									<view:FormClasificacion width="100%" height="100%"/>	
-								</s:NavigatorContent>
-							</mx:ViewStack>	
-						</s:VGroup>	
-					</s:NavigatorContent>
+					<s:VGroup gap="0" height="100%" visible="{vsVistas.selectedIndex > 0 ? true : false}" includeInLayout="{vsVistas.selectedIndex > 0 ? true : false}">
+						<s:Group width="200" height="150">
+							<s:Rect width="100%" height="100%">
+								<s:fill>
+									<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+									<s:SolidColor color="#293846"/>
+								</s:fill>
+							</s:Rect>	
+						</s:Group>
 						
-				</mx:ViewStack>
-				
+						<s:Group width="200" height="100%">
+							<s:Rect width="100%" height="100%">
+								<s:fill>
+									<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+									<s:SolidColor color="#2f4050"/>
+								</s:fill>
+							</s:Rect>
+							<s:VGroup id="vgbotones" click="fnNavegar(event)" width="100%" gap="0" creationComplete="fnArr(event)">
+								<components:ListaAcordeon label="Usuarios" img="assets/icons/usuarios.png"/>
+								<components:ListaAcordeon label="Sucursales" img="assets/icons/sucursal.png"/>
+								<components:ListaAcordeon label="Clientes" img="assets/icons/clientes.png"/>
+								<components:ListaAcordeon height="50" label="Tipificacion" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}]}"/>
+							</s:VGroup>
+							
+						</s:Group>
+						
+					</s:VGroup>
 					
-			</s:HGroup>
-			
-			
-		</s:Group>	
-	</s:VGroup>
+					<mx:ViewStack id="vsVistas" width="100%" height="100%">
+						<s:NavigatorContent>
+							<view:Login width="100%" height="100%"/>
+						</s:NavigatorContent>
+						<s:NavigatorContent>
+							<s:VGroup width="100%" height="100%">
+								<s:Group width="100%" height="50">
+									<s:Button verticalCenter="0" right="10" skinClass="assets.skins.CustomButtonLogout" click="fnLogout(event)"/>
+								</s:Group>
+								<components:Titulos id="titulos" titulo="{vsGeneral.selectedChild.label}"/>
+								<mx:ViewStack id="vsGeneral" width="100%" height="100%">
+									
+									<s:NavigatorContent label="Usuarios">
+										<view:FormUsuario width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Clientes">
+										<view:FormCliente width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Sucursales">
+										<view:FormSucursal width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Clasificación">
+										<view:FormClasificacion width="100%" height="100%"/>
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Categoría">
+										<view:FormClasificacion width="100%"/>
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Subcategoría">
+										<view:FormClasificacion width="100%" height="100%"/>
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Problema">
+										<view:FormClasificacion width="100%" height="100%"/>	
+									</s:NavigatorContent>
+								</mx:ViewStack>	
+							</s:VGroup>	
+						</s:NavigatorContent>
+						
+					</mx:ViewStack>
+					
+					
+				</s:HGroup>
+				
+				
+			</s:Group>	
+		</s:VGroup>	
+	</s:Scroller>
+	
 	
 	
 </s:WindowedApplication>

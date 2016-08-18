@@ -125,7 +125,7 @@
 	<fx:Binding source="txtNombre.text" destination="clasificacionVO.NombreClasificacion" twoWay="true"/>
 	
 	
-	<s:HGroup>
+	<s:HGroup gap="15">
 		<components:CustomPanelSpark skinClass="assets.skins.CustomPanelBlancoSkin" title="{dgClasificacion.selectedIndex > -1 ? 'Actualizar' : 'Nuevo'}">
 			<s:Form defaultButton="{btnEnviar}">
 				<s:FormItem label="Id">

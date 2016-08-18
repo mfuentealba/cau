@@ -25,6 +25,11 @@ global
 	
 }
 
+s|Scroller{
+	skinClass:ClassReference("assets.skins.ScrollerLVSkin");
+
+}
+	
 
 components|CustomPanelSpark{
 	skinClass: ClassReference("assets.skins.CustomPanelBlancoSkin");

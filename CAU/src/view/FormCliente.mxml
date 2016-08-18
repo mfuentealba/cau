@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
-		 xmlns:s="library://ns.adobe.com/flex/spark"
-		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 xmlns:controllerbd="services.controllerbd.*"
-		 width="886" height="512" xmlns:skins="assets.skins.*" xmlns:components="components.*"
-		 >
+<s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:controllerbd="services.controllerbd.*">
 	<fx:Script>
 		<![CDATA[
 			import controller.Controller;
@@ -70,7 +68,7 @@
 					clienteVO.password = auxCliente.password;
 					clienteVO.empresa = auxCliente.empresa;
 				}
-					
+				
 			}
 			
 			private function fnActualizaGrilla(item:ClienteVO):void{
@@ -123,101 +121,110 @@
 	<fx:Binding source="txtPassword.text" destination="clienteVO.password" twoWay="true"/>
 	<fx:Binding source="txtEmpresa.text" destination="clienteVO.empresa" twoWay="true"/>
 	<fx:Binding source="txtFiltro.text" destination="modelApp.clientesFilter" twoWay="true"/>
-	<s:layout>
-		<s:HorizontalLayout/>
-	</s:layout>
-	<components:CustomPanelSpark title="Clientes" width="20%" height="100%" color="#eeeeee" imgBl="true">
-		<s:Form height="100%" width="100%">
-			<s:FormItem label="ID" width="100%" height="30">
-				<s:Label id="idLbl" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Rut" width="100%" height="30">
-				<s:TextInput id="txtRut" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Nombres" width="100%" height="30">
-				<s:TextInput id="txtNombres" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Apellidos" width="100%" height="30">
-				<s:TextInput id="txtApellidos" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Email" width="100%" height="30">
-				<s:TextInput id="txtEmail" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Sucursal" width="100%" height="30">
-				<s:ComboBox id="cmbSucursal" color="#333333" skinClass="assets.skins.ComboBoxLVSkin" dataProvider="{modelApp.arrSucursales}" labelField="sucursal" width="100%" height="30"></s:ComboBox>
-			</s:FormItem>
-			<s:FormItem label="Teléfono" width="100%" height="30">
-				<s:TextInput id="txtTelefono" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Anexo" width="100%" height="30">
-				<s:TextInput id="txtAnexo" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Unidad" width="100%" height="30">
-				<s:TextInput id="txtUnidad" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Rótulo" width="100%" height="30">
-				<s:TextInput id="txtRotulo" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Dirección ip" width="100%" height="30">
-				<s:TextInput id="txtIp" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Gerencia" width="100%" height="30">
-				<s:TextInput id="txtGerencia" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Password" width="100%" height="30">
-				<s:TextInput id="txtPassword" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="Empresa" width="100%" height="30">
-				<s:TextInput id="txtEmpresa" width="100%" height="30"/>
-			</s:FormItem>
-			<s:FormItem label="" width="100%" height="50">
-				<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{clienteVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarCliente(event)" width="100%" height="50" skinClass="assets.skins.ButtonSendLVSkin"/>
-			</s:FormItem>
-			<s:FormItem label="" width="100%" height="50">
-				<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo Cliente" click="fnNuevoCliente(event)" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
-			</s:FormItem>
-			<s:FormItem label="" width="100%" height="50">
-				<s:Button id="btnEliminar" color="white" fontWeight="bold" label="Eliminar" click="fnOperarCliente(event)" enabled="false" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
-			</s:FormItem>
-			
-		</s:Form>	
-	</components:CustomPanelSpark>
-	<s:VGroup width="100%" height="100%">
-		<s:Group>
-			<s:Rect width="100%" height="100%">
-				<s:fill>
-					<s:SolidColor color="#333333"/>
-				</s:fill>
-			</s:Rect>
-			<s:HGroup paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
-				<s:Label text="Filtro"/>
-				<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
-			</s:HGroup>
-		</s:Group>
-		<s:DataGrid id="dgClientes" width="100%" height="600" skinClass="assets.skins.CustomDataGrid2Skin"
-					requestedRowCount="4" dataProvider="{modelApp.arrClientes}" gridClick="fnSelectCliente(event)"
-					rowHeight="35" resizableColumns="false">
-			<s:columns>
-				<s:ArrayList>
-					<s:GridColumn dataField="id" headerText="id"></s:GridColumn>
-					<s:GridColumn dataField="rut" headerText="rut"></s:GridColumn>
-					<s:GridColumn dataField="nombres" headerText="nombres"></s:GridColumn>
-					<s:GridColumn dataField="apellidos" headerText="apellidos"></s:GridColumn>
-					<s:GridColumn dataField="email" headerText="email"></s:GridColumn>
-					<s:GridColumn dataField="sucursalVO.sucursal" headerText="sucursal"></s:GridColumn>
-					<s:GridColumn dataField="telefono" headerText="telefono"></s:GridColumn>
-					<s:GridColumn dataField="anexo" headerText="anexo"></s:GridColumn>
-					<s:GridColumn dataField="unidad" headerText="unidad"></s:GridColumn>
-					<s:GridColumn dataField="rotulo" headerText="rotulo"></s:GridColumn>
-					<s:GridColumn dataField="dir_ip" headerText="dir_ip"></s:GridColumn>
-					<s:GridColumn dataField="gerencia" headerText="gerencia"></s:GridColumn>
-					<s:GridColumn dataField="password" headerText="password"></s:GridColumn>
-					<s:GridColumn dataField="empresa" headerText="empresa"></s:GridColumn>
-				</s:ArrayList>
-			</s:columns>
-			
-		</s:DataGrid>
-	</s:VGroup>
-	
-	
-</s:Group>
+	<s:Group 
+		width="100%" height="100%" xmlns:skins="assets.skins.*" xmlns:components="components.*"
+		>
+		
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<components:CustomPanelSpark title="Clientes" width="20%" color="#eeeeee" imgBl="true">
+			<s:Form width="100%">
+				<s:FormItem label="ID" width="100%" height="30">
+					<s:Label id="idLbl" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Rut" width="100%" height="30">
+					<s:TextInput id="txtRut" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Nombres" width="100%" height="30">
+					<s:TextInput id="txtNombres" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Apellidos" width="100%" height="30">
+					<s:TextInput id="txtApellidos" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Email" width="100%" height="30">
+					<s:TextInput id="txtEmail" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Sucursal" width="100%" height="30">
+					<s:ComboBox id="cmbSucursal" color="#333333" skinClass="assets.skins.ComboBoxLVSkin" dataProvider="{modelApp.arrSucursales}" labelField="sucursal" width="100%" height="30"></s:ComboBox>
+				</s:FormItem>
+				<s:FormItem label="Teléfono" width="100%" height="30">
+					<s:TextInput id="txtTelefono" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Anexo" width="100%" height="30">
+					<s:TextInput id="txtAnexo" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Unidad" width="100%" height="30">
+					<s:TextInput id="txtUnidad" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Rótulo" width="100%" height="30">
+					<s:TextInput id="txtRotulo" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Dirección ip" width="100%" height="30">
+					<s:TextInput id="txtIp" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Gerencia" width="100%" height="30">
+					<s:TextInput id="txtGerencia" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Password" width="100%" height="30">
+					<s:TextInput id="txtPassword" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Empresa" width="100%" height="30">
+					<s:TextInput id="txtEmpresa" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="" width="100%" height="50">
+					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{clienteVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarCliente(event)" width="100%" height="50" skinClass="assets.skins.ButtonSendLVSkin"/>
+				</s:FormItem>
+				<s:FormItem label="" width="100%" height="50">
+					<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo Cliente" click="fnNuevoCliente(event)" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
+				</s:FormItem>
+				<s:FormItem label="" width="100%" height="50">
+					<s:Button id="btnEliminar" color="white" fontWeight="bold" label="Eliminar" click="fnOperarCliente(event)" enabled="false" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
+				</s:FormItem>
+				
+			</s:Form>	
+		</components:CustomPanelSpark>
+		<components:CustomPanelSpark title="Lista de clientes generados" width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" paddingLeft="10" paddingRight="10">
+				<s:Group width="100%">
+					<s:Rect width="100%" height="100%">
+						<s:fill>
+							<s:SolidColor color="#333333"/>
+						</s:fill>
+					</s:Rect>
+					<s:HGroup color="#fefefe" verticalAlign="middle" width="100%" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
+						<s:Label text="Filtro" fontWeight="bold"/>
+						<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
+					</s:HGroup>
+				</s:Group>
+				<s:DataGrid id="dgClientes" width="100%" height="100%" 
+							requestedRowCount="4" dataProvider="{modelApp.arrClientes}" gridClick="fnSelectCliente(event)"
+							rowHeight="35" resizableColumns="false">
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="id" headerText="id"></s:GridColumn>
+							<s:GridColumn dataField="rut" headerText="rut"></s:GridColumn>
+							<s:GridColumn dataField="nombres" headerText="nombres"></s:GridColumn>
+							<s:GridColumn dataField="apellidos" headerText="apellidos"></s:GridColumn>
+							<s:GridColumn dataField="email" headerText="email"></s:GridColumn>
+							<s:GridColumn dataField="sucursalVO.sucursal" headerText="sucursal"></s:GridColumn>
+							<s:GridColumn dataField="telefono" headerText="telefono"></s:GridColumn>
+							<s:GridColumn dataField="anexo" headerText="anexo"></s:GridColumn>
+							<s:GridColumn dataField="unidad" headerText="unidad"></s:GridColumn>
+							<s:GridColumn dataField="rotulo" headerText="rotulo"></s:GridColumn>
+							<s:GridColumn dataField="dir_ip" headerText="dir_ip"></s:GridColumn>
+							<s:GridColumn dataField="gerencia" headerText="gerencia"></s:GridColumn>
+							<s:GridColumn dataField="password" headerText="password"></s:GridColumn>
+							<s:GridColumn dataField="empresa" headerText="empresa"></s:GridColumn>
+						</s:ArrayList>
+					</s:columns>
+					
+				</s:DataGrid>
+			</s:VGroup>	
+		</components:CustomPanelSpark>
+		
+		
+		
+	</s:Group>	
+</s:Scroller>
+

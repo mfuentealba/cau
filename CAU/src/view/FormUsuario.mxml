@@ -259,7 +259,7 @@
 	</components:CustomPanelSpark>
 	
 	<components:CustomPanelSpark title="Lista de usuarios generados" width="100%" height="100%">
-		<s:VGroup width="100%" height="100%">
+		<s:VGroup width="100%" height="100%" paddingLeft="10" paddingRight="10">
 			<s:Group width="100%">
 				<s:Rect width="100%" height="100%">
 					<s:fill>
