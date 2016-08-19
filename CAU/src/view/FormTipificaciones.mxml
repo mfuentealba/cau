@@ -1,29 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:view="view.*">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:components="components.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:HGroup>
-		<s:ButtonBar dataProvider="{vsTipificacion}">
-			<s:layout>
-				<s:VerticalLayout/>
-			</s:layout>
-		</s:ButtonBar>  
-		<mx:ViewStack id="vsTipificacion">
-			<s:NavigatorContent label="Clasificación">
-				<view:FormClasificacion width="100%" height="100%"/>
-			</s:NavigatorContent>
-			<s:NavigatorContent label="Categorías">
+	<fx:Script>
+		<![CDATA[
+			import components.PopupCategorias;
+			
+			import controller.Controller;
+			
+			import event.MantenedoresEvent;
+			
+			import model.ModelApp;
+			
+			import mx.collections.ArrayCollection;
+			import mx.managers.PopUpManager;
+			
+			import spark.events.GridEvent;
+			
+			import vo.ClasificacionVO;
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			[Bindable] private var clasificacionVO:ClasificacionVO = new ClasificacionVO();
+			protected function fnBuscarCategoriasAsociadas(evento:GridEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(evento.rowIndex > -1){
+					var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, dgClasificacion.selectedItem);
+					Controller.getInstance().dispatchEvent(manEvent);
+					
+				}
 				
-			</s:NavigatorContent>
-			<s:NavigatorContent label="Subcategorías">
+			}
+			
+			
+			private function fnActualizaGrilla(item:*):void{
+				var auxClasificacion:ClasificacionVO = dgClasificacion.selectedItem as ClasificacionVO;
+				auxClasificacion.NombreClasificacion = item.NombreClasificacion;
+			}
+			
+			private function fnActualizaData(auxClasificacionVO:ClasificacionVO):void{				
+				clasificacionVO.idClasificacion = auxClasificacionVO.idClasificacion; 
+				clasificacionVO.NombreClasificacion = auxClasificacionVO.NombreClasificacion;
+				clasificacionVO.arrCategoriasIn = auxClasificacionVO.arrCategoriasIn;
+				clasificacionVO.arrCategoriasOut = auxClasificacionVO.arrCategoriasOut;
+				auxClasificacionVO.arrCategoriasIn.refresh();
+				auxClasificacionVO.arrCategoriasOut.refresh();
+			}
+			
+			protected function fnPopCategorias(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:PopupCategorias = new PopupCategorias();
+				pop.clasificacionVO = ClasificacionVO(dgClasificacion.selectedItem);
+				pop.fnActualizaData = fnActualizaData;
+				PopUpManager.addPopUp(pop, this.parentApplication as CAU, true);
+				PopUpManager.centerPopUp(pop);
+			}
+			
+			protected function fnEliminarNoSeleccionadas(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var arr:Array = [];
+				for each(var obj:Object in clasificacionVO.arrCategoriasIn){
+					if(obj.sel == false){
+						arr.push(obj['obj']['idCategoria']);	
+					}
+					
+				}
 				
-			</s:NavigatorContent>
-			<s:NavigatorContent label="Problemas">
+				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS, fnActualizaData, [dgClasificacion.selectedItem, arr]);
+				Controller.getInstance().dispatchEvent(manEvent);	
+			}
+			
+			protected function fnNuevaClasificacion(event:*):void
+			{
+				// TODO Auto-generated method stub				
+				clasificacionVO = new ClasificacionVO();
+				dgClasificacion.selectedItem = null;
+				modelApp.arrClasificacion.refresh();
+				btnEnviar.label = 'Crear';
+			}
+			
+			/*private function set fnIdClas(val:int):void{
+				idLbl.text = val + '';	
+			}*/
+			
+			
+			protected function fnOperarClasificacion(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var mantenedoresEvent:MantenedoresEvent;
+				switch(evento.target){
+					case btnEnviar:
+						if(btnEnviar.label == 'Crear'){
+							
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.CREAR_CLASIFICACION, fnNuevaClasificacion, [clasificacionVO, modelApp.arrClasificacion]);						
+						} else {
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.MODIFICAR_CLASIFICACION, fnActualizaGrilla, [clasificacionVO, modelApp.arrClasificacion]);
+						}
+						
+						break;
+					case btnEliminar:
+						mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION, fnRemueveGrilla, [dgClasificacion.selectedItem, modelApp.arrClasificacion]);
+						
+						break;
+				}
 				
-			</s:NavigatorContent>
-		</mx:ViewStack>
-	</s:HGroup>
+				Controller.getInstance().dispatchEvent(mantenedoresEvent);
+			}	
+			
+			private function fnRemueveGrilla(id:String):void{
+				var auxClasificacionVO:ClasificacionVO = dgClasificacion.selectedItem as ClasificacionVO;
+				auxClasificacionVO.arrCategoriasIn = null;
+				auxClasificacionVO.arrCategoriasOut = null;
+				modelApp.arrClasificacion.removeItemAt(modelApp.arrClasificacion.getItemIndex(auxClasificacionVO));
+				fnNuevaClasificacion(null);
+			}
+			
+		]]>
+	</fx:Script>
+	<!--<fx:Binding source="clasificacionVO.idClasificacion" destination="fnIdClas"/>-->
+	<fx:Binding source="txtNombre.text" destination="clasificacionVO.NombreClasificacion" twoWay="true"/>
+	
+	<s:VGroup width="100%" height="100%">
+		<s:HGroup gap="15" width="100%" height="40%">
+			<components:CustomPanelSpark skinClass="assets.skins.CustomPanelBlancoSkin" title="{dgClasificacion.selectedIndex > -1 ? 'Actualizar Id: ' + clasificacionVO.idClasificacion : 'Nuevo'}" width="40%"  height="100%">
+				<s:Form defaultButton="{btnEnviar}" width="100%">
+					<!--<s:FormItem label="Id" width="100%" height="30">
+						<s:Label id="idLbl" />
+					</s:FormItem>-->
+					<s:FormItem label="Nombre" width="100%" height="30">
+						<s:TextInput id="txtNombre" height="30" width="150"/>
+					</s:FormItem>
+					<s:FormItem width="100%" height="30">
+						<s:Button id="btnEnviar" label="{clasificacionVO.idClasificacion == 0 ? 'Crear' : 'Actualizar'}" click="fnOperarClasificacion(event)" skinClass="assets.skins.CustomButtonEnviar" width="150" height="30"/>	
+					</s:FormItem>
+					<s:FormItem width="100%" height="30">
+						<s:Button id="btnNuevo" label="Nueva Clasificación" click="fnNuevaClasificacion(event)" skinClass="assets.skins.CustomButtonTransparenteSkin" width="150" height="30"/>	
+					</s:FormItem>
+					<s:FormItem width="100%" height="30">
+						<s:Button id="btnEliminar" label="Eliminar" click="fnOperarClasificacion(event)" skinClass="assets.skins.CustomButtonTransparenteSkin" width="150" height="30"/>	
+					</s:FormItem>
+				</s:Form>	
+			</components:CustomPanelSpark>
+			
+			<components:CustomPanelSpark title="Existentes" width="100%"  height="100%">
+				<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="20">						
+					<s:DataGrid id="dgClasificacion" dataProvider="{modelApp.arrClasificacion}" gridClick="fnBuscarCategoriasAsociadas(event)" width="100%" height="100%">
+						<s:columns>
+							<s:ArrayList>
+								<s:GridColumn dataField="idClasificacion" headerText="Id"/>
+								<s:GridColumn dataField="NombreClasificacion" headerText="Nombre"/>	
+							</s:ArrayList>
+						</s:columns>
+					</s:DataGrid>
+				</s:VGroup> 	
+			</components:CustomPanelSpark>
+			
+		</s:HGroup>
+		<components:CustomPanelSpark id="cpAsociados" title="Categorias Asociadas" width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="20">
+				<s:HGroup width="50%">
+					<s:Button label="Agregar Categorias" click="fnPopCategorias(event)" width="100%"/>
+					<s:Button label="Eliminar no seleccionadas" click="fnEliminarNoSeleccionadas(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
+					
+				</s:HGroup>
+				<s:DataGrid id="lstCategorias" dataProvider="{dgClasificacion.selectedItem.arrCategoriasIn}" width="100%" height="100%">
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="obj.NombreCategoria" headerText="Nombre"/>
+							<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel" width="30"/>	
+						</s:ArrayList>
+					</s:columns>
+				</s:DataGrid>
+				
+				
+				
+			</s:VGroup>
+		</components:CustomPanelSpark>
+	</s:VGroup>
+	
 </s:Group>

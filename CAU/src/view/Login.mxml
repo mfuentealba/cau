@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="600">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="800" height="600" color="#444444">
 	
 	<fx:Script>
 		<![CDATA[
@@ -31,23 +31,38 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Panel width="357" title="Login" horizontalCenter="0" verticalCenter="0" color="#444444">
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center" paddingTop="30"/>
+	</s:layout>
+	<s:Image source="@Embed('assets/imgs/logo.png')"/>
+	<s:Label text="Bienvenido a Sistema de Gestión de Incidencias" fontWeight="bold" fontSize="14"/>
+	<s:Label/>
+	<s:Label text="Desde este sistema podrá gestionar el que hacer diario"/>
+	<s:Label text="dependiendo del perfil que posea"/>
+	<s:Label text="etc."/>
+	<s:Label/>
+	<s:Label text="Debe ingresar su usuario y password."/>
+	<!--<s:Label text="User" fontWeight="bold"/>-->
+	<s:TextInput id="txtUser" prompt="Ingrese Username" text="pzambrt" width="300"/>
+	<!--<s:Label text="Password" fontWeight="bold"/>-->
+	<s:TextInput id="txtPass" displayAsPassword="true" prompt="Ingrese contraseña" text="12345678" width="300"/>
+	<s:CheckBox id="chkPass" label="Recordar Contraseña"/>
+	<s:Button label="Ingresar" click="fnIngresar(event)" width="{txtUser.width}"/>
+	<s:Label/>
+	<s:VGroup fontSize="12">
+		<mx:LinkButton label="Recuperar contraseña" color="#33a2d9"/>
+		<s:Label text="No tiene cuenta de usuario"/>	
+	</s:VGroup>
+	
+	<s:Button id="btnRegistrar" label="Registrarse" skinClass="assets.skins.ButtonCleanLVSkin" width="{txtUser.width}"/>
+	
+	<!--<s:Panel width="357" title="Login" horizontalCenter="0" verticalCenter="0" color="#444444">
 		<s:layout>
 			<s:VerticalLayout paddingTop="15" paddingLeft="15" paddingBottom="20"/>
 		</s:layout>
 		
-		<s:Label text="User" fontWeight="bold"/>
-		<s:TextInput id="txtUser" prompt="Ingrese Username" text="pzambrt"/>
-		<s:Label text="Password" fontWeight="bold"/>
-		<s:TextInput id="txtPass" displayAsPassword="true" prompt="Ingrese contraseña" text="12345678"/>
-		<s:CheckBox id="chkPass" label="Recordar Contraseña"/>
 		
-		<mx:LinkButton id="btnRegistrar" label="Registrarse"/>
-		<s:HGroup>
-			<s:Button x="34" y="145" label="Ingresar" click="fnIngresar(event)"/>
-			<mx:LinkButton x="146" y="149" label="Recuperar contraseña"/>	
-		</s:HGroup>
 		
-	</s:Panel>
+	</s:Panel>-->
 	
 </s:Group>

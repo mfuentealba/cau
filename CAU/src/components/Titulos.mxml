@@ -16,6 +16,7 @@
 			import mx.controls.LinkButton;
 			[Bindable] public var strBreadcrumb:Array;
 			[Bindable] public var titulo:String;
+			public var fnLinkExt:Function;
 			
 			
 			private function set fnBreadcrumb(val:Array):void{
@@ -40,6 +41,7 @@
 			}
 			
 			private function fnLink(evento:MouseEvent):void{
+				fnLinkExt.call(this, evento);
 				switch(evento){
 					
 				}
