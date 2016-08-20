@@ -17,6 +17,13 @@ package event
 		public static const CREAR_CLASIFICACION:String = 'saveClasificacion';
 		public static const MODIFICAR_CLASIFICACION:String = 'updateClasificacion';
 		public static const ELIMINAR_CLASIFICACION:String = 'deleteClasificacion';
+		
+		public static const BUSCA_SUBCATEGORIAS_ASOCIADAS:String = 'getCategoriaSubcategoria';
+		public static const AGREGAR_SUBCATEGORIAS:String = 'setCategoriaSubcategoria';
+		public static const ELIMINAR_CATEGORIA_SUBCATEGORIA:String = 'removeCategoriaSubcategoria';
+		public static const CREAR_CATEGORIA:String = 'saveCategoria';
+		public static const MODIFICAR_CATEGORIA:String = 'updateCategoria';
+		public static const ELIMINAR_CATEGORIA:String = 'deleteCategoria';
 		/*public static const MODIFICAR:String = 'updateSucursales';
 		public static const ELIMINAR:String = 'deleteSucursales';*/
 		

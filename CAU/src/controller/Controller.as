@@ -72,6 +72,13 @@ package controller
 			addEventListenerNew(MantenedoresEvent.CREAR_CLASIFICACION, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.ELIMINAR_CLASIFICACION, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.MODIFICAR_CLASIFICACION, MantenedorListener);
+			
+			addEventListenerNew(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.AGREGAR_SUBCATEGORIAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.CREAR_CATEGORIA, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.ELIMINAR_CATEGORIA, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.MODIFICAR_CATEGORIA, MantenedorListener);
 		}	
 	}
 }
