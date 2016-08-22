@@ -266,6 +266,73 @@ class MantenedorService {
 	}
 	
 	
+	public function getAllTiempoSolucion() {
+		//echo "hfdfgjsfgskdf";
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  TiempoSolucion");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$rows = array();
+		//$rows = new stdClass();
+		$row = new stdClass();
+		mysqli_stmt_bind_result($stmt, $row->idTiempoSolucion, $row->descripcion);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      $row = new stdClass();
+		  //$row = new DescripcionVO();
+	      mysqli_stmt_bind_result($stmt, $row->idTiempoSolucion, $row->descripcion);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		return $rows;
+		//return $resp;
+	}
+	
+	
+	public function getAllFormaAtencion() {
+		//echo "hfdfgjsfgskdf";
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  FormaAtencion");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$rows = array();
+		$row = new stdClass();
+		//$row = new DescripcionVO();
+		mysqli_stmt_bind_result($stmt, $row->idFormaAtencion, $row->descripcion);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      $row = new stdClass();
+		  //$row = new DescripcionVO();
+	      mysqli_stmt_bind_result($stmt, $row->idFormaAtencion, $row->descripcion);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		return $rows;
+		//return $resp;
+	}
+	
 	
 	
 	
@@ -311,6 +378,91 @@ FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria =
 		return $rows;
 		//return $resp;
 	}
+	
+	
+	
+	public function getCategoriaSubcategorias($id, $idClas) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"NombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
+		//echo "hfdfgjsfgskdf";
+		$stmt = mysqli_prepare($this->connection, "SELECT c.idSubCategoria, case when idCategoria is null then 0 else 1 end sel 
+FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcategoria = asoc.idsubcategoria and asoc.idcategoria = ?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 's', $id);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$rows = array();
+		//$rows = new stdClass();
+		//$row = new CategoriaVO();
+		$row = new stdClass();
+		mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->sel);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      //$row = new stdClass();
+		  $row = new stdClass();
+	      mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->sel);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		return $rows;
+		//return $resp;
+	}
+	
+	public function getSubcategoriaProblemas($id, $idCat, $idClas) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"NombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
+		//echo "hfdfgjsfgskdf";
+		$stmt = mysqli_prepare($this->connection, "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
+FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = ?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 's', $id);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$rows = array();
+		//$rows = new stdClass();
+		//$row = new CategoriaVO();
+		$row = new stdClass();
+		mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->sel);
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  //$rows->{$row->id} = $row;
+	      //$row = new stdClass();
+		  $row = new stdClass();
+	      mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->sel);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		return $rows;
+		//return $resp;
+	}
+	
 	
 	
 	public function setClasificacionCategorias($id, $arr) {
@@ -399,6 +551,107 @@ FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria =
 		$row2 = new ClasificacionVO();
 		$row2->idClasificacion = $autoid;
 		$row2->NombreClasificacion = $row;
+		return $row2;
+	}
+	
+	public function saveCategoria($row) {
+		//return 0;
+
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO Categoria (NombreCategoria) VALUES (?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		/*$item->sucursal = 'hola';
+		$item->direccion = 'hola';*/
+		
+		mysqli_stmt_bind_param($stmt, 's', $row);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg . " ----" . $row;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg . " ----" . $row;
+		}
+
+		$autoid = mysqli_stmt_insert_id($stmt);
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row2 = new CategoriaVO();
+		$row->idCategoria = $autoid;
+		$row2->NombreCategoria = $row;
+		return $row2;
+	}
+	
+	
+	public function saveSubCategoria($row) {
+		//return 0;
+
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO subcategoria (Nombresubcategoria) VALUES (?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 's', $row);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg . " ----" . $row;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg . " ----" . $row;
+		}
+
+		$autoid = mysqli_stmt_insert_id($stmt);
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row2 = new SubCategoriaVO();
+		$row2->idSubCategoria = $autoid;
+		$row2->NombreSubCategoria = $row;
+		return $row2;
+	}
+	
+	
+	public function saveProblemas($row, $idFormaAtencion, $idTiempoSolucion) {
+		//return 0;
+
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO descripcion (NombreDescripcion, idFormaAtencion, idTiempoSolucion) VALUES (?,?,?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		
+		mysqli_stmt_bind_param($stmt, 'sii', $row, $idFormaAtencion, $idTiempoSolucion);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg . " ----" . $row;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg . " ----" . $row;
+		}
+
+		$autoid = mysqli_stmt_insert_id($stmt);
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row2 = new DescripcionVO();
+		$row2->idDescripcion = $autoid;
+		$row2->NombreDescripcion = $row;
+		$row2->idDescripcion = $idFormaAtencion; 
+		$row2->NombreDescripcion = $idTiempoSolucion;
 		return $row2;
 	}
 	

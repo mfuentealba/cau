@@ -66,6 +66,9 @@ package controller
 			addEventListenerNew(MantenedoresEvent.LISTAR_CATEGORIAS, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.LISTAR_SUBCATEGORIAS, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.LISTAR_DESCRIPCION, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.LISTAR_TIEMPO_SOLUCION, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.LISTAR_FORMA_ATENCION, MantenedorListener);
+			
 			addEventListenerNew(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.AGREGAR_CATEGORIAS, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS, MantenedorListener);
@@ -79,6 +82,17 @@ package controller
 			addEventListenerNew(MantenedoresEvent.CREAR_CATEGORIA, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.ELIMINAR_CATEGORIA, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.MODIFICAR_CATEGORIA, MantenedorListener);
+			
+			addEventListenerNew(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.AGREGAR_PROBLEMAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.CREAR_SUBCATEGORIAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.ELIMINAR_SUBCATEGORIAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.MODIFICAR_SUBCATEGORIAS, MantenedorListener);
+			
+			addEventListenerNew(MantenedoresEvent.CREAR_PROBLEMAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.ELIMINAR_PROBLEMAS, MantenedorListener);
+			addEventListenerNew(MantenedoresEvent.MODIFICAR_PROBLEMAS, MantenedorListener);
 		}	
 	}
 }

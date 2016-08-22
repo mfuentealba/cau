@@ -43,10 +43,10 @@
 			private function fnActualizaData(auxClasificacionVO:ClasificacionVO):void{				
 				clasificacionVO.idClasificacion = auxClasificacionVO.idClasificacion; 
 				clasificacionVO.NombreClasificacion = auxClasificacionVO.NombreClasificacion;
-				clasificacionVO.arrCategoriasIn = auxClasificacionVO.arrCategoriasIn;
-				clasificacionVO.arrCategoriasOut = auxClasificacionVO.arrCategoriasOut;
-				auxClasificacionVO.arrCategoriasIn.refresh();
-				auxClasificacionVO.arrCategoriasOut.refresh();
+				clasificacionVO.arrAsociadosIn = auxClasificacionVO.arrAsociadosIn;
+				clasificacionVO.arrAsociadosOut = auxClasificacionVO.arrAsociadosOut;
+				auxClasificacionVO.arrAsociadosIn.refresh();
+				auxClasificacionVO.arrAsociadosOut.refresh();
 			}
 			
 			protected function fnPopCategorias(event:MouseEvent):void
@@ -63,7 +63,7 @@
 			{
 				// TODO Auto-generated method stub
 				var arr:Array = [];
-				for each(var obj:Object in clasificacionVO.arrCategoriasIn){
+				for each(var obj:Object in clasificacionVO.arrAsociadosIn){
 					if(obj.sel == false){
 						arr.push(obj['obj']['idCategoria']);	
 					}
@@ -113,8 +113,8 @@
 			
 			private function fnRemueveGrilla(id:String):void{
 				var auxClasificacionVO:ClasificacionVO = dgClasificacion.selectedItem as ClasificacionVO;
-				auxClasificacionVO.arrCategoriasIn = null;
-				auxClasificacionVO.arrCategoriasOut = null;
+				auxClasificacionVO.arrAsociadosIn = null;
+				auxClasificacionVO.arrAsociadosOut = null;
 				modelApp.arrClasificacion.removeItemAt(modelApp.arrClasificacion.getItemIndex(auxClasificacionVO));
 				fnNuevaClasificacion(null);
 			}

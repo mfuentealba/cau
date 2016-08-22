@@ -48,7 +48,8 @@ package model
 		public var usuarioActivo:UserVO;
 		//public var grupoResolutorFilter:String;
 		
-		
+		public var arrFormaAtencion:ArrayCollection;
+		public var arrTiemposolucion:ArrayCollection;
 		
 		
 		

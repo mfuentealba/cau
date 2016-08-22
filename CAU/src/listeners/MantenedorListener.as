@@ -13,6 +13,7 @@ package listeners
 	import mx.controls.Alert;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.ResultEvent;
+	import mx.rpc.remoting.Operation;
 	import mx.rpc.remoting.RemoteObject;
 	
 	import services.CustomRemoteObject;
@@ -67,25 +68,37 @@ package listeners
 					rmtObj.getAllDescripcion();
 					
 					break;
+				case MantenedoresEvent.LISTAR_TIEMPO_SOLUCION:
+					trace("LISTAR_TIEMPO_SOLUCION_INI");
+					rmtObj[evento.type].send();
+					
+					break;
+				case MantenedoresEvent.LISTAR_FORMA_ATENCION:
+					trace("LISTAR_FORMA_ATENCION_INI");
+					rmtObj[evento.type].send();
+					
+					break;
+				
+				/***************************************************************/
 				
 				case MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS:
 					trace("BUSCA_CATEGORIAS_ASOCIADAS_INI");
 					var str:String = com.adobe.serialization.json.JSON.encode(evento.item);
-					rmtObj.getClasificacionCategorias(evento.item.idClasificacion);
-					rmtObj.item = evento.item;
+					rmtObj[evento.type].send(evento.item.idClas.idClasificacion);
+					rmtObj.item = evento.item['idClas'];
 					rmtObj.callback = evento.callback;
 					break;
 				case MantenedoresEvent.AGREGAR_CATEGORIAS:
 					trace("AGREGAR_CATEGORIAS_INI");
 					
-					rmtObj.setClasificacionCategorias(evento.item[0].idClasificacion, evento.item[1]);
+					rmtObj[evento.type].send(evento.item[0].idClasificacion, evento.item[1]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					break;
 				case MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS:
 					trace("ELIMINAR_CATEGORIAS_INI");
 					
-					rmtObj.removeClasificacionCategorias(evento.item[0].idClasificacion, evento.item[1]);
+					rmtObj[evento.type].send(evento.item[0].idClasificacion, evento.item[1]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					break;
@@ -93,7 +106,7 @@ package listeners
 				case MantenedoresEvent.CREAR_CLASIFICACION:
 					var obj:Object = {idClasificacion: evento.item[0].idClasificacion, NombreClasificacion: evento.item[0].NombreClasificacion};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj.saveClasificacion(evento.item[0].NombreClasificacion);
+					Operation(rmtObj[evento.type]).send(evento.item[0].NombreClasificacion);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -101,13 +114,13 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_CLASIFICACION:
 					obj = {idClasificacion: evento.item[0].idClasificacion, NombreClasificacion: evento.item[0].NombreClasificacion};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj.updateClasificacion([evento.item[0].idClasificacion, evento.item[0].NombreClasificacion]);
+					rmtObj[evento.type].send([evento.item[0].idClasificacion, evento.item[0].NombreClasificacion]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
 					break;
 				case MantenedoresEvent.ELIMINAR_CLASIFICACION:
-					rmtObj.deleteClasificacion(evento.item[0].idClasificacion);
+					rmtObj[evento.type].send(evento.item[0].idClasificacion);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -116,50 +129,134 @@ package listeners
 				case MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS:
 					trace("BUSCA_SUBCATEGORIAS_ASOCIADAS");
 					str = com.adobe.serialization.json.JSON.encode(evento.item);
-					rmtObj.getCategoriaSubcategoria(evento.item.idCategoria);
-					rmtObj.item = evento.item;
+					rmtObj[evento.type].send(evento.item.idCategoria.obj.idCategoria, evento.item.idClas);
+					rmtObj.item = evento.item['idCategoria']['obj'];
 					rmtObj.callback = evento.callback;
 					break;
 				case MantenedoresEvent.AGREGAR_SUBCATEGORIAS:
 					trace("AGREGAR_SUBCATEGORIAS");
 					
-					rmtObj.setCategoriaSubcategoria(evento.item[0].idCategoria, evento.item[1]);
+					rmtObj[evento.type].send(evento.item[0].idCategoria, evento.item[1]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					break;
 				case MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA:
 					trace("ELIMINAR_CATEGORIA_SUBCATEGORIA");
 					
-					rmtObj.removeCategoriaSubcategoria(evento.item[0].idCategoria, evento.item[1]);
+					rmtObj[evento.type].send(evento.item[0].idCategoria, evento.item[1]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					break;
 				
 				case MantenedoresEvent.CREAR_CATEGORIA:
+					trace("CREAR_CATEGORIA");
 					obj = {idCategoria: evento.item[0].idCategoria, NombreCategoria: evento.item[0].NombreCategoria};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj.saveCategoria(evento.item[0].NombreCategoria);
+					rmtObj[evento.type].send(evento.item[0].NombreCategoria);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
 					break;
 				case MantenedoresEvent.MODIFICAR_CATEGORIA:
+					trace("MODIFICAR_CATEGORIA");
 					obj = {idCategoria: evento.item[0].idCategoria, NombreCategoria: evento.item[0].NombreCategoria};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj.updateCategoria([evento.item[0].idCategoria, evento.item[0].NombreCategoria]);
+					rmtObj[evento.type].send([evento.item[0].idCategoria, evento.item[0].NombreCategoria]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
 					
 					break;
 				case MantenedoresEvent.ELIMINAR_CATEGORIA:
-					rmtObj.deleteCategoria(evento.item[0].idCategoria);
+					trace("ELIMINAR_CATEGORIA");
+					rmtObj[evento.type].send(evento.item[0].idCategoria);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
 					
 					break;
+				
+				
 				/***************************************/
+				case MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS:
+					trace("BUSCA_SUBCATEGORIAS_ASOCIADAS");
+					str = com.adobe.serialization.json.JSON.encode(evento.item);
+					rmtObj[evento.type].send(evento.item.idSubCategoria.idSubCategoria, evento.item.idCategoria, evento.item.idClas);
+					rmtObj.item = evento.item['idSubCategoria']['obj'];
+					rmtObj.callback = evento.callback;
+					break;
+				case MantenedoresEvent.AGREGAR_PROBLEMAS:
+					trace("AGREGAR_SUBCATEGORIAS");
+					
+					rmtObj[evento.type].send(evento.item[0].idSubCategoria, evento.item[1]);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					break;
+				case MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS:
+					trace("ELIMINAR_CATEGORIA_SUBCATEGORIA");
+					
+					rmtObj[evento.type].send(evento.item[0].idSubCategoria, evento.item[1]);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					break;
+				
+				case MantenedoresEvent.CREAR_SUBCATEGORIAS:
+					obj = {idSubCategoria: evento.item[0].idSubCategoria, NombreSubCategoria: evento.item[0].nombreSubCategoria};
+					str = com.adobe.serialization.json.JSON.encode(obj);
+					rmtObj[evento.type].send(evento.item[0].nombreSubCategoria);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					
+					break;
+				case MantenedoresEvent.MODIFICAR_SUBCATEGORIAS:
+					obj = {idSubCategoria: evento.item[0].idSubCategoria, NombreSubCategoria: evento.item[0].NombreSubCategoria};
+					str = com.adobe.serialization.json.JSON.encode(obj);
+					rmtObj[evento.type].send([evento.item[0].idSubCategoria, evento.item[0].NombreSubCategoria]);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					
+					
+					break;
+				case MantenedoresEvent.ELIMINAR_SUBCATEGORIAS:
+					rmtObj[evento.type].send(evento.item[0].idSubCategoria);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					
+					
+					break;
+				
+				
+				
+				
+				/***************************************/
+				case MantenedoresEvent.CREAR_PROBLEMAS:
+					obj = {idDescripcion: evento.item[0].idDescripcion, nombreDescripcion: evento.item[0].nombreDescripcion};
+					str = com.adobe.serialization.json.JSON.encode(obj);
+					rmtObj[evento.type].send(evento.item[0].nombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					
+					break;
+				case MantenedoresEvent.MODIFICAR_PROBLEMAS:
+					obj = {idCategoria: evento.item[0].idCategoria, nombreCategoria: evento.item[0].nombreCategoria};
+					str = com.adobe.serialization.json.JSON.encode(obj);
+					rmtObj[evento.type].send([evento.item[0].idDescripcion, evento.item[0].NombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion]);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					
+					
+					break;
+				case MantenedoresEvent.ELIMINAR_PROBLEMAS:
+					rmtObj[evento.type].send(evento.item[0].idDescripcion);
+					rmtObj.item = evento.item[0];
+					rmtObj.callback = evento.callback;
+					
+					
+					break;
+				
+				/***************************************/
+				
+				
 				/*case MantenedoresEvent.MODIFICAR:
 					modelApp.rmtObjSucursales.updateSucursales(evento.sucursalVO);
 					
@@ -174,6 +271,11 @@ package listeners
 		
 		public static function result(data:ResultEvent):void
 		{
+			var objTipificacion:Object = {CLASIFICACION:{arrIn : 'arrAsociadosIn', arrOut: 'arrAsociadosOut', idPrincipal: 'idClasificacion', id: 'idCategoria', obj: 'objCategoria', arr: 'arrClasificacion'},
+											CATEGORIAS: {arrIn : 'arrAsociadosIn', arrOut: 'arrAsociadosOut', idPrincipal: 'idCategoria', id: 'idSubCategoria', obj: 'objSubCategoria', arr: 'arrCategoria'},
+										 SUBCATEGORIAS: {arrIn : 'arrAsociadosIn', arrOut: 'arrAsociadosOut', idPrincipal: 'idSubCategoria', id: 'idDescripcion', obj: 'objDescripcion', arr: 'arrSubCategoria'},
+										 PROBLEMAS: {id: 'idDescripcion', arr: 'arrDescripcion'}
+										};
 			switch(data.token.message['operation']){
 				case MantenedoresEvent.LISTAR_PERFILES:
 					modelApp.arrPerfiles = new ArrayCollection(data.result as Array);
@@ -207,19 +309,30 @@ package listeners
 					trace("LISTAR_DESCRIPCION");
 					break;
 				
+				case MantenedoresEvent.LISTAR_TIEMPO_SOLUCION:
+					modelApp.arrTiemposolucion = new ArrayCollection(data.result as Array);
+					//modelApp.arrSubCategoria.source.forEach(fnDictSubCategoria);
+					trace("LISTAR_TIEMPO_SOLUCION");
+					break;
+				case MantenedoresEvent.LISTAR_FORMA_ATENCION:
+					modelApp.arrFormaAtencion = new ArrayCollection(data.result as Array);
+					//modelApp.arrDescripcion.source.forEach(fnDictDescripcion);
+					trace("LISTAR_FORMA_ATENCION");
+					break;
 				
-				var objTipificacion:Object = {CLASIFICACION:{arrIn : 'arrCategoriasIn', arrOut: 'arrCategoriasOut', id: 'idCategoria', obj: 'objCategoria'}};
+				
+				/****************************************/
 				case MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS:
 					var opt:String = 'CLASIFICACION';
 					var arr:Array = data.result as Array;
 					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(var obj:* in arr){
-						if(modelApp.objCategoria.hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
 							if(obj['sel'] == 1){
-								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj:modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
+								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 							} else {
-								data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj:modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
+								data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
 							}
 							
 						}
@@ -229,15 +342,16 @@ package listeners
 					trace("BUSCA_CATEGORIAS_ASOCIADAS");
 					break;
 				case MantenedoresEvent.AGREGAR_CATEGORIAS:
+					opt = 'CLASIFICACION';
 					arr = data.result as Array;
-					ClasificacionVO(data.target['item']).arrCategoriasIn = new ArrayCollection();
-					ClasificacionVO(data.target['item']).arrCategoriasOut = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
-						if(modelApp.objCategoria.hasOwnProperty(obj['idCategoria'])){
+						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
 							if(obj['sel'] == 1){
-								ClasificacionVO(data.target['item']).arrCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: true});	
+								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 							} else {
-								ClasificacionVO(data.target['item']).arrCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: false});
+								data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
 							}
 							
 						}
@@ -248,15 +362,16 @@ package listeners
 					break;
 				
 				case MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS:
+					opt = 'CLASIFICACION';
 					arr = data.result as Array;
-					ClasificacionVO(data.target['item']).arrCategoriasIn = new ArrayCollection();
-					ClasificacionVO(data.target['item']).arrCategoriasOut = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
-						if(modelApp.objCategoria.hasOwnProperty(obj['idCategoria'])){
+						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
 							if(obj['sel'] == 1){
-								ClasificacionVO(data.target['item']).arrCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: true});	
+								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 							} else {
-								ClasificacionVO(data.target['item']).arrCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idCategoria']], sel: false});
+								data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
 							}
 							
 						}
@@ -267,9 +382,9 @@ package listeners
 					break;
 				
 				case MantenedoresEvent.CREAR_CLASIFICACION:
-					
-					if(data.result.hasOwnProperty('idClasificacion')){
-						modelApp.arrClasificacion.addItem(data.result);
+					opt = 'CLASIFICACION';
+					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
+						modelApp[objTipificacion[opt]['arr']].addItem(data.result);
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -277,7 +392,8 @@ package listeners
 					
 					break;
 				case MantenedoresEvent.MODIFICAR_CLASIFICACION:
-					if(data.result.hasOwnProperty('idClasificacion')){
+					opt = 'CLASIFICACION';
+					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -285,7 +401,8 @@ package listeners
 					
 					break;
 				case MantenedoresEvent.ELIMINAR_CLASIFICACION:
-					if(data.result == data.target.item.idClasificacion){
+					opt = 'CLASIFICACION';
+					if(data.result == data.target.item[objTipificacion[opt]['idPrincipal']]){
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -296,15 +413,16 @@ package listeners
 				
 				/*********************************************************/
 				case MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS:
+					opt = 'CATEGORIAS';
 					arr = data.result as Array;
-					CategoriaVO(data.target['item']).arrSubCategoriasIn = new ArrayCollection();
-					CategoriaVO(data.target['item']).arrSubCategoriasOut = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
-						if(modelApp.objCategoria.hasOwnProperty(obj['idSubCategoria'])){
+						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
 							if(obj['sel'] == 1){
-								CategoriaVO(data.target['item']).arrSubCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idSubCategoria']], sel: true});	
+								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 							} else {
-								CategoriaVO(data.target['item']).arrSubCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idSubCategoria']], sel: false});
+								data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
 							}
 							
 						}
@@ -314,47 +432,49 @@ package listeners
 					trace("BUSCA_CATEGORIAS_ASOCIADAS");
 					break;
 				case MantenedoresEvent.AGREGAR_SUBCATEGORIAS:
+					opt = 'CATEGORIAS';
 					arr = data.result as Array;
-					CategoriaVO(data.target['item']).arrSubCategoriasIn = new ArrayCollection();
-					CategoriaVO(data.target['item']).arrSubCategoriasOut = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
-						if(modelApp.objCategoria.hasOwnProperty(obj['idSubCategoria'])){
-							if(obj['sel'] == 1){
-								CategoriaVO(data.target['item']).arrSubCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idSubCategoria']], sel: true});	
-							} else {
-								CategoriaVO(data.target['item']).arrSubCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idSubCategoria']], sel: false});
-							}
-							
+					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						if(obj['sel'] == 1){
+							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
+						} else {
+							data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
 						}
-					
+						
 					}
+					
+				}
 					data.target['callback'].call(null, data.target['item']);
 					trace("AGREGAR_CATEGORIAS");
 					break;
 				
 				case MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA:
+					opt = 'CATEGORIAS';
 					arr = data.result as Array;
-					CategoriaVO(data.target['item']).arrSubCategoriasIn = new ArrayCollection();
-					CategoriaVO(data.target['item']).arrSubCategoriasOut = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
-						if(modelApp.objCategoria.hasOwnProperty(obj['idSubCategoria'])){
-							if(obj['sel'] == 1){
-								CategoriaVO(data.target['item']).arrSubCategoriasIn.addItem({obj:modelApp.objCategoria[obj['idSubCategoria']], sel: true});	
-							} else {
-								CategoriaVO(data.target['item']).arrSubCategoriasOut.addItem({obj:modelApp.objCategoria[obj['idSubCategoria']], sel: false});
-							}
-							
+					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						if(obj['sel'] == 1){
+							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
+						} else {
+							data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
 						}
 						
 					}
+					
+				}
 					data.target['callback'].call(null, data.target['item']);
 					trace("ELIMINAR_CATEGORIAS");
 					break;
 				
 				case MantenedoresEvent.CREAR_CATEGORIA:
-					
-					if(data.result.hasOwnProperty('idCategoria')){
-						modelApp.arrClasificacion.addItem(data.result);
+					opt = 'CATEGORIAS';
+					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
+						modelApp[objTipificacion[opt]['arr']].addItem(data.result);
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -362,7 +482,8 @@ package listeners
 					
 					break;
 				case MantenedoresEvent.MODIFICAR_CATEGORIA:
-					if(data.result.hasOwnProperty('idCategoria')){
+					opt = 'CATEGORIAS';
+					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -370,7 +491,8 @@ package listeners
 					
 					break;
 				case MantenedoresEvent.ELIMINAR_CATEGORIA:
-					if(data.result == data.target.item.idCategoria){
+					opt = 'CATEGORIAS';
+					if(data.result == data.target.item[objTipificacion[opt]['idPrincipal']]){
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -379,8 +501,127 @@ package listeners
 					
 					break;
 				/*********************************************************/
+				case MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS:
+					opt = 'SUBCATEGORIAS';
+					arr = data.result as Array;
+					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
+					for each(obj in arr){
+					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						if(obj['sel'] == 1){
+							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
+						} else {
+							data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
+						}
+						
+					}
+					
+				}
+					data.target['callback'].call(null, data.target['item']); 
+					trace("BUSCA_CATEGORIAS_ASOCIADAS");
+					break;
+				case MantenedoresEvent.AGREGAR_PROBLEMAS:
+					opt = 'SUBCATEGORIAS';
+					arr = data.result as Array;
+					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
+					for each(obj in arr){
+					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						if(obj['sel'] == 1){
+							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
+						} else {
+							data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
+						}
+						
+					}
+					
+				}
+					data.target['callback'].call(null, data.target['item']);
+					trace("AGREGAR_CATEGORIAS");
+					break;
+				
+				case MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS:
+					opt = 'SUBCATEGORIAS';
+					arr = data.result as Array;
+					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
+					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
+					for each(obj in arr){
+					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						if(obj['sel'] == 1){
+							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
+						} else {
+							data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
+						}
+						
+					}
+					
+				}
+					data.target['callback'].call(null, data.target['item']);
+					trace("ELIMINAR_CATEGORIAS");
+					break;
+				
+				case MantenedoresEvent.CREAR_SUBCATEGORIAS:
+					opt = 'SUBCATEGORIAS';
+					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
+						modelApp[objTipificacion[opt]['arr']].addItem(data.result);
+						data.target.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					break;
+				case MantenedoresEvent.MODIFICAR_SUBCATEGORIAS:
+					opt = 'SUBCATEGORIAS';
+					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
+						data.target.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					break;
+				case MantenedoresEvent.ELIMINAR_SUBCATEGORIAS:
+					opt = 'SUBCATEGORIAS';
+					if(data.result == data.target.item[objTipificacion[opt]['idPrincipal']]){
+						data.target.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					
+					break;
 				
 				
+				/******************************************************/
+				
+				case MantenedoresEvent.CREAR_PROBLEMAS:
+					opt = 'PROBLEMAS';
+					if(data.result.hasOwnProperty(objTipificacion[opt]['id'])){
+						modelApp[objTipificacion[opt]['arr']].addItem(data.result);
+						data.target.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					break;
+				case MantenedoresEvent.MODIFICAR_PROBLEMAS:
+					opt = 'PROBLEMAS';
+					if(data.result.hasOwnProperty(objTipificacion[opt]['id'])){
+						data.target.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					break;
+				case MantenedoresEvent.ELIMINAR_PROBLEMAS:
+					opt = 'PROBLEMAS';
+					if(data.result == data.target.item[objTipificacion[opt]['id']]){
+						data.target.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					
+					break;
 				
 				/*case SucursalEvent.MODIFICAR:
 					evento.callback.call(this, data.result);

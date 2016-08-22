@@ -8,8 +8,8 @@ package vo
 	{
 		public var idCategoria:int;
 		public var NombreCategoria:String;
-		public var arrSubCategoriasIn:ArrayCollection = new ArrayCollection();
-		public var arrSubCategoriasOut:ArrayCollection = new ArrayCollection();
+		public var arrAsociadosIn:ArrayCollection = new ArrayCollection();
+		public var arrAsociadosOut:ArrayCollection = new ArrayCollection();
 		
 		public function CategoriaVO()
 		{

@@ -97,6 +97,15 @@
 				modelApp.fnClientesFilter = fnClientesFilter;
 				
 				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_FORMA_ATENCION);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_TIEMPO_SOLUCION);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				
+				
 				/*
 				var mantenedor2Event:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
 				Controller.getInstance().dispatchEvent(mantenedor2Event);*/
