@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <components:CustomPanelSpark xmlns:fx="http://ns.adobe.com/mxml/2009" 
 							 xmlns:s="library://ns.adobe.com/flex/spark" 
-							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" width="400" height="300">
+							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" width="400" height="300"
+							 creationComplete="fnSeteo(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -14,6 +15,7 @@
 			import model.ModelApp;
 			
 			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			
 			import vo.ClasificacionVO;
@@ -44,6 +46,11 @@
 					}
 					mantenedoresEvent = new MantenedoresEvent(tipoEvento, fnPost, [obj, arr]);						
 				} else {
+					obj[campo1] = txtNombre.text;
+					if(ext){
+						obj['idFormaAtencion'] = ddlFormaAtencion.selectedItem.idFormaAtencion;
+						obj['idTiempoSolucion'] = ddlTiempoSolucion.selectedItem.idTiempoSolucion;
+					}
 					mantenedoresEvent = new MantenedoresEvent(tipoEvento, fnPost, [obj, arr]);
 				}
 				Controller.getInstance().dispatchEvent(mantenedoresEvent);
@@ -54,6 +61,19 @@
 			{
 				// TODO Auto-generated method stub
 				PopUpManager.removePopUp(this);
+			}
+			
+			protected function fnSeteo(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(obj){
+					this.title = 'Modificar';
+					txtNombre.text = obj[campo1];
+					if(ext){
+						ddlFormaAtencion.selectedItem = modelApp.objFormaAtencion[obj.idFormaAtencion];
+						ddlTiempoSolucion.selectedItem = modelApp.objTiempoSolucion[obj.idTiempoSolucion];
+					}
+				}
 			}
 			
 		]]>
@@ -67,7 +87,7 @@
 				<s:DropDownList id="ddlFormaAtencion" height="30" width="150" dataProvider="{modelApp.arrFormaAtencion}" labelField="descripcion"/>
 			</s:FormItem>
 			<s:FormItem label="Tiempo de solución" width="100%" height="30" visible="{ext}" includeInLayout="{ext}">
-				<s:DropDownList id="ddlTiempoSolucion" height="30" width="150" dataProvider="{modelApp.arrTiemposolucion}" labelField="descripcion"/>
+				<s:DropDownList id="ddlTiempoSolucion" height="30" width="150" dataProvider="{modelApp.arrTiempoSolucion}" labelField="descripcion"/>
 			</s:FormItem>
 			
 			

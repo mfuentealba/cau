@@ -7,7 +7,7 @@ package vo
 	public class CategoriaVO
 	{
 		public var idCategoria:int;
-		public var NombreCategoria:String;
+		public var nombreCategoria:String;
 		public var arrAsociadosIn:ArrayCollection = new ArrayCollection();
 		public var arrAsociadosOut:ArrayCollection = new ArrayCollection();
 		

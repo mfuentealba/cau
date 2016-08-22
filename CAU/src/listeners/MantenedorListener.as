@@ -104,17 +104,17 @@ package listeners
 					break;
 				
 				case MantenedoresEvent.CREAR_CLASIFICACION:
-					var obj:Object = {idClasificacion: evento.item[0].idClasificacion, NombreClasificacion: evento.item[0].NombreClasificacion};
+					var obj:Object = {idClasificacion: evento.item[0].idClasificacion, nombreClasificacion: evento.item[0].nombreClasificacion};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					Operation(rmtObj[evento.type]).send(evento.item[0].NombreClasificacion);
+					Operation(rmtObj[evento.type]).send(evento.item[0].nombreClasificacion);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
 					break;
 				case MantenedoresEvent.MODIFICAR_CLASIFICACION:
-					obj = {idClasificacion: evento.item[0].idClasificacion, NombreClasificacion: evento.item[0].NombreClasificacion};
+					obj = {idClasificacion: evento.item[0].idClasificacion, nombreClasificacion: evento.item[0].nombreClasificacion};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send([evento.item[0].idClasificacion, evento.item[0].NombreClasificacion]);
+					rmtObj[evento.type].send([evento.item[0].idClasificacion, evento.item[0].nombreClasificacion]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -150,18 +150,18 @@ package listeners
 				
 				case MantenedoresEvent.CREAR_CATEGORIA:
 					trace("CREAR_CATEGORIA");
-					obj = {idCategoria: evento.item[0].idCategoria, NombreCategoria: evento.item[0].NombreCategoria};
+					obj = {idCategoria: evento.item[0].idCategoria, nombreCategoria: evento.item[0].nombreCategoria};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send(evento.item[0].NombreCategoria);
+					rmtObj[evento.type].send(evento.item[0].nombreCategoria);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
 					break;
 				case MantenedoresEvent.MODIFICAR_CATEGORIA:
 					trace("MODIFICAR_CATEGORIA");
-					obj = {idCategoria: evento.item[0].idCategoria, NombreCategoria: evento.item[0].NombreCategoria};
+					obj = {idCategoria: evento.item[0].idCategoria, nombreCategoria: evento.item[0].nombreCategoria};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send([evento.item[0].idCategoria, evento.item[0].NombreCategoria]);
+					rmtObj[evento.type].send([evento.item[0].idCategoria, evento.item[0].nombreCategoria]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -181,7 +181,7 @@ package listeners
 				case MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS:
 					trace("BUSCA_SUBCATEGORIAS_ASOCIADAS");
 					str = com.adobe.serialization.json.JSON.encode(evento.item);
-					rmtObj[evento.type].send(evento.item.idSubCategoria.idSubCategoria, evento.item.idCategoria, evento.item.idClas);
+					rmtObj[evento.type].send(evento.item.idSubCategoria.obj.idSubCategoria, evento.item.idCategoria, evento.item.idClas);
 					rmtObj.item = evento.item['idSubCategoria']['obj'];
 					rmtObj.callback = evento.callback;
 					break;
@@ -201,7 +201,7 @@ package listeners
 					break;
 				
 				case MantenedoresEvent.CREAR_SUBCATEGORIAS:
-					obj = {idSubCategoria: evento.item[0].idSubCategoria, NombreSubCategoria: evento.item[0].nombreSubCategoria};
+					obj = {idSubCategoria: evento.item[0].idSubCategoria, nombreSubCategoria: evento.item[0].nombreSubCategoria};
 					str = com.adobe.serialization.json.JSON.encode(obj);
 					rmtObj[evento.type].send(evento.item[0].nombreSubCategoria);
 					rmtObj.item = evento.item[0];
@@ -209,9 +209,9 @@ package listeners
 					
 					break;
 				case MantenedoresEvent.MODIFICAR_SUBCATEGORIAS:
-					obj = {idSubCategoria: evento.item[0].idSubCategoria, NombreSubCategoria: evento.item[0].NombreSubCategoria};
+					obj = {idSubCategoria: evento.item[0].idSubCategoria, nombreSubCategoria: evento.item[0].nombreSubCategoria};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send([evento.item[0].idSubCategoria, evento.item[0].NombreSubCategoria]);
+					rmtObj[evento.type].send([evento.item[0].idSubCategoria, evento.item[0].nombreSubCategoria]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -238,9 +238,9 @@ package listeners
 					
 					break;
 				case MantenedoresEvent.MODIFICAR_PROBLEMAS:
-					obj = {idCategoria: evento.item[0].idCategoria, nombreCategoria: evento.item[0].nombreCategoria};
+					obj = {idDescripcion: evento.item[0].idDescripcion, nombreDescripcion: evento.item[0].nombreDescripcion, idFormaAtencion: evento.item[0].idFormaAtencion, idTiempoSolucion: evento.item[0].idTiempoSolucion};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send([evento.item[0].idDescripcion, evento.item[0].NombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion]);
+					rmtObj[evento.type].send([evento.item[0].idDescripcion, evento.item[0].nombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -310,13 +310,13 @@ package listeners
 					break;
 				
 				case MantenedoresEvent.LISTAR_TIEMPO_SOLUCION:
-					modelApp.arrTiemposolucion = new ArrayCollection(data.result as Array);
-					//modelApp.arrSubCategoria.source.forEach(fnDictSubCategoria);
+					modelApp.arrTiempoSolucion = new ArrayCollection(data.result as Array);
+					modelApp.arrTiempoSolucion.source.forEach(fnDictTiemposolucion);
 					trace("LISTAR_TIEMPO_SOLUCION");
 					break;
 				case MantenedoresEvent.LISTAR_FORMA_ATENCION:
 					modelApp.arrFormaAtencion = new ArrayCollection(data.result as Array);
-					//modelApp.arrDescripcion.source.forEach(fnDictDescripcion);
+					modelApp.arrFormaAtencion.source.forEach(fnDictFormaAtencion);
 					trace("LISTAR_FORMA_ATENCION");
 					break;
 				
@@ -394,7 +394,7 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_CLASIFICACION:
 					opt = 'CLASIFICACION';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
-						data.target.callback.call(null, data.result);	
+						data.target.callback.call(null, data.result, 'Clasificacion');	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -484,7 +484,7 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_CATEGORIA:
 					opt = 'CATEGORIAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
-						data.target.callback.call(null, data.result);	
+						data.target.callback.call(null, data.result, 'Categoria');	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -573,7 +573,7 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_SUBCATEGORIAS:
 					opt = 'SUBCATEGORIAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
-						data.target.callback.call(null, data.result);	
+						data.target.callback.call(null, data.result, 'SubCategoria');	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -606,7 +606,7 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_PROBLEMAS:
 					opt = 'PROBLEMAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['id'])){
-						data.target.callback.call(null, data.result);	
+						data.target.callback.call(null, data.result, 'Problema');	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -657,6 +657,14 @@ package listeners
 			modelApp.objDescripcion[item.idDescripcion + ''] = item;
 		}
 		
+		
+		private static function fnDictTiemposolucion(item:*, index:int, arr:Array):void{
+			modelApp.objTiempoSolucion[item.idTiempoSolucion + ''] = item;
+		}
+		
+		private static function fnDictFormaAtencion(item:*, index:int, arr:Array):void{
+			modelApp.objFormaAtencion[item.idFormaAtencion + ''] = item;
+		}
 		
 		public static function fault(info:Object):void
 		{

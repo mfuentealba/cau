@@ -32,11 +32,11 @@ package event
 		public static const AGREGAR_PROBLEMAS:String = 'setSubcategoriaProblema';
 		public static const ELIMINAR_SUBCATEGORIA_PROBLEMAS:String = 'removeSubcategoriaProblema';
 		public static const CREAR_SUBCATEGORIAS:String = 'saveSubcategoria';
-		public static const MODIFICAR_SUBCATEGORIAS:String = 'updateSubcategoria';
+		public static const MODIFICAR_SUBCATEGORIAS:String = 'updateSubCategoria';
 		public static const ELIMINAR_SUBCATEGORIAS:String = 'deleteSubcategoria';
 		
 		public static const CREAR_PROBLEMAS:String = 'saveProblemas';
-		public static const MODIFICAR_PROBLEMAS:String = 'updateProblemas';
+		public static const MODIFICAR_PROBLEMAS:String = 'updateProblema';
 		public static const ELIMINAR_PROBLEMAS:String = 'deleteProblemas';
 		/*public static const MODIFICAR:String = 'updateSucursales';
 		public static const ELIMINAR:String = 'deleteSucursales';*/

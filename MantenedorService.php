@@ -148,14 +148,14 @@ class MantenedorService {
 		$rows = array();
 		//$rows = new stdClass();
 		$row = new ClasificacionVO();
-		mysqli_stmt_bind_result($stmt, $row->idClasificacion, $row->NombreClasificacion);
+		mysqli_stmt_bind_result($stmt, $row->idClasificacion, $row->nombreClasificacion);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  //$rows->{$row->id} = $row;
 	      //$row = new stdClass();
 		  $row = new ClasificacionVO();
-	      mysqli_stmt_bind_result($stmt, $row->idClasificacion, $row->NombreClasificacion);
+	      mysqli_stmt_bind_result($stmt, $row->idClasificacion, $row->nombreClasificacion);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -181,14 +181,14 @@ class MantenedorService {
 		$rows = array();
 		//$rows = new stdClass();
 		$row = new CategoriaVO();
-		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->NombreCategoria);
+		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->nombreCategoria);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  //$rows->{$row->id} = $row;
 	      //$row = new stdClass();
 		  $row = new CategoriaVO();
-	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->NombreCategoria);
+	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->nombreCategoria);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -338,7 +338,7 @@ class MantenedorService {
 	
 	
 	
-	public function getClasificacionCategorias($id) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"NombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
+	public function getClasificacionCategorias($id) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"nombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT c.idCategoria, case when idClasificacion is null then 0 else 1 end sel 
 FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria = asoc.idcategoria and asoc.idclasificacion = ?");		
@@ -381,7 +381,7 @@ FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria =
 	
 	
 	
-	public function getCategoriaSubcategorias($id, $idClas) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"NombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
+	public function getCategoriaSubcategorias($id, $idClas) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"nombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT c.idSubCategoria, case when idCategoria is null then 0 else 1 end sel 
 FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcategoria = asoc.idsubcategoria and asoc.idcategoria = ?");		
@@ -422,7 +422,7 @@ FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcatego
 		//return $resp;
 	}
 	
-	public function getSubcategoriaProblemas($id, $idCat, $idClas) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"NombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
+	public function getSubcategoriaProblemas($id, $idCat, $idClas) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"nombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
 FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = ?");		
@@ -523,7 +523,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function saveClasificacion($row) {
 		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO Clasificacion (NombreClasificacion) VALUES (?)");
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO Clasificacion (nombreClasificacion) VALUES (?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -550,14 +550,14 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		mysqli_close($this->connection);
 		$row2 = new ClasificacionVO();
 		$row2->idClasificacion = $autoid;
-		$row2->NombreClasificacion = $row;
+		$row2->nombreClasificacion = $row;
 		return $row2;
 	}
 	
 	public function saveCategoria($row) {
 		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO Categoria (NombreCategoria) VALUES (?)");
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO Categoria (nombreCategoria) VALUES (?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -584,7 +584,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		mysqli_close($this->connection);
 		$row2 = new CategoriaVO();
 		$row->idCategoria = $autoid;
-		$row2->NombreCategoria = $row;
+		$row2->nombreCategoria = $row;
 		return $row2;
 	}
 	
@@ -592,7 +592,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function saveSubCategoria($row) {
 		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO subcategoria (Nombresubcategoria) VALUES (?)");
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO subcategoria (nombresubcategoria) VALUES (?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -616,7 +616,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		mysqli_close($this->connection);
 		$row2 = new SubCategoriaVO();
 		$row2->idSubCategoria = $autoid;
-		$row2->NombreSubCategoria = $row;
+		$row2->nombreSubCategoria = $row;
 		return $row2;
 	}
 	
@@ -624,7 +624,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function saveProblemas($row, $idFormaAtencion, $idTiempoSolucion) {
 		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO descripcion (NombreDescripcion, idFormaAtencion, idTiempoSolucion) VALUES (?,?,?)");
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO descripcion (nombreDescripcion, idFormaAtencion, idTiempoSolucion) VALUES (?,?,?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -649,16 +649,16 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		mysqli_close($this->connection);
 		$row2 = new DescripcionVO();
 		$row2->idDescripcion = $autoid;
-		$row2->NombreDescripcion = $row;
+		$row2->nombreDescripcion = $row;
 		$row2->idDescripcion = $idFormaAtencion; 
-		$row2->NombreDescripcion = $idTiempoSolucion;
+		$row2->nombreDescripcion = $idTiempoSolucion;
 		return $row2;
 	}
 	
 	
 	public function updateClasificacion($item) {
 	
-		$stmt = mysqli_prepare($this->connection, "UPDATE Clasificacion SET NombreClasificacion=? WHERE idClasificacion=?");		
+		$stmt = mysqli_prepare($this->connection, "UPDATE Clasificacion SET nombreClasificacion=? WHERE idClasificacion=?");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -681,7 +681,96 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		mysqli_close($this->connection);
 		$row2 = new ClasificacionVO();
 		$row2->idClasificacion = $item[0];
-		$row2->NombreClasificacion = $item[1];
+		$row2->nombreClasificacion = $item[1];
+		return $row2;
+	}
+	
+	public function updateCategoria($item) {
+	
+		$stmt = mysqli_prepare($this->connection, "UPDATE Categoria SET nombreCategoria=? WHERE idCategoria=?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 'si', $item[1], $item[0]);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row2 = new CategoriaVO();
+		$row2->idCategoria = $item[0];
+		$row2->nombreCategoria = $item[1];
+		return $row2;
+	}
+	
+	public function updateSubCategoria($item) {
+	
+		$stmt = mysqli_prepare($this->connection, "UPDATE SubCategoria SET nombreSubCategoria=? WHERE idSubCategoria=?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 'si', $item[1], $item[0]);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row2 = new SubCategoriaVO();
+		$row2->idSubCategoria = $item[0];
+		$row2->nombreSubCategoria = $item[1];
+		return $row2;
+	}
+	
+	public function updateProblema($item) {
+	
+		$stmt = mysqli_prepare($this->connection, "UPDATE Descripcion SET nombreDescripcion=?, idFormaAtencion=?, idTiempoSolucion=? WHERE idDescripcion=?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 'siii', $item[1], $item[2], $item[3], $item[0]);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row2 = new DescripcionVO();
+		$row2->idDescripcion = $item[0];
+		$row2->nombreDescripcion = $item[1];
+		$row2->idFormaAtencion = $item[2];
+		$row2->idTiempoSolucion = $item[3];
 		return $row2;
 	}
 	
@@ -773,7 +862,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function createClasificacion($item) {
 		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO Clasificacion (NombreClasificacion) VALUES (?)");
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO Clasificacion (nombreClasificacion) VALUES (?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -782,7 +871,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		/*$item->sucursal = 'hola';
 		$item->direccion = 'hola';*/
 		
-		mysqli_stmt_bind_param($stmt, 's', $item->NombreClasificacion);
+		mysqli_stmt_bind_param($stmt, 's', $item->nombreClasificacion);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -805,7 +894,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function createCategoria($item) {
 		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO Categoria (NombreCategoria) VALUES (?)");
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO Categoria (nombreCategoria) VALUES (?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -814,7 +903,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		/*$item->sucursal = 'hola';
 		$item->direccion = 'hola';*/
 		
-		mysqli_stmt_bind_param($stmt, 's', $item->NombreCategoria);
+		mysqli_stmt_bind_param($stmt, 's', $item->nombreCategoria);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;

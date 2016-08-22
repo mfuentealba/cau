@@ -47,7 +47,7 @@
 		<s:DataGrid id="dgSubCategoriasOut" dataProvider="{categoriaVO.arrSubCategoriasOut}" width="100%" height="200">
 			<s:columns>
 				<s:ArrayList>
-					<s:GridColumn dataField="obj.NombreCategoria" headerText="Nombre"/>
+					<s:GridColumn dataField="obj.nombreCategoria" headerText="Nombre"/>
 					<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel" width="40"/>	
 				</s:ArrayList>
 			</s:columns>

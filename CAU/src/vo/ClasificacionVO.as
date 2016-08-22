@@ -7,7 +7,7 @@ package vo
 	public class ClasificacionVO
 	{
 		public var idClasificacion:int;
-		public var NombreClasificacion:String;
+		public var nombreClasificacion:String;
 		public var arrAsociadosIn:ArrayCollection = new ArrayCollection();
 		public var arrAsociadosOut:ArrayCollection = new ArrayCollection();
 		

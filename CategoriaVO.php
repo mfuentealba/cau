@@ -2,6 +2,6 @@
 class CategoriaVO {
 	  	
 	var $idCategoria;
-	var $NombreCategoria;	
+	var $nombreCategoria;	
 		
 }

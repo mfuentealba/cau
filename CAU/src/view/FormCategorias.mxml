@@ -40,12 +40,12 @@
 			
 			private function fnActualizaGrilla(item:*):void{
 				var auxClasificacion:ClasificacionVO = dgClasificacion.selectedItem as ClasificacionVO;
-				auxClasificacion.NombreClasificacion = item.NombreClasificacion;
+				auxClasificacion.nombreClasificacion = item.nombreClasificacion;
 			}
 			
 			private function fnActualizaData(auxClasificacionVO:ClasificacionVO):void{				
 				clasificacionVO.idClasificacion = auxClasificacionVO.idClasificacion; 
-				clasificacionVO.NombreClasificacion = auxClasificacionVO.NombreClasificacion;
+				clasificacionVO.nombreClasificacion = auxClasificacionVO.nombreClasificacion;
 				clasificacionVO.arrCategoriasIn = auxClasificacionVO.arrCategoriasIn;
 				clasificacionVO.arrCategoriasOut = auxClasificacionVO.arrCategoriasOut;
 				auxClasificacionVO.arrCategoriasIn.refresh();
@@ -125,7 +125,7 @@
 		]]>
 	</fx:Script>
 	<!--<fx:Binding source="clasificacionVO.idClasificacion" destination="fnIdClas"/>-->
-	<fx:Binding source="txtNombre.text" destination="clasificacionVO.NombreClasificacion" twoWay="true"/>
+	<fx:Binding source="txtNombre.text" destination="clasificacionVO.nombreClasificacion" twoWay="true"/>
 	<s:Group width="100%" height="100%">
 		<s:VGroup width="100%" height="100%" paddingBottom="50">
 			<s:HGroup gap="15" width="100%" height="40%">
@@ -155,7 +155,7 @@
 							<s:columns>
 								<s:ArrayList>
 									<s:GridColumn dataField="idClasificacion" headerText="Id"/>
-									<s:GridColumn dataField="NombreClasificacion" headerText="Nombre"/>	
+									<s:GridColumn dataField="nombreClasificacion" headerText="Nombre"/>	
 								</s:ArrayList>
 							</s:columns>
 						</s:DataGrid>
@@ -173,7 +173,7 @@
 					<s:DataGrid id="lstCategorias" dataProvider="{dgClasificacion.selectedItem.arrCategoriasIn}" width="100%" height="100%">
 						<s:columns>
 							<s:ArrayList>
-								<s:GridColumn dataField="obj.NombreCategoria" headerText="Nombre"/>
+								<s:GridColumn dataField="obj.nombreCategoria" headerText="Nombre"/>
 								<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel" width="30"/>	
 							</s:ArrayList>
 						</s:columns>

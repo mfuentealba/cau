@@ -2,6 +2,6 @@
 class ClasificacionVO {
 	  	
 	var $idClasificacion;
-	var $NombreClasificacion;	
+	var $nombreClasificacion;	
 		
 }

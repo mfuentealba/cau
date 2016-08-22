@@ -49,8 +49,9 @@ package model
 		//public var grupoResolutorFilter:String;
 		
 		public var arrFormaAtencion:ArrayCollection;
-		public var arrTiemposolucion:ArrayCollection;
-		
+		public var arrTiempoSolucion:ArrayCollection;
+		public var objFormaAtencion:Object = {};
+		public var objTiempoSolucion:Object = {};
 		
 		
 		
