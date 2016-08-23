@@ -776,6 +776,42 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	
 	
 	public function deleteClasificacion($itemID) {
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_subcategoriadescripcion WHERE idClasificacion=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_categoriasubcategoria WHERE idClasificacion=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
 		
 		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_clasificacioncategoria WHERE idClasificacion=?");
 		$msg = $this->throwExceptionOnError();

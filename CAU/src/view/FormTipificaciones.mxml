@@ -23,6 +23,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.events.CloseEvent;
 			import mx.managers.PopUpManager;
 			
 			import spark.events.GridEvent;
@@ -31,7 +32,7 @@
 			import vo.ClasificacionVO;
 			import vo.DescripcionVO;
 			import vo.SubCategoriaVO;
-			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			[Bindable] public var modelApp:ModelApp = ModelApp.getInstance();
 			[Bindable] private var clasificacionVO:ClasificacionVO = new ClasificacionVO();
 			protected function fnBuscarAsociados(evento:GridEvent):void
 			{
@@ -138,10 +139,18 @@
 			protected function fnNuevaCategoria(event:*):void
 			{
 				// TODO Auto-generated method stub				
-				var categoriaVO:CategoriaVO = new CategoriaVO();
+				/*var categoriaVO:CategoriaVO = new CategoriaVO();
 				dgCategorias.selectedItem = null;
-				modelApp.arrCategoria.refresh();
+				modelApp.arrCategoria.refresh();*/
+				Alert.show('Deseas incluir esta nueva categoría en una clasificación', 'Atención', Alert.OK|Alert.NO, null, fnIncluirCategoria);
+				
 				//btnEnviar.label = 'Crear';
+			}
+			
+			protected function fnIncluirCategoria(evento:CloseEvent):void{
+				if(evento.detail == Alert.OK){
+					
+				}
 			}
 			
 			
@@ -200,11 +209,40 @@
 				//fnNuevaClasificacion(null);
 			}
 			
+			private function fnEliminacion(opt:String):void{
+				switch(opt){
+					case 'Clasificacion':
+						Alert.show('Esta acción eliminará la clasificación y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
+						break;
+					case 'Categoria':
+						break;
+					case 'SubCategoria':
+						break;
+					case 'Problema':
+						break;
+				}
+			}
+			
+			private function fnElimina(evento:CloseEvent):void{
+				if(evento.detail == Alert.OK){
+					var mantenedoresEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION, fnRemueveGrilla, [dgClasificacion.selectedItem, modelApp.arrClasificacion]);
+					Controller.getInstance().dispatchEvent(mantenedoresEvent);
+				}
+			}
+			
+			private function fnFormaAtencion(item:Object, column:*):String{
+				return modelApp.objFormaAtencion[item.obj.idFormaAtencion]['descripcion'];
+			}
+			
+			private function fnTiempoSolucion(item:Object, column:*):String{
+				return modelApp.objTiempoSolucion[item.obj.idTiempoSolucion]['descripcion'];
+			}			
+			
 			private function fnPopTipificacion(evento:MouseEvent):void{
 				var pop:PopTipificacion = new PopTipificacion();
 				var sw:Boolean;
 				switch(evento.target.id){
-					case 'btnCrearClasificacion', 'btnModificarClasificacion':						
+					case 'btnCrearClasificacion' || 'btnModificarClasificacion':						
 						pop.opcion = evento.target.label; 
 						
 						
@@ -236,7 +274,7 @@
 						}
 						break;
 					
-					case 'btnCrearCategoria', 'btnModificarCategoria':						
+					case 'btnCrearCategoria' || 'btnModificarCategoria':						
 						pop.opcion = evento.target.label; 
 						
 						if(evento.target.label != 'Crear'){
@@ -269,7 +307,7 @@
 						
 						break;
 					
-					case 'btnCrearSubCategoria', 'btnModificarSubCategoria':						
+					case 'btnCrearSubCategoria' || 'btnModificarSubCategoria':						
 						pop.opcion = evento.target.label; 
 						
 						if(evento.target.label != 'Crear'){
@@ -330,34 +368,10 @@
 							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
 							PopUpManager.centerPopUp(pop);	
 						}
-						
 						break;
 				}
 				
 				
-			}
-			
-			private function fnFormaAtencion(item:Object, column:*):String{
-				return modelApp.objFormaAtencion[item.obj.idFormaAtencion]['descripcion'];
-			}
-			
-			private function fnTiempoSolucion(item:Object, column:*):String{
-				return modelApp.objTiempoSolucion[item.obj.idTiempoSolucion]['descripcion'];
-			}
-			
-			
-			private function fnEliminacion(opt:String):void{
-				switch(opt){
-					case 'Clasificacion':
-						Alert.show('Esta acción eliminará la clasificación y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención');
-						break;
-					case 'Categoria':
-						break;
-					case 'SubCategoria':
-						break;
-					case 'Problema':
-						break;
-				}
 			}
 			
 		]]>

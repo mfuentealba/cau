@@ -394,6 +394,7 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_CLASIFICACION:
 					opt = 'CLASIFICACION';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
+						Alert.show("Registro modificado con éxito", "Información");
 						data.target.callback.call(null, data.result, 'Clasificacion');	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -403,6 +404,7 @@ package listeners
 				case MantenedoresEvent.ELIMINAR_CLASIFICACION:
 					opt = 'CLASIFICACION';
 					if(data.result == data.target.item[objTipificacion[opt]['idPrincipal']]){
+						Alert.show("Registro eliminado con éxito", "Información");
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -484,6 +486,7 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_CATEGORIA:
 					opt = 'CATEGORIAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
+						Alert.show("Registro modificado con éxito", "Información");
 						data.target.callback.call(null, data.result, 'Categoria');	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -493,6 +496,7 @@ package listeners
 				case MantenedoresEvent.ELIMINAR_CATEGORIA:
 					opt = 'CATEGORIAS';
 					if(data.result == data.target.item[objTipificacion[opt]['idPrincipal']]){
+						Alert.show("Registro eliminado con éxito", "Información");
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -573,6 +577,7 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_SUBCATEGORIAS:
 					opt = 'SUBCATEGORIAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
+						Alert.show("Registro modificado con éxito", "Información");
 						data.target.callback.call(null, data.result, 'SubCategoria');	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -582,6 +587,7 @@ package listeners
 				case MantenedoresEvent.ELIMINAR_SUBCATEGORIAS:
 					opt = 'SUBCATEGORIAS';
 					if(data.result == data.target.item[objTipificacion[opt]['idPrincipal']]){
+						Alert.show("Registro eliminado con éxito", "Información");
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -606,6 +612,7 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_PROBLEMAS:
 					opt = 'PROBLEMAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['id'])){
+						Alert.show("Registro modificado con éxito", "Información");
 						data.target.callback.call(null, data.result, 'Problema');	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -615,6 +622,7 @@ package listeners
 				case MantenedoresEvent.ELIMINAR_PROBLEMAS:
 					opt = 'PROBLEMAS';
 					if(data.result == data.target.item[objTipificacion[opt]['id']]){
+						Alert.show("Registro eliminado con éxito", "Información");
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
