@@ -53,7 +53,10 @@ package model
 		public var objFormaAtencion:Object = {};
 		public var objTiempoSolucion:Object = {};
 		
-		
+		public static const CLASIFICACION:String = 'Clasificacion';
+		public static const CATEGORIA:String = 'Categoria';
+		public static const SUBCATEGORIA:String = 'SubCategoria';
+		public static const PROBLEMA:String = 'Problema';
 		
 		public static function getInstance():ModelApp
 		{

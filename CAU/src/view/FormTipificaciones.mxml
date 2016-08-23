@@ -64,21 +64,21 @@
 			private function fnActualizaGrilla(item:*, opt:String):void{
 				var aux:*;
 				switch(opt){
-					case 'Clasificacion':
+					case ModelApp.CLASIFICACION:
 						aux = dgClasificacion.selectedItem as ClasificacionVO;
 						aux.nombreClasificacion = item.nombreClasificacion;
 						break;
-					case 'Categoria':
+					case ModelApp.CATEGORIA:
 						aux = dgCategorias.selectedItem.obj as CategoriaVO;
 						aux.nombreCategoria = item.nombreCategoria;		
 						dgClasificacion.selectedItem.arrAsociadosIn.refresh();
 						break;
-					case 'SubCategoria':
+					case ModelApp.SUBCATEGORIA:
 						aux = dgSubCategorias.selectedItem.obj as SubCategoriaVO;
 						aux.nombreSubCategoria = item.nombreSubCategoria;
 						dgCategorias.selectedItem.obj.arrAsociadosIn.refresh();
 						break;
-					case 'Problema':
+					case ModelApp.PROBLEMA:
 						aux = dgProblemas.selectedItem.obj as DescripcionVO;
 						aux.nombreDescripcion = item.nombreDescripcion;
 						aux.idFormaAtencion = item.idFormaAtencion;
@@ -142,7 +142,9 @@
 				/*var categoriaVO:CategoriaVO = new CategoriaVO();
 				dgCategorias.selectedItem = null;
 				modelApp.arrCategoria.refresh();*/
-				Alert.show('Deseas incluir esta nueva categoría en una clasificación', 'Atención', Alert.OK|Alert.NO, null, fnIncluirCategoria);
+				
+				//Alert.show('Deseas incluir esta nueva categoría la clasificación actual', 'Atención', Alert.OK|Alert.NO, null, fnIncluirCategoria);
+				dgClasificacion.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgClasificacion.selectedIndex));
 				
 				//btnEnviar.label = 'Crear';
 			}
@@ -157,9 +159,12 @@
 			protected function fnNuevaSubcategoria(event:*):void
 			{
 				// TODO Auto-generated method stub				
-				var subcategoriaVO:SubCategoriaVO = new SubCategoriaVO();
+				/*var subcategoriaVO:SubCategoriaVO = new SubCategoriaVO();
 				dgSubCategorias.selectedItem = null;
-				modelApp.arrSubCategoria.refresh();
+				modelApp.arrSubCategoria.refresh();*/
+				dgCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgCategorias.selectedIndex));
+				
+				
 				//btnEnviar.label = 'Crear';
 			}
 			
@@ -167,10 +172,7 @@
 			protected function fnNuevoProblema(event:*):void
 			{
 				// TODO Auto-generated method stub				
-				var descripcionVO:DescripcionVO = new DescripcionVO();
-				dgClasificacion.selectedItem = null;
-				modelApp.arrDescripcion.refresh();
-				//btnEnviar.label = 'Crear';
+				dgSubCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgSubCategorias.selectedIndex));
 			}
 			
 			/*private function set fnIdClas(val:int):void{
@@ -211,14 +213,14 @@
 			
 			private function fnEliminacion(opt:String):void{
 				switch(opt){
-					case 'Clasificacion':
+					case ModelApp.CLASIFICACION:
 						Alert.show('Esta acción eliminará la clasificación y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
 						break;
-					case 'Categoria':
+					case ModelApp.CATEGORIA:
 						break;
-					case 'SubCategoria':
+					case ModelApp.SUBCATEGORIA:
 						break;
-					case 'Problema':
+					case ModelApp.PROBLEMA:
 						break;
 				}
 			}
@@ -244,7 +246,7 @@
 				switch(evento.target.id){
 					case 'btnCrearClasificacion' || 'btnModificarClasificacion':						
 						pop.opcion = evento.target.label; 
-						
+						pop.ext2 = false;
 						
 						if(evento.target.label != 'Crear'){
 							if(dgClasificacion.selectedIndex > -1){
@@ -252,6 +254,7 @@
 								pop.obj = dgClasificacion.selectedItem;
 								pop.tipoEvento = MantenedoresEvent.MODIFICAR_CLASIFICACION;
 								pop.fnPost = fnActualizaGrilla;
+								
 								sw = true;
 							} else {
 								Alert.show('Debe Seleccionar Clasificación a modificar');
@@ -261,11 +264,12 @@
 							pop.title = 'Crear Clasificación';
 							pop.tipoEvento = MantenedoresEvent.CREAR_CLASIFICACION;
 							pop.fnPost = fnNuevaClasificacion;
+							
 							sw = true;
 						}
 						if(sw){
 							
-							pop.arr = modelApp.arrClasificacion;
+							//pop.arr = modelApp.arrClasificacion;
 							pop.campo1 = 'nombreClasificacion';
 							pop.claseOperacion = ClasificacionVO;
 							
@@ -279,6 +283,7 @@
 						
 						if(evento.target.label != 'Crear'){
 							if(dgCategorias.selectedIndex > -1){
+								pop.ext2 = false;
 								pop.title = 'Modificar Categoría';
 								pop.obj = dgCategorias.selectedItem.obj;
 								pop.tipoEvento = MantenedoresEvent.MODIFICAR_CATEGORIA;
@@ -292,12 +297,15 @@
 							pop.title = 'Crear Categoría';
 							pop.tipoEvento = MantenedoresEvent.CREAR_CATEGORIA;
 							pop.fnPost = fnNuevaCategoria;
+							pop.dgDataProvider = modelApp.arrClasificacion;
+							pop.campoVisible = 'nombreClasificacion';
+							pop.idCampoVisible = 'idClasificacion';
 							sw = true;
 						}
 						
 						if(sw){
 							
-							pop.arr = modelApp.arrCategoria;
+							//pop.arr = modelApp.arrCategoria;
 							pop.campo1 = 'nombreCategoria';
 							pop.claseOperacion = CategoriaVO;
 							
@@ -312,6 +320,7 @@
 						
 						if(evento.target.label != 'Crear'){
 							if(dgSubCategorias.selectedIndex > -1){
+								pop.ext2 = false;
 								pop.title = 'Modificar Subcategoría';
 								pop.obj = dgSubCategorias.selectedItem.obj;
 								pop.tipoEvento = MantenedoresEvent.MODIFICAR_SUBCATEGORIAS;
@@ -322,14 +331,19 @@
 							}
 							
 						} else {
+							pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
+							pop.title = 'Crear Subcategoría';
 							pop.tipoEvento = MantenedoresEvent.CREAR_SUBCATEGORIAS;
 							pop.fnPost = fnNuevaSubcategoria;
+							pop.dgDataProvider = modelApp.arrCategoria;
+							pop.campoVisible = 'nombreCategoria';
+							pop.idCampoVisible = 'idCategoria';
 							sw = true;
 						}
 						
 						if(sw){
 							
-							pop.arr = modelApp.arrSubCategoria;
+							//pop.arr = modelApp.arrSubCategoria;
 							pop.campo1 = 'nombreSubCategoria';
 							pop.claseOperacion = SubCategoriaVO;
 							
@@ -339,12 +353,13 @@
 						
 						break;
 					
-					case 'btnCrearProblemas', 'btnModificarProblema':						
+					case 'btnCrearProblemas' || 'btnModificarProblema':						
 						pop.opcion = evento.target.label; 
 						
 						pop.ext = true;
 						if(evento.target.label != 'Crear'){
 							if(dgProblemas.selectedIndex > -1){
+								pop.ext2 = false;
 								pop.title = 'Modificar Problema';
 								pop.obj = dgProblemas.selectedItem.obj;
 								pop.tipoEvento = MantenedoresEvent.MODIFICAR_PROBLEMAS;
@@ -355,13 +370,19 @@
 							}
 							
 						} else {
+							pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
+							pop.idCat = '' + dgCategorias.selectedItem['obj']['idCategoria'];
+							pop.title = 'Crear Problema';
 							pop.tipoEvento = MantenedoresEvent.CREAR_PROBLEMAS;
 							pop.fnPost = fnNuevoProblema;
+							pop.dgDataProvider = modelApp.arrSubCategoria;
+							pop.campoVisible = 'nombreSubCategoria';
+							pop.idCampoVisible = 'idSubCategoria';
 							sw = true;
 						}
 						if(sw){
 							
-							pop.arr = modelApp.arrDescripcion;
+							//pop.arr = modelApp.arrDescripcion;
 							pop.campo1 = 'nombreDescripcion';
 							pop.claseOperacion = DescripcionVO;
 							
@@ -403,7 +424,7 @@
 						<s:HGroup width="100%">
 							<s:Button id="btnCrearClasificacion" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarClasificacion" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							<s:Button label="Eliminar" click="fnEliminacion('Clasificacion')" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
+							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.CLASIFICACION)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Agregar Categoría" click="fnEliminarNoSeleccionadas(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							
 						</s:HGroup>
@@ -422,7 +443,7 @@
 						<s:HGroup width="100%">
 							<s:Button id="btnCrearCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarCategoria" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							<s:Button label="Eliminar" click="fnEliminacion('Categoria')" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
+							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.CATEGORIA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Agregar Subcategoría" click="fnEliminarNoSeleccionadas(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							
 						</s:HGroup>
@@ -446,7 +467,7 @@
 						<s:HGroup width="100%">
 							<s:Button id="btnCrearSubCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarSubCategoria" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							<s:Button label="Eliminar" click="fnEliminacion('SubCategoria')" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
+							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.SUBCATEGORIA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Agregar Problema" click="fnEliminarNoSeleccionadas(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							
 						</s:HGroup>
@@ -467,7 +488,7 @@
 						<s:HGroup width="75%">
 							<s:Button id="btnCrearProblemas" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarProblema" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							<s:Button label="Eliminar" click="fnEliminacion('Problema')" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
+							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.PROBLEMA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							
 						</s:HGroup>
 						

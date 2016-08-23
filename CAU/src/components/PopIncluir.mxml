@@ -11,7 +11,10 @@
 			
 			import event.MantenedoresEvent;
 			
+			import model.ModelApp;
+			
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
 			import mx.managers.PopUpManager;
 			
 			import vo.CategoriaVO;
@@ -22,6 +25,7 @@
 			[Bindable] public var dgDataProvider2:ArrayCollection;
 			[Bindable] public var campoVisible:String;
 			[Bindable] public var idCampoVisible:int;
+			public var optEvento:String;
 			
 			protected function fnCerrar(event:MouseEvent):void
 			{
@@ -40,7 +44,19 @@
 					
 				}
 				
-				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, fnActualizaData, [clasificacionVO, arr]);
+				var manEvent:MantenedoresEvent;
+				switch(optEvento){
+					case ModelApp.CATEGORIA:
+						manEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, fnActualizaData, [clasificacionVO, arr]);
+						break;
+					case ModelApp.SUBCATEGORIA:
+						manEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, fnActualizaData, [clasificacionVO, arr]);
+						break;
+					case ModelApp.PROBLEMA:
+						manEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, fnActualizaData, [clasificacionVO, arr]);
+						break;
+				}
+				
 				Controller.getInstance().dispatchEvent(manEvent);
 				fnCerrar(null);
 			}

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <components:CustomPanelSpark xmlns:fx="http://ns.adobe.com/mxml/2009" 
 							 xmlns:s="library://ns.adobe.com/flex/spark" 
-							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" width="400" height="300"
+							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" width="400" height="{140 + (ext ? 80 : 0) + (ext2 ? 180 : 0)}"
 							 creationComplete="fnSeteo(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -12,24 +12,37 @@
 			
 			import event.MantenedoresEvent;
 			
+			import flash.net.dns.AAAARecord;
+			
 			import model.ModelApp;
 			
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
+			
+			import spark.components.gridClasses.GridColumn;
 			
 			import vo.ClasificacionVO;
 			[Bindable] public var obj:Object;
 			[Bindable] public var ext:Boolean;
+			[Bindable] public var ext2:Boolean = true;
 			[Bindable] public var opcion:String;
 			[Bindable] public var idOpt:String;
 			public var fnPost:Function;
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
-			[Bindable] public var arr:ArrayCollection;
+			//[Bindable] public var arr:ArrayCollection;
 			public var campo1:String;
 			public var claseOperacion:Class;
 			public var tipoEvento:String;
 			
+			[Bindable] public var dgDataProvider:ArrayCollection;
+			[Bindable] public var dgDataProvider2:ArrayCollection = new ArrayCollection();
+			[Bindable] public var campoVisible:String;
+			[Bindable] public var idCampoVisible:String;
+			
+			public var idClas:String;
+			public var idCat:String;
 			
 			protected function fnOperar(evento:MouseEvent):void
 			{
@@ -44,7 +57,22 @@
 						obj.idTiempoSolucion = ddlTiempoSolucion.selectedItem.idTiempoSolucion;
 						obj.idFormaAtencion = ddlFormaAtencion.selectedItem.idFormaAtencion;
 					}
-					mantenedoresEvent = new MantenedoresEvent(tipoEvento, fnPost, [obj, arr]);						
+					var arr:ArrayCollection = new ArrayCollection();
+					for each(var obj2:Object in dgDataProvider2){
+						if(obj2.sel == true){
+							arr.addItem(obj2['obj'][idCampoVisible]);	
+						}
+						
+					}
+					var arrParam:Array = [obj];
+					if(idClas){
+						arrParam.push(idClas);
+					}
+					if(idCat){
+						arrParam.push(idCat);
+					}
+					arrParam.push(arr);
+					mantenedoresEvent = new MantenedoresEvent(tipoEvento, fnPost, arrParam);						
 				} else {
 					obj[campo1] = txtNombre.text;
 					if(ext){
@@ -76,9 +104,40 @@
 				}
 			}
 			
+			private function set fnArmaDataProvider(arr:ArrayCollection):void{
+				if(arr){
+					
+					for each(var obj:* in dgDataProvider){
+						dgDataProvider2.addItem({obj: obj, sel: false});
+					}
+				}
+			}
+			
+			protected function dg_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				var g:GridColumn = new GridColumn();
+				g.headerText = 'ID';
+				g.dataField = 'obj.' + idCampoVisible;
+				arList.addItem(g);
+				g = new GridColumn();
+				g.headerText = 'Nombre';
+				g.dataField = 'obj.' + campoVisible;
+				arList.addItem(g);
+				g = new GridColumn();
+				g.headerText = 'Sel';
+				g.dataField = 'sel';
+				g.rendererIsEditable = true;
+				var productRenderer:ClassFactory = new ClassFactory(components.RenderSel);
+
+				g.itemRenderer = productRenderer;
+				arList.addItem(g);
+			}
+			
 		]]>
 	</fx:Script>
-	<s:VGroup>
+	<fx:Binding source="dgDataProvider" destination="fnArmaDataProvider"/>
+	<s:VGroup horizontalCenter="0">
 		<s:Form defaultButton="{btnEnviar}" width="100%">
 			<s:FormItem label="Nombre" width="100%" height="30"> 
 				<s:TextInput id="txtNombre" height="30" width="150"/>
@@ -93,6 +152,17 @@
 			
 			
 		</s:Form>
+		<s:VGroup width="100%" includeInLayout="{ext2}" visible="{ext2}">
+			<s:Label text="Incluir en:"/>
+			<s:DataGrid id="dg" dataProvider="{dgDataProvider2}" width="100%" height="150" creationComplete="dg_creationCompleteHandler(event)">
+				<s:columns>
+					<s:ArrayList id="arList">
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>	
+		</s:VGroup>
+		
+		
 		<s:HGroup>
 			<s:Button id="btnEnviar" label="{obj == null ? 'Crear' : 'Actualizar'}" click="fnOperar(event)" skinClass="assets.skins.CustomButtonEnviar" width="150" height="30"/>	
 			<s:Button id="btnEliminar" label="Cancelar" click="fnCerrar()" skinClass="assets.skins.CustomButtonTransparenteSkin" width="150" height="30"/>

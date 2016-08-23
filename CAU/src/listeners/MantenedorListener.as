@@ -128,7 +128,7 @@ package listeners
 				/***************************************/
 				case MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS:
 					trace("BUSCA_SUBCATEGORIAS_ASOCIADAS");
-					str = com.adobe.serialization.json.JSON.encode(evento.item);
+					//str = com.adobe.serialization.json.JSON.encode(evento.item);
 					rmtObj[evento.type].send(evento.item.idCategoria.obj.idCategoria, evento.item.idClas);
 					rmtObj.item = evento.item['idCategoria']['obj'];
 					rmtObj.callback = evento.callback;
@@ -152,7 +152,7 @@ package listeners
 					trace("CREAR_CATEGORIA");
 					obj = {idCategoria: evento.item[0].idCategoria, nombreCategoria: evento.item[0].nombreCategoria};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send(evento.item[0].nombreCategoria);
+					rmtObj[evento.type].send(evento.item[0].nombreCategoria, evento.item[1].source);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -180,7 +180,7 @@ package listeners
 				/***************************************/
 				case MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS:
 					trace("BUSCA_SUBCATEGORIAS_ASOCIADAS");
-					str = com.adobe.serialization.json.JSON.encode(evento.item);
+					//str = com.adobe.serialization.json.JSON.encode(evento.item);
 					rmtObj[evento.type].send(evento.item.idSubCategoria.obj.idSubCategoria, evento.item.idCategoria, evento.item.idClas);
 					rmtObj.item = evento.item['idSubCategoria']['obj'];
 					rmtObj.callback = evento.callback;
@@ -203,7 +203,7 @@ package listeners
 				case MantenedoresEvent.CREAR_SUBCATEGORIAS:
 					obj = {idSubCategoria: evento.item[0].idSubCategoria, nombreSubCategoria: evento.item[0].nombreSubCategoria};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send(evento.item[0].nombreSubCategoria);
+					rmtObj[evento.type].send(evento.item[0].nombreSubCategoria, evento.item[1], evento.item[2].source);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -232,7 +232,7 @@ package listeners
 				case MantenedoresEvent.CREAR_PROBLEMAS:
 					obj = {idDescripcion: evento.item[0].idDescripcion, nombreDescripcion: evento.item[0].nombreDescripcion};
 					str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send(evento.item[0].nombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion);
+					rmtObj[evento.type].send(evento.item[0].nombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion, evento.item[1], evento.item[2], evento.item[3].source);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -271,10 +271,10 @@ package listeners
 		
 		public static function result(data:ResultEvent):void
 		{
-			var objTipificacion:Object = {CLASIFICACION:{arrIn : 'arrAsociadosIn', arrOut: 'arrAsociadosOut', idPrincipal: 'idClasificacion', id: 'idCategoria', obj: 'objCategoria', arr: 'arrClasificacion'},
-											CATEGORIAS: {arrIn : 'arrAsociadosIn', arrOut: 'arrAsociadosOut', idPrincipal: 'idCategoria', id: 'idSubCategoria', obj: 'objSubCategoria', arr: 'arrCategoria'},
-										 SUBCATEGORIAS: {arrIn : 'arrAsociadosIn', arrOut: 'arrAsociadosOut', idPrincipal: 'idSubCategoria', id: 'idDescripcion', obj: 'objDescripcion', arr: 'arrSubCategoria'},
-										 PROBLEMAS: {id: 'idDescripcion', arr: 'arrDescripcion'}
+			var objTipificacion:Object = {CLASIFICACION:{arrIn : 'arrAsociadosIn', arrOut: 'arrAsociadosOut', idPrincipal: 'idClasificacion', id: 'idCategoria', obj: 'objCategoria', arr: 'arrClasificacion', objPropio: 'objClasificacion'},
+											CATEGORIAS: {arrIn : 'arrAsociadosIn', arrOut: 'arrAsociadosOut', idPrincipal: 'idCategoria', id: 'idSubCategoria', obj: 'objSubCategoria', arr: 'arrCategoria', objPropio: 'objCategoria'},
+										 SUBCATEGORIAS: {arrIn : 'arrAsociadosIn', arrOut: 'arrAsociadosOut', idPrincipal: 'idSubCategoria', id: 'idDescripcion', obj: 'objDescripcion', arr: 'arrSubCategoria', objPropio: 'objSubCategoria'},
+										 PROBLEMAS: {id: 'idDescripcion', arr: 'arrDescripcion', objPropio: 'objDescripcion', idPrincipal: 'idDescripcion'}
 										};
 			switch(data.token.message['operation']){
 				case MantenedoresEvent.LISTAR_PERFILES:
@@ -385,6 +385,7 @@ package listeners
 					opt = 'CLASIFICACION';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
 						modelApp[objTipificacion[opt]['arr']].addItem(data.result);
+						modelApp[objTipificacion[opt]['objPropio']][data.result[objTipificacion[opt]['idPrincipal']]] = data.result;
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -395,7 +396,7 @@ package listeners
 					opt = 'CLASIFICACION';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
 						Alert.show("Registro modificado con éxito", "Información");
-						data.target.callback.call(null, data.result, 'Clasificacion');	
+						data.target.callback.call(null, data.result, ModelApp.CLASIFICACION);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -477,6 +478,7 @@ package listeners
 					opt = 'CATEGORIAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
 						modelApp[objTipificacion[opt]['arr']].addItem(data.result);
+						modelApp[objTipificacion[opt]['objPropio']][data.result[objTipificacion[opt]['idPrincipal']]] = data.result;
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -487,7 +489,7 @@ package listeners
 					opt = 'CATEGORIAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
 						Alert.show("Registro modificado con éxito", "Información");
-						data.target.callback.call(null, data.result, 'Categoria');	
+						data.target.callback.call(null, data.result, ModelApp.CATEGORIA);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -568,6 +570,7 @@ package listeners
 					opt = 'SUBCATEGORIAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
 						modelApp[objTipificacion[opt]['arr']].addItem(data.result);
+						modelApp[objTipificacion[opt]['objPropio']][data.result[objTipificacion[opt]['idPrincipal']]] = data.result;
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -578,7 +581,7 @@ package listeners
 					opt = 'SUBCATEGORIAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['idPrincipal'])){
 						Alert.show("Registro modificado con éxito", "Información");
-						data.target.callback.call(null, data.result, 'SubCategoria');	
+						data.target.callback.call(null, data.result, ModelApp.SUBCATEGORIA);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -603,6 +606,7 @@ package listeners
 					opt = 'PROBLEMAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['id'])){
 						modelApp[objTipificacion[opt]['arr']].addItem(data.result);
+						modelApp[objTipificacion[opt]['objPropio']][data.result[objTipificacion[opt]['idPrincipal']]] = data.result;
 						data.target.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
@@ -613,7 +617,7 @@ package listeners
 					opt = 'PROBLEMAS';
 					if(data.result.hasOwnProperty(objTipificacion[opt]['id'])){
 						Alert.show("Registro modificado con éxito", "Información");
-						data.target.callback.call(null, data.result, 'Problema');	
+						data.target.callback.call(null, data.result, ModelApp.PROBLEMA);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
