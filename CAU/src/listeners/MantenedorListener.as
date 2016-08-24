@@ -83,10 +83,15 @@ package listeners
 				
 				case MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS:
 					trace("BUSCA_CATEGORIAS_ASOCIADAS_INI");
-					var str:String = com.adobe.serialization.json.JSON.encode(evento.item);
-					rmtObj[evento.type].send(evento.item.idClas.idClasificacion);
-					rmtObj.item = evento.item['idClas'];
-					rmtObj.callback = evento.callback;
+					//var str:String = com.adobe.serialization.json.JSON.encode(evento.item);
+					try{
+						rmtObj[evento.type].send(evento.item.idClas.idClasificacion);
+						rmtObj.item = evento.item['idClas'];
+						rmtObj.callback = evento.callback;
+					} catch(e:*){
+						
+					}
+					
 					break;
 				case MantenedoresEvent.AGREGAR_CATEGORIAS:
 					trace("AGREGAR_CATEGORIAS_INI");
@@ -105,7 +110,7 @@ package listeners
 				
 				case MantenedoresEvent.CREAR_CLASIFICACION:
 					var obj:Object = {idClasificacion: evento.item[0].idClasificacion, nombreClasificacion: evento.item[0].nombreClasificacion};
-					str = com.adobe.serialization.json.JSON.encode(obj);
+					//str = com.adobe.serialization.json.JSON.encode(obj);
 					Operation(rmtObj[evento.type]).send(evento.item[0].nombreClasificacion);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
@@ -113,7 +118,7 @@ package listeners
 					break;
 				case MantenedoresEvent.MODIFICAR_CLASIFICACION:
 					obj = {idClasificacion: evento.item[0].idClasificacion, nombreClasificacion: evento.item[0].nombreClasificacion};
-					str = com.adobe.serialization.json.JSON.encode(obj);
+					//str = com.adobe.serialization.json.JSON.encode(obj);
 					rmtObj[evento.type].send([evento.item[0].idClasificacion, evento.item[0].nombreClasificacion]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
@@ -129,14 +134,19 @@ package listeners
 				case MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS:
 					trace("BUSCA_SUBCATEGORIAS_ASOCIADAS");
 					//str = com.adobe.serialization.json.JSON.encode(evento.item);
-					rmtObj[evento.type].send(evento.item.idCategoria.obj.idCategoria, evento.item.idClas);
-					rmtObj.item = evento.item['idCategoria']['obj'];
-					rmtObj.callback = evento.callback;
+					try{
+						rmtObj[evento.type].send(evento.item.idCategoria.obj.idCategoria, evento.item.idClas);
+						rmtObj.item = evento.item['idCategoria']['obj'];
+						rmtObj.callback = evento.callback;	
+					} catch(e:*){
+						
+					}
+					
 					break;
 				case MantenedoresEvent.AGREGAR_SUBCATEGORIAS:
 					trace("AGREGAR_SUBCATEGORIAS");
 					
-					rmtObj[evento.type].send(evento.item[0].idCategoria, evento.item[1]);
+					rmtObj[evento.type].send(evento.item[1], evento.item[0].idCategoria, evento.item[2]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					break;
@@ -151,7 +161,7 @@ package listeners
 				case MantenedoresEvent.CREAR_CATEGORIA:
 					trace("CREAR_CATEGORIA");
 					obj = {idCategoria: evento.item[0].idCategoria, nombreCategoria: evento.item[0].nombreCategoria};
-					str = com.adobe.serialization.json.JSON.encode(obj);
+					//str = com.adobe.serialization.json.JSON.encode(obj);
 					rmtObj[evento.type].send(evento.item[0].nombreCategoria, evento.item[1].source);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
@@ -160,7 +170,7 @@ package listeners
 				case MantenedoresEvent.MODIFICAR_CATEGORIA:
 					trace("MODIFICAR_CATEGORIA");
 					obj = {idCategoria: evento.item[0].idCategoria, nombreCategoria: evento.item[0].nombreCategoria};
-					str = com.adobe.serialization.json.JSON.encode(obj);
+					//str = com.adobe.serialization.json.JSON.encode(obj);
 					rmtObj[evento.type].send([evento.item[0].idCategoria, evento.item[0].nombreCategoria]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
@@ -179,16 +189,20 @@ package listeners
 				
 				/***************************************/
 				case MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS:
-					trace("BUSCA_SUBCATEGORIAS_ASOCIADAS");
+					trace("BUSCA_PROBLEMAS_ASOCIADOS");
 					//str = com.adobe.serialization.json.JSON.encode(evento.item);
-					rmtObj[evento.type].send(evento.item.idSubCategoria.obj.idSubCategoria, evento.item.idCategoria, evento.item.idClas);
-					rmtObj.item = evento.item['idSubCategoria']['obj'];
-					rmtObj.callback = evento.callback;
+					try{
+						rmtObj[evento.type].send(evento.item.idSubCategoria.obj.idSubCategoria, evento.item.idCategoria, evento.item.idClas);
+						rmtObj.item = evento.item['idSubCategoria']['obj'];
+						rmtObj.callback = evento.callback;
+					} catch(e:*){
+						
+					}
 					break;
 				case MantenedoresEvent.AGREGAR_PROBLEMAS:
-					trace("AGREGAR_SUBCATEGORIAS");
+					trace("AGREGAR_PROBLEMAS");
 					
-					rmtObj[evento.type].send(evento.item[0].idSubCategoria, evento.item[1]);
+					rmtObj[evento.type].send(evento.item[1], evento.item[2], evento.item[0].idSubCategoria, evento.item[3]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					break;
@@ -202,7 +216,7 @@ package listeners
 				
 				case MantenedoresEvent.CREAR_SUBCATEGORIAS:
 					obj = {idSubCategoria: evento.item[0].idSubCategoria, nombreSubCategoria: evento.item[0].nombreSubCategoria};
-					str = com.adobe.serialization.json.JSON.encode(obj);
+					//str = com.adobe.serialization.json.JSON.encode(obj);
 					rmtObj[evento.type].send(evento.item[0].nombreSubCategoria, evento.item[1], evento.item[2].source);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
@@ -210,7 +224,7 @@ package listeners
 					break;
 				case MantenedoresEvent.MODIFICAR_SUBCATEGORIAS:
 					obj = {idSubCategoria: evento.item[0].idSubCategoria, nombreSubCategoria: evento.item[0].nombreSubCategoria};
-					str = com.adobe.serialization.json.JSON.encode(obj);
+					//str = com.adobe.serialization.json.JSON.encode(obj);
 					rmtObj[evento.type].send([evento.item[0].idSubCategoria, evento.item[0].nombreSubCategoria]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
@@ -231,7 +245,7 @@ package listeners
 				/***************************************/
 				case MantenedoresEvent.CREAR_PROBLEMAS:
 					obj = {idDescripcion: evento.item[0].idDescripcion, nombreDescripcion: evento.item[0].nombreDescripcion};
-					str = com.adobe.serialization.json.JSON.encode(obj);
+					//str = com.adobe.serialization.json.JSON.encode(obj);
 					rmtObj[evento.type].send(evento.item[0].nombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion, evento.item[1], evento.item[2], evento.item[3].source);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
@@ -239,7 +253,7 @@ package listeners
 					break;
 				case MantenedoresEvent.MODIFICAR_PROBLEMAS:
 					obj = {idDescripcion: evento.item[0].idDescripcion, nombreDescripcion: evento.item[0].nombreDescripcion, idFormaAtencion: evento.item[0].idFormaAtencion, idTiempoSolucion: evento.item[0].idTiempoSolucion};
-					str = com.adobe.serialization.json.JSON.encode(obj);
+					//str = com.adobe.serialization.json.JSON.encode(obj);
 					rmtObj[evento.type].send([evento.item[0].idDescripcion, evento.item[0].nombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;

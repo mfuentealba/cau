@@ -11,6 +11,7 @@
 	<fx:Script>
 		<![CDATA[
 			import components.PopTipificacion;
+			import components.PopupAgregar;
 			import components.PopupCategorias;
 			
 			import controller.Controller;
@@ -44,13 +45,19 @@
 					switch(evento.currentTarget){
 						case dgClasificacion:
 							manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem});
+							dgCategorias.dataProvider = null;
+							dgSubCategorias.dataProvider = null;
+							dgProblemas.dataProvider = null;
 							Controller.getInstance().dispatchEvent(manEvent);		
 							break;
 						case dgCategorias:
+							dgSubCategorias.dataProvider = null;
+							dgProblemas.dataProvider = null;
 							manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem});
 							Controller.getInstance().dispatchEvent(manEvent);		
 							break;
 						case dgSubCategorias:
+							dgProblemas.dataProvider = null;
 							manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem.obj.idCategoria, idSubCategoria: dgSubCategorias.selectedItem});
 							Controller.getInstance().dispatchEvent(manEvent);		
 							break;
@@ -100,38 +107,69 @@
 				auxNuevoVO.arrAsociadosOut.refresh();
 			}
 			
-			protected function fnPopCategorias(event:MouseEvent):void
+			protected function fnPopAgregar(obj:*, campoVisible:String, idCampoVisible:String, eventoEjecucion:String):void
 			{
 				// TODO Auto-generated method stub
-				var pop:PopupCategorias = new PopupCategorias();
-				pop.clasificacionVO = ClasificacionVO(dgClasificacion.selectedItem);
-				pop.fnActualizaData = fnActualizaData;
-				PopUpManager.addPopUp(pop, this.parentApplication as CAU, true);
-				PopUpManager.centerPopUp(pop);
+				if(obj){
+					var pop:PopupAgregar = new PopupAgregar();
+					pop.objVO = obj;
+					pop.eventoEjecucion = eventoEjecucion;
+					pop.fnActualizaData = fnActualizaData;
+					pop.campoVisible = campoVisible;
+					
+					switch(eventoEjecucion){
+						case MantenedoresEvent.AGREGAR_SUBCATEGORIAS:
+							pop.idClas = dgClasificacion.selectedItem['idClasificacion'];
+							break;
+						case MantenedoresEvent.AGREGAR_PROBLEMAS:
+							pop.idClas = dgClasificacion.selectedItem['idClasificacion'];
+							pop.idCat = dgCategorias.selectedItem.obj['idCategoria'];
+							break;
+					}
+					
+					pop.idCampoVisible = idCampoVisible;
+					PopUpManager.addPopUp(pop, this.parentApplication as CAU, true);
+					PopUpManager.centerPopUp(pop);	
+				} else {
+					Alert.show('Debe seleccionar clasificación', 'Info');
+				}
+				
 			}
 			
 			
 			
 			
 			
-			protected function fnEliminarNoSeleccionadas(event:MouseEvent):void
+			protected function fnEliminarNoSeleccionadas(objSelect:*, campo:String, evento:String, dg:DataGrid):void
 			{
 				// TODO Auto-generated method stub
 				var arr:Array = [];
-				for each(var obj:Object in clasificacionVO.arrAsociadosIn){
-					if(obj.sel == false){
-						arr.push(obj['obj']['idCategoria']);	
+				if(objSelect){
+					for each(var obj:Object in objSelect.arrAsociadosIn){
+						if(obj.sel == false){
+							arr.push(obj['obj'][campo]);	
+						}
+						
 					}
 					
+					var manEvent:MantenedoresEvent = new MantenedoresEvent(evento, fnActualizaData, [objSelect, arr]);
+					dg.selectedItem.obj.arrAsociadosIn.removeAll();
+					dg.selectedItem.obj.arrAsociadosOut.removeAll();
+					dg.selectedItem = null;
+					Controller.getInstance().dispatchEvent(manEvent);	
+					
+				} else {
+					Alert.show("Lista vacía", 'Info');
 				}
-				
-				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS, fnActualizaData, [dgClasificacion.selectedItem, arr]);
-				Controller.getInstance().dispatchEvent(manEvent);	
+					
 			}
 			
 			protected function fnNuevaClasificacion(event:*):void
 			{
-				// TODO Auto-generated method stub				
+				// TODO Auto-generated method stub			
+				dgCategorias.dataProvider = null;
+				dgSubCategorias.dataProvider = null;
+				dgProblemas.dataProvider = null;
 				clasificacionVO = new ClasificacionVO();
 				dgClasificacion.selectedItem = null;
 				modelApp.arrClasificacion.refresh();
@@ -140,74 +178,27 @@
 			
 			protected function fnNuevaCategoria(event:*):void
 			{
-				// TODO Auto-generated method stub				
-				/*var categoriaVO:CategoriaVO = new CategoriaVO();
-				dgCategorias.selectedItem = null;
-				modelApp.arrCategoria.refresh();*/
-				
-				//Alert.show('Deseas incluir esta nueva categoría la clasificación actual', 'Atención', Alert.OK|Alert.NO, null, fnIncluirCategoria);
-				dgClasificacion.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgClasificacion.selectedIndex));
-				/*if(dgClasificacion.selectedItem){
-					fnBuscarAsociados(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgClasificacion.selectedIndex));
-					ClasificacionVO(dgClasificacion.selectedItem).arrAsociadosIn.refresh();
-				}*/
-				
-				//btnEnviar.label = 'Crear';
-			}
-			
-			protected function fnIncluirCategoria(evento:CloseEvent):void{
-				if(evento.detail == Alert.OK){
-					
-				}
+				dgSubCategorias.dataProvider = null;
+				dgProblemas.dataProvider = null;
+				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem});
+				Controller.getInstance().dispatchEvent(manEvent);		
 			}
 			
 			
 			protected function fnNuevaSubcategoria(event:*):void
 			{
-				// TODO Auto-generated method stub				
-				/*var subcategoriaVO:SubCategoriaVO = new SubCategoriaVO();
-				dgSubCategorias.selectedItem = null;
-				modelApp.arrSubCategoria.refresh();*/
-				dgCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgCategorias.selectedIndex));
-				
-				
-				//btnEnviar.label = 'Crear';
+				dgProblemas.dataProvider = null;
+				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem});
+				Controller.getInstance().dispatchEvent(manEvent);		
 			}
 			
 			
 			protected function fnNuevoProblema(event:*):void
 			{
-				// TODO Auto-generated method stub				
-				dgSubCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgSubCategorias.selectedIndex));
+				dgProblemas.selectedItem = null;
+				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem.obj.idCategoria, idSubCategoria: dgSubCategorias.selectedItem});
+				Controller.getInstance().dispatchEvent(manEvent);	
 			}
-			
-			/*private function set fnIdClas(val:int):void{
-				idLbl.text = val + '';	
-			}*/
-			
-			
-			/*protected function fnOperarClasificacion(evento:MouseEvent):void
-			{
-				// TODO Auto-generated method stub
-				var mantenedoresEvent:MantenedoresEvent;
-				switch(evento.target){
-					case btnEnviar:
-						if(btnEnviar.label == 'Crear'){
-							
-							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.CREAR_CLASIFICACION, fnNuevaClasificacion, [clasificacionVO, modelApp.arrClasificacion]);						
-						} else {
-							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.MODIFICAR_CLASIFICACION, fnActualizaGrilla, [clasificacionVO, modelApp.arrClasificacion]);
-						}
-						
-						break;
-					case btnEliminar:
-						mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION, fnRemueveGrilla, [dgClasificacion.selectedItem, modelApp.arrClasificacion]);
-						
-						break;
-				}
-				
-				Controller.getInstance().dispatchEvent(mantenedoresEvent);
-			}*/	
 			
 			private function fnRemueveGrilla(id:String, opt:String):void{
 				var manEvent:MantenedoresEvent;
@@ -226,27 +217,29 @@
 						auxCatVO.arrAsociadosOut = null;
 						modelApp.arrCategoria.removeItemAt(modelApp.arrCategoria.getItemIndex(auxCatVO));
 						delete modelApp.objCategoria[id];
-						manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem});
-						Controller.getInstance().dispatchEvent(manEvent);
+						/*manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem});
+						Controller.getInstance().dispatchEvent(manEvent);*/
+						fnNuevaCategoria(null);
 						break;
 					case ModelApp.SUBCATEGORIA:
-						dgCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgCategorias.selectedIndex));
+						//dgCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgCategorias.selectedIndex));
 						var auxSubVO:SubCategoriaVO = dgSubCategorias.selectedItem['obj'] as SubCategoriaVO;
 						auxSubVO.arrAsociadosIn = null;
 						auxSubVO.arrAsociadosOut = null;
 						modelApp.arrSubCategoria.removeItemAt(modelApp.arrSubCategoria.getItemIndex(auxSubVO));
 						delete modelApp.objSubCategoria[id];
-						manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem});
-						Controller.getInstance().dispatchEvent(manEvent);		
+						/*manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem});
+						Controller.getInstance().dispatchEvent(manEvent);*/
+						fnNuevaSubcategoria(null);
 						break;
 					case ModelApp.PROBLEMA:
-						dgSubCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgSubCategorias.selectedIndex));
+						//dgSubCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgSubCategorias.selectedIndex));
 						var auxProbVO:DescripcionVO = dgProblemas.selectedItem['obj'] as DescripcionVO;
 						modelApp.arrDescripcion.removeItemAt(modelApp.arrDescripcion.getItemIndex(auxProbVO));
 						delete modelApp.objDescripcion[id];
-						manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem.obj.idCategoria, idSubCategoria: dgSubCategorias.selectedItem});
-						Controller.getInstance().dispatchEvent(manEvent);		
-						
+						/*manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem.obj.idCategoria, idSubCategoria: dgSubCategorias.selectedItem});
+						Controller.getInstance().dispatchEvent(manEvent);*/		
+						fnNuevoProblema(null);
 						break;
 						
 				}
@@ -459,37 +452,38 @@
 				
 			}
 			
+			
+		/*	private function set fnLimpiaGrillasCL(val:*):void{
+				dgCategorias.selectedItem = null;
+				dgCategorias.dataProvider = null;
+			}
+
+			
+			private function set fnLimpiaGrillasCA(val:*):void{
+				dgSubCategorias.selectedItem = null;
+				dgSubCategorias.dataProvider = null;
+			}
+			
+			private function set fnLimpiaGrillasSUB(val:*):void{
+				dgProblemas.selectedItem = null;
+				dgProblemas.dataProvider = null;
+			}//80537000-9 33*/
 		]]>
 	</fx:Script>
 	<!--<fx:Binding source="clasificacionVO.idClasificacion" destination="fnIdClas"/>-->
 	<!--<fx:Binding source="txtNombre.text" destination="clasificacionVO.nombreClasificacion" twoWay="true"/>-->
+	<!--<fx:Binding source="{dgClasificacion.selectedItem}" destination="fnLimpiaGrillasCL"/>
+	<fx:Binding source="{dgCategorias.selectedItem}" destination="fnLimpiaGrillasCA"/>
+	<fx:Binding source="{dgSubCategorias.selectedItem}" destination="fnLimpiaGrillasSUB"/>-->
 	<s:Group width="100%" height="100%">
 		<s:VGroup width="100%" height="100%" paddingBottom="30">
 			<s:HGroup gap="15" width="100%" height="40%">
-				<!--<components:CustomPanelSpark skinClass="assets.skins.CustomPanelBlancoSkin" title="{dgClasificacion.selectedIndex > -1 ? 'Actualizar Id: ' + clasificacionVO.idClasificacion : 'Nuevo'}" width="40%"  height="220">
-					<s:Form defaultButton="{btnEnviar}" width="100%">
-						<s:FormItem label="Nombre" width="100%" height="30">
-							<s:TextInput id="txtNombre" height="30" width="150"/>
-						</s:FormItem>
-						<s:FormItem width="100%" height="30">
-							<s:Button id="btnEnviar" label="{clasificacionVO.idClasificacion == 0 ? 'Crear' : 'Actualizar'}" click="fnOperarClasificacion(event)" skinClass="assets.skins.CustomButtonEnviar" width="150" height="30"/>	
-						</s:FormItem>
-						<s:FormItem width="100%" height="30">
-							<s:Button id="btnNuevo" label="Nueva Clasificación" click="fnNuevaClasificacion(event)" skinClass="assets.skins.CustomButtonTransparenteSkin" width="150" height="30"/>	
-						</s:FormItem>
-						<s:FormItem width="100%" height="30">
-							<s:Button id="btnEliminar" label="Eliminar" click="fnOperarClasificacion(event)" skinClass="assets.skins.CustomButtonTransparenteSkin" width="150" height="30"/>	
-						</s:FormItem>
-					</s:Form>	
-				</components:CustomPanelSpark>-->
-				
 				<components:CustomPanelSpark id="cpClasificacion" title="Clasificación" width="100%"  height="100%">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
-						<s:HGroup width="100%">
+						<s:HGroup width="75%">
 							<s:Button id="btnCrearClasificacion" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarClasificacion" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.CLASIFICACION)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							<s:Button label="Agregar Categoría" click="fnEliminarNoSeleccionadas(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							
 						</s:HGroup>
 						<s:DataGrid id="dgClasificacion" dataProvider="{modelApp.arrClasificacion}" gridClick="fnBuscarAsociados(event)" width="100%" height="100%">
@@ -504,12 +498,14 @@
 				</components:CustomPanelSpark>
 				<components:CustomPanelSpark id="cpAsociados" title="Categorias" width="100%">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
-						<s:HGroup width="100%">
+						<s:HGroup width="75%">
 							<s:Button id="btnCrearCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarCategoria" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.CATEGORIA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							<s:Button label="Agregar Subcategoría" click="fnEliminarNoSeleccionadas(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							
+						</s:HGroup>
+						<s:HGroup width="100%">
+							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgClasificacion.selectedItem, 'nombreCategoria', 'idCategoria', MantenedoresEvent.AGREGAR_CATEGORIAS)" width="100%"/>
+							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgClasificacion.selectedItem, 'idCategoria', MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS, dgCategorias)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
 						<s:DataGrid id="dgCategorias" dataProvider="{dgClasificacion.selectedItem.arrAsociadosIn}" width="100%" height="100%" gridClick="fnBuscarAsociados(event)">
 							<s:columns>
@@ -532,10 +528,11 @@
 							<s:Button id="btnCrearSubCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarSubCategoria" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.SUBCATEGORIA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							<s:Button label="Agregar Problema" click="fnEliminarNoSeleccionadas(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							
 						</s:HGroup>
-						
+						<s:HGroup width="100%">
+							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgCategorias.selectedItem.obj, 'nombreSubCategoria', 'idSubCategoria', MantenedoresEvent.AGREGAR_SUBCATEGORIAS)" width="100%"/>
+							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgCategorias.selectedItem, 'idSubCategoria', MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA, dgSubCategorias)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
+						</s:HGroup>						
 						<s:DataGrid id="dgSubCategorias" dataProvider="{dgCategorias.selectedItem.obj.arrAsociadosIn}" gridClick="fnBuscarAsociados(event)" width="100%" height="100%">
 							<s:columns>
 								<s:ArrayList>
@@ -553,13 +550,10 @@
 							<s:Button id="btnCrearProblemas" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarProblema" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.PROBLEMA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							
 						</s:HGroup>
-						
 						<s:HGroup width="100%">
-							<s:Button label="Agregar Categorias" click="fnPopCategorias(event)" width="100%"/>
-							<s:Button label="Eliminar no seleccionadas" click="fnEliminarNoSeleccionadas(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-							
+							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgSubCategorias.selectedItem.obj, 'nombreDescripcion', 'idDescripcion', MantenedoresEvent.AGREGAR_PROBLEMAS)" width="100%"/>
+							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgSubCategorias.selectedItem, 'idDescripcion', MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS, dgProblemas)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
 						<s:DataGrid id="dgProblemas" dataProvider="{dgSubCategorias.selectedItem.obj.arrAsociadosIn}" width="100%" height="100%">
 							<s:columns>

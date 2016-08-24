@@ -381,20 +381,25 @@ FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria =
 	
 	
 	
+	//public function getCategoriaSubcategorias($arr) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"nombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
 	public function getCategoriaSubcategorias($id, $idClas) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"nombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
 		//echo "hfdfgjsfgskdf";
+		
+		/*$id = $arr[0]; 
+		$idClas = $arr[1]; */
+		//return " ca: " . $id . " cla: " . $idClas;
 		$stmt = mysqli_prepare($this->connection, "SELECT c.idSubCategoria, case when idCategoria is null then 0 else 1 end sel 
-FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcategoria = asoc.idsubcategoria and asoc.idcategoria = ?");		
+FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcategoria = asoc.idsubcategoria and asoc.idcategoria = " . $id . " and asoc.idClasificacion=" . $idClas . "");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 		
-		mysqli_stmt_bind_param($stmt, 's', $id);		
+		/*mysqli_stmt_bind_param($stmt, 'ss', $id, $idclas);		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
-		}
+		}*/
 		
 		mysqli_stmt_execute($stmt);
 		$msg = $this->throwExceptionOnError();
@@ -425,17 +430,17 @@ FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcatego
 	public function getSubcategoriaProblemas($id, $idCat, $idClas) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"nombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
 		//echo "hfdfgjsfgskdf";
 		$stmt = mysqli_prepare($this->connection, "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
-FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = ?");		
+FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas);		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 		
-		mysqli_stmt_bind_param($stmt, 's', $id);		
+		/*mysqli_stmt_bind_param($stmt, 's', $id);		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
-		}
+		}*/
 		
 		mysqli_stmt_execute($stmt);
 		$msg = $this->throwExceptionOnError();
@@ -544,7 +549,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 
 		}
 		
-		return $this->getCategoriaSubcategorias($idClas, $idCat);	
+		return $this->getCategoriaSubcategorias($idCat, $idClas);	
 		
 	}
 	
@@ -577,7 +582,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	
 	
 	
-	public function setSubCategoriaProblemas($idClas, $idCat, $idSub, $arr) {
+	public function setSubCategoriaProblema($idClas, $idCat, $idSub, $arr) {
 	
 		for($i = 0; $i < count($arr); $i++){
 			$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_subcategoriadescripcion (idClasificacion, idCategoria, idSubCategoria, idDescripcion) VALUES (?,?,?,?)");
@@ -600,7 +605,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 
 		}
 		
-		return $this->getSubcategoriaProblemas($idClas, $idCat);	
+		return $this->getSubcategoriaProblemas($idSub, $idCat, $idClas);	
 		
 	}
 	
@@ -1180,7 +1185,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		return $itemID;
 	}
 	
-	public function deleteProblema($itemID) {
+	public function deleteProblemas($itemID) {
 		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_subcategoriadescripcion WHERE idDescripcion=?");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
