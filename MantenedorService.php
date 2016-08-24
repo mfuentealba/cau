@@ -1037,6 +1037,193 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	}
 	
 	
+	public function deleteCategoria($itemID) {
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_subcategoriadescripcion WHERE idCategoria=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_categoriasubcategoria WHERE idCategoria=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_clasificacioncategoria WHERE idCategoria=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+				
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM `cau`.`categoria` WHERE idCategoria = ?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		return $itemID;
+	}
+	
+	public function deleteSubCategoria($itemID) {
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_subcategoriadescripcion WHERE idSubCategoria=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_categoriasubcategoria WHERE idSubCategoria=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+						
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM `cau`.`subcategoria` WHERE idSubCategoria = ?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		return $itemID;
+	}
+	
+	public function deleteProblema($itemID) {
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_subcategoriadescripcion WHERE idDescripcion=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+				
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM `cau`.`descripcion` WHERE idDescripcion = ?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		return $itemID;
+	}
+	
 	
 
 	/**

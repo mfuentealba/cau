@@ -169,7 +169,7 @@ package listeners
 					break;
 				case MantenedoresEvent.ELIMINAR_CATEGORIA:
 					trace("ELIMINAR_CATEGORIA");
-					rmtObj[evento.type].send(evento.item[0].idCategoria);
+					rmtObj[evento.type].send(evento.item[0]['obj'].idCategoria);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -218,7 +218,7 @@ package listeners
 					
 					break;
 				case MantenedoresEvent.ELIMINAR_SUBCATEGORIAS:
-					rmtObj[evento.type].send(evento.item[0].idSubCategoria);
+					rmtObj[evento.type].send(evento.item[0]['obj'].idSubCategoria);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -247,7 +247,7 @@ package listeners
 					
 					break;
 				case MantenedoresEvent.ELIMINAR_PROBLEMAS:
-					rmtObj[evento.type].send(evento.item[0].idDescripcion);
+					rmtObj[evento.type].send(evento.item[0]['obj'].idDescripcion);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -406,7 +406,7 @@ package listeners
 					opt = 'CLASIFICACION';
 					if(data.result == data.target.item[objTipificacion[opt]['idPrincipal']]){
 						Alert.show("Registro eliminado con éxito", "Información");
-						data.target.callback.call(null, data.result);	
+						data.target.callback.call(null, data.result, ModelApp.CLASIFICACION);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -460,16 +460,16 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrIn']] = new ArrayCollection();
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
-					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
-						if(obj['sel'] == 1){
-							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
-						} else {
-							data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
+						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+							if(obj['sel'] == 1){
+								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
+							} else {
+								data.target['item'][objTipificacion[opt]['arrOut']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: false});
+							}
+							
 						}
 						
 					}
-					
-				}
 					data.target['callback'].call(null, data.target['item']);
 					trace("ELIMINAR_CATEGORIAS");
 					break;
@@ -497,9 +497,9 @@ package listeners
 					break;
 				case MantenedoresEvent.ELIMINAR_CATEGORIA:
 					opt = 'CATEGORIAS';
-					if(data.result == data.target.item[objTipificacion[opt]['idPrincipal']]){
+					if(data.result == data.target.item['obj'][objTipificacion[opt]['idPrincipal']]){
 						Alert.show("Registro eliminado con éxito", "Información");
-						data.target.callback.call(null, data.result);	
+						data.target.callback.call(null, data.result, ModelApp.CATEGORIA);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -589,9 +589,9 @@ package listeners
 					break;
 				case MantenedoresEvent.ELIMINAR_SUBCATEGORIAS:
 					opt = 'SUBCATEGORIAS';
-					if(data.result == data.target.item[objTipificacion[opt]['idPrincipal']]){
+					if(data.result == data.target.item['obj'][objTipificacion[opt]['idPrincipal']]){
 						Alert.show("Registro eliminado con éxito", "Información");
-						data.target.callback.call(null, data.result);	
+						data.target.callback.call(null, data.result, ModelApp.SUBCATEGORIA);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -625,9 +625,9 @@ package listeners
 					break;
 				case MantenedoresEvent.ELIMINAR_PROBLEMAS:
 					opt = 'PROBLEMAS';
-					if(data.result == data.target.item[objTipificacion[opt]['id']]){
+					if(data.result == data.target.item['obj'][objTipificacion[opt]['id']]){
 						Alert.show("Registro eliminado con éxito", "Información");
-						data.target.callback.call(null, data.result);	
+						data.target.callback.call(null, data.result, ModelApp.PROBLEMA);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}

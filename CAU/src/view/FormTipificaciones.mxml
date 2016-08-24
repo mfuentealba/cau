@@ -34,9 +34,11 @@
 			import vo.SubCategoriaVO;
 			[Bindable] public var modelApp:ModelApp = ModelApp.getInstance();
 			[Bindable] private var clasificacionVO:ClasificacionVO = new ClasificacionVO();
+			private var test:String = '';
 			protected function fnBuscarAsociados(evento:GridEvent):void
 			{
 				// TODO Auto-generated method stub
+				trace('fnBuscarAsociados');
 				if(evento.rowIndex > -1){
 					var manEvent:MantenedoresEvent;
 					switch(evento.currentTarget){
@@ -145,6 +147,10 @@
 				
 				//Alert.show('Deseas incluir esta nueva categoría la clasificación actual', 'Atención', Alert.OK|Alert.NO, null, fnIncluirCategoria);
 				dgClasificacion.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgClasificacion.selectedIndex));
+				/*if(dgClasificacion.selectedItem){
+					fnBuscarAsociados(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgClasificacion.selectedIndex));
+					ClasificacionVO(dgClasificacion.selectedItem).arrAsociadosIn.refresh();
+				}*/
 				
 				//btnEnviar.label = 'Crear';
 			}
@@ -203,31 +209,89 @@
 				Controller.getInstance().dispatchEvent(mantenedoresEvent);
 			}*/	
 			
-			private function fnRemueveGrilla(id:String):void{
-				var auxClasificacionVO:ClasificacionVO = dgClasificacion.selectedItem as ClasificacionVO;
-				auxClasificacionVO.arrAsociadosIn = null;
-				auxClasificacionVO.arrAsociadosOut = null;
-				modelApp.arrClasificacion.removeItemAt(modelApp.arrClasificacion.getItemIndex(auxClasificacionVO));
+			private function fnRemueveGrilla(id:String, opt:String):void{
+				var manEvent:MantenedoresEvent;
+				switch(opt){
+					case ModelApp.CLASIFICACION:
+						var auxClasificacionVO:ClasificacionVO = dgClasificacion.selectedItem as ClasificacionVO;
+						auxClasificacionVO.arrAsociadosIn = null;
+						auxClasificacionVO.arrAsociadosOut = null;
+						modelApp.arrClasificacion.removeItemAt(modelApp.arrClasificacion.getItemIndex(auxClasificacionVO));
+						delete modelApp.objClasificacion[id];
+						break;
+					case ModelApp.CATEGORIA:
+						
+						var auxCatVO:CategoriaVO = dgCategorias.selectedItem['obj'] as CategoriaVO;
+						auxCatVO.arrAsociadosIn = null;
+						auxCatVO.arrAsociadosOut = null;
+						modelApp.arrCategoria.removeItemAt(modelApp.arrCategoria.getItemIndex(auxCatVO));
+						delete modelApp.objCategoria[id];
+						manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem});
+						Controller.getInstance().dispatchEvent(manEvent);
+						break;
+					case ModelApp.SUBCATEGORIA:
+						dgCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgCategorias.selectedIndex));
+						var auxSubVO:SubCategoriaVO = dgSubCategorias.selectedItem['obj'] as SubCategoriaVO;
+						auxSubVO.arrAsociadosIn = null;
+						auxSubVO.arrAsociadosOut = null;
+						modelApp.arrSubCategoria.removeItemAt(modelApp.arrSubCategoria.getItemIndex(auxSubVO));
+						delete modelApp.objSubCategoria[id];
+						manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem});
+						Controller.getInstance().dispatchEvent(manEvent);		
+						break;
+					case ModelApp.PROBLEMA:
+						dgSubCategorias.dispatchEvent(new GridEvent(GridEvent.GRID_CLICK,false,false, NaN, NaN,null,false, false, false, false, 0, dgSubCategorias.selectedIndex));
+						var auxProbVO:DescripcionVO = dgProblemas.selectedItem['obj'] as DescripcionVO;
+						modelApp.arrDescripcion.removeItemAt(modelApp.arrDescripcion.getItemIndex(auxProbVO));
+						delete modelApp.objDescripcion[id];
+						manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem.obj.idCategoria, idSubCategoria: dgSubCategorias.selectedItem});
+						Controller.getInstance().dispatchEvent(manEvent);		
+						
+						break;
+						
+				}
+				
 				//fnNuevaClasificacion(null);
 			}
 			
+			private var optDelete:String;
 			private function fnEliminacion(opt:String):void{
+				optDelete = opt;
 				switch(opt){
 					case ModelApp.CLASIFICACION:
 						Alert.show('Esta acción eliminará la clasificación y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
 						break;
 					case ModelApp.CATEGORIA:
+						Alert.show('Esta acción eliminará la categoría y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
 						break;
 					case ModelApp.SUBCATEGORIA:
+						Alert.show('Esta acción eliminará la subcategoría y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
 						break;
 					case ModelApp.PROBLEMA:
+						Alert.show('Esta acción eliminará el problema y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
 						break;
 				}
+				optDelete = opt;
 			}
 			
 			private function fnElimina(evento:CloseEvent):void{
 				if(evento.detail == Alert.OK){
-					var mantenedoresEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION, fnRemueveGrilla, [dgClasificacion.selectedItem, modelApp.arrClasificacion]);
+					var mantenedoresEvent:MantenedoresEvent;
+					switch(optDelete){
+						case ModelApp.CLASIFICACION:
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION, fnRemueveGrilla, [dgClasificacion.selectedItem, modelApp.arrClasificacion]);
+							break;
+						case ModelApp.CATEGORIA:
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CATEGORIA, fnRemueveGrilla, [dgCategorias.selectedItem, modelApp.arrCategoria]);
+							break;
+						case ModelApp.SUBCATEGORIA:
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_SUBCATEGORIAS, fnRemueveGrilla, [dgSubCategorias.selectedItem, modelApp.arrSubCategoria]);
+							break;
+						case ModelApp.PROBLEMA:
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_PROBLEMAS, fnRemueveGrilla, [dgProblemas.selectedItem, modelApp.arrDescripcion]);
+							break;
+					}
+					
 					Controller.getInstance().dispatchEvent(mantenedoresEvent);
 				}
 			}
