@@ -28,7 +28,7 @@
   <flashCatalyst validateFlashCatalystCompatibility="false"/>
   <buildTargets>
     <buildTarget buildTargetName="default">
-      <airSettings airCertificatePath="C:/Users/mario/Adobe Flash Builder 4.6/WarLand/src/app_fin.p12" airTimestamp="false" anePathSet="true" version="1">
+      <airSettings airCertificatePath="C:/Users/mfuentealba/Adobe Flash Builder 4.6/WarLand/src/app_fin.p12" airTimestamp="false" anePathSet="true" version="1">
         <airExcludes/>
         <anePaths/>
       </airSettings>
