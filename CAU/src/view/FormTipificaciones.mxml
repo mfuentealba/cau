@@ -209,6 +209,8 @@
 						auxClasificacionVO.arrAsociadosOut = null;
 						modelApp.arrClasificacion.removeItemAt(modelApp.arrClasificacion.getItemIndex(auxClasificacionVO));
 						delete modelApp.objClasificacion[id];
+						dgSubCategorias.dataProvider = null;
+						dgProblemas.dataProvider = null;
 						break;
 					case ModelApp.CATEGORIA:
 						
@@ -478,7 +480,7 @@
 	<s:Group width="100%" height="100%">
 		<s:VGroup width="100%" height="100%" paddingBottom="30">
 			<s:HGroup gap="15" width="100%" height="40%">
-				<components:CustomPanelSpark id="cpClasificacion" title="Clasificación" width="100%"  height="100%">
+				<components:CustomPanelSpark id="cpClasificacion" title="Clasificación" width="100%"  height="350">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
 						<s:HGroup width="75%">
 							<s:Button id="btnCrearClasificacion" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
@@ -496,7 +498,7 @@
 						</s:DataGrid>
 					</s:VGroup> 	
 				</components:CustomPanelSpark>
-				<components:CustomPanelSpark id="cpAsociados" title="Categorias" width="100%">
+				<components:CustomPanelSpark id="cpAsociados" title="Categorias" width="100%" height="350">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
 						<s:HGroup width="75%">
 							<s:Button id="btnCrearCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
@@ -522,7 +524,7 @@
 				</components:CustomPanelSpark>	
 			</s:HGroup>
 			<s:HGroup gap="15" width="100%" height="40%">
-				<components:CustomPanelSpark title="Subcategorias" width="100%"  height="100%">
+				<components:CustomPanelSpark title="Subcategorias" width="100%"  height="350">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
 						<s:HGroup width="100%">
 							<s:Button id="btnCrearSubCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
@@ -530,7 +532,7 @@
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.SUBCATEGORIA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
 						<s:HGroup width="100%">
-							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgCategorias.selectedItem.obj, 'nombreSubCategoria', 'idSubCategoria', MantenedoresEvent.AGREGAR_SUBCATEGORIAS)" width="100%"/>
+							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgCategorias.selectedItem ? dgCategorias.selectedItem.obj : null, 'nombreSubCategoria', 'idSubCategoria', MantenedoresEvent.AGREGAR_SUBCATEGORIAS)" width="100%"/>
 							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgCategorias.selectedItem, 'idSubCategoria', MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA, dgSubCategorias)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>						
 						<s:DataGrid id="dgSubCategorias" dataProvider="{dgCategorias.selectedItem.obj.arrAsociadosIn}" gridClick="fnBuscarAsociados(event)" width="100%" height="100%">
@@ -544,7 +546,7 @@
 						</s:DataGrid>
 					</s:VGroup> 	
 				</components:CustomPanelSpark>
-				<components:CustomPanelSpark title="Problemas" width="100%">
+				<components:CustomPanelSpark title="Problemas" width="100%" height="350">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
 						<s:HGroup width="75%">
 							<s:Button id="btnCrearProblemas" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
@@ -552,7 +554,7 @@
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.PROBLEMA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
 						<s:HGroup width="100%">
-							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgSubCategorias.selectedItem.obj, 'nombreDescripcion', 'idDescripcion', MantenedoresEvent.AGREGAR_PROBLEMAS)" width="100%"/>
+							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgSubCategorias.selectedItem ? dgSubCategorias.selectedItem.obj : null, 'nombreDescripcion', 'idDescripcion', MantenedoresEvent.AGREGAR_PROBLEMAS)" width="100%"/>
 							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgSubCategorias.selectedItem, 'idDescripcion', MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS, dgProblemas)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
 						<s:DataGrid id="dgProblemas" dataProvider="{dgSubCategorias.selectedItem.obj.arrAsociadosIn}" width="100%" height="100%">

@@ -33,6 +33,7 @@ package model
 		public var arrSubCategoria:ArrayCollection;
 		public var arrDescripcion:ArrayCollection;
 		
+		
 		public var objTipoUsuario:Object = {};
 		public var objGrupoResolutor:Object = {};
 		public var objPerfiles:Object = {};
@@ -40,6 +41,11 @@ package model
 		public var objCategoria:Object = {};
 		public var objSubCategoria:Object = {};
 		public var objDescripcion:Object = {};
+		
+		
+		public var objTicket:Object = {};
+		public var arrTickets:ArrayCollection;
+		public var fnTicketsFilter:Function;
 		
 		public var arrUsuarios:ArrayCollection;
 		public var objUsuarios:Object = {};

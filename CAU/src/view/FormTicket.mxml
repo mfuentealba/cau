@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
+			xmlns:s="library://ns.adobe.com/flex/spark"
+			xmlns:mx="library://ns.adobe.com/flex/mx"
+			xmlns:controllerbd="services.controllerbd.*"
+			xmlns:skins="assets.skins.*" 
+			xmlns:components="components.*">
+	<fx:Script>
+		<![CDATA[
+			import controller.Controller;
+			
+			import event.TicketEvent;
+			import event.UsuarioEvent;
+			
+			import model.ModelApp;
+			
+			import mx.controls.Alert;
+			import mx.validators.EmailValidator;
+			
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
+			
+			import vo.UserVO;
+			
+			
+			[Bindable] public var usuarioVO:UserVO = new UserVO();
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			
+			
+			protected function fnValidaUsuario(evento:MouseEvent):void{
+				/*var mailValidator:EmailValidator = new EmailValidator();
+				mailValidator.*/
+				
+				var i:int = txtEmail.text.search(/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/);
+				if(i < 0){
+					Alert.show("debe ingresar mail", "Atención");
+					return;
+				}
+				if(usuarioVO.email == '' || usuarioVO.grupoResolutorVO == null || usuarioVO.nombre_completo == '' || usuarioVO.password == '' || usuarioVO.perfilVO == null || usuarioVO.tema == ''|| usuarioVO.tipoUsuarioVO == null || usuarioVO.username == ''){
+					Alert.show("Debe completar todos los campos", "Atención");
+					return;
+				}
+				fnOperarUsuario(evento);
+				
+			}
+			
+			
+			
+			protected function fnOperarUsuario(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var usuarioEvent:UsuarioEvent;
+				switch(evento.target){
+					case btnEnviar:
+						if(btnEnviar.label == 'Crear'){
+							
+							usuarioEvent = new UsuarioEvent(UsuarioEvent.CREAR, usuarioVO, fnNuevoUsuario);						
+						} else {
+							usuarioEvent = new UsuarioEvent(UsuarioEvent.MODIFICAR, usuarioVO, fnActualizaGrilla);
+						}
+						
+						break;
+					case btnEliminar:
+						usuarioEvent = new UsuarioEvent(UsuarioEvent.ELIMINAR, usuarioVO, fnRemueveGrilla);
+						
+						break;
+				}
+				
+				Controller.getInstance().dispatchEvent(usuarioEvent);
+			}			
+			
+			protected function fnNuevoUsuario(event:*):void
+			{
+				// TODO Auto-generated method stub
+				cmbIdGrupoResolutor.selectedItem = null;
+				cmbPerfil.selectedItem = null;
+				cmbTipoUsuario.selectedItem = null;
+				cmbIdGrupoResolutor.textInput.text = '';
+				cmbPerfil.textInput.text = '';
+				cmbTipoUsuario.selectedItem = null;
+				cmbTipoUsuario.textInput.text = '';
+				usuarioVO = new UserVO();
+				dgUsuarios.selectedItem = null;
+				btnEnviar.label = 'Crear';
+			}
+			
+			protected function fnSelectUsuario(evento:GridEvent):void
+			{
+				// TODO Auto-generated method stub
+				//sucursales = dgTicketes.selectedItem as UserVO;
+				
+				if(evento.rowIndex > -1){
+					var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+					usuarioVO.id = auxUsuario.id; 
+					usuarioVO.perfil = auxUsuario.perfil;
+					usuarioVO.username = auxUsuario.username;
+					usuarioVO.email = auxUsuario.email;
+					usuarioVO.password = auxUsuario.password;
+					usuarioVO.nombre_completo = auxUsuario.nombre_completo;
+					usuarioVO.tema = auxUsuario.tema;
+					usuarioVO.tipoUsuario = auxUsuario.tipoUsuario;
+					usuarioVO.idGrupoResolutor = auxUsuario.idGrupoResolutor;
+				}
+				
+			}
+			
+			private function fnActualizaGrilla(item:UserVO):void{
+				var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+				auxUsuario.id = item.id; 
+				auxUsuario.perfil = item.perfil;
+				auxUsuario.username = item.username;
+				auxUsuario.email = item.email;
+				auxUsuario.password = item.password;
+				auxUsuario.nombre_completo = item.nombre_completo;
+				auxUsuario.tema = item.tema;
+				auxUsuario.tipoUsuario = item.tipoUsuario;
+				auxUsuario.idGrupoResolutor = item.idGrupoResolutor;
+			}
+			
+			private function fnRemueveGrilla(id:String):void{
+				var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+				modelApp.arrUsuarios.removeItemAt(modelApp.arrUsuarios.getItemIndex(auxUsuario));
+				fnNuevoUsuario(null);
+			}
+			
+			
+			
+			protected function fnFiltrarTicket(event:*):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.arrUsuarios.refresh();
+			}
+			
+			
+			/*protected function cmbIdGrupoResolutor_changeHandler(evento:IndexChangeEvent):void
+			{
+			// TODO Auto-generated method stub
+			if(evento.newIndex < 0){
+			cmbIdGrupoResolutor.selectedIndex = -1;
+			} else {
+			usuarioVO.grupoResolutorVO = cmbIdGrupoResolutor.selectedItem;
+			}
+			}*/
+			
+			protected function cmbIdGrupoResolutor_changingHandler(evento:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function cmbIdGrupoResolutor_keyUpHandler(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				//modelApp.grupoResolutorFilter = cmbIdGrupoResolutor.textInput.text;
+				modelApp.arrGrupoResolutor.refresh();	
+				
+				
+			}
+			
+			private function set fnCambioGruporesolutor(val:int):void{
+				trace('OPCION 1 ' + val);
+				if(val > -1){
+					usuarioVO.idGrupoResolutor = '' + cmbIdGrupoResolutor.selectedItem['idGrupoResolutor'];
+					trace('NUEVO GRUPO ' + usuarioVO.grupoResolutorVO.nombreGrupoResolutor);
+				} else {
+					cmbIdGrupoResolutor.selectedIndex = -1;
+				}
+			}
+			
+			/*	private function set fnCambioGruporesolutor2(val:*):void{
+			trace('OPCION 2 ' + cmbIdGrupoResolutor.selectedItem['idGrupoResolutor']);
+			
+			if(val && !(val is String)){
+			usuarioVO.idGrupoResolutor = '' + cmbIdGrupoResolutor.selectedItem['IdGrupoResolutor'];
+			trace('NUEVO GRUPO ' + usuarioVO.grupoResolutorVO.nombreGrupoResolutor);
+			} else {
+			cmbIdGrupoResolutor.selectedIndex = -1;
+			}
+			}*/
+			
+		]]>
+	</fx:Script>
+	<fx:Binding source="cmbPerfil.selectedItem.id" destination="usuarioVO.perfil" twoWay="true"/>
+	<fx:Binding source="usuarioVO.perfilVO" destination="cmbPerfil.selectedItem" twoWay="true"/>
+	<fx:Binding source="txtUsername.text" destination="usuarioVO.username" twoWay="true"/>
+	<fx:Binding source="txtEmail.text" destination="usuarioVO.email" twoWay="true"/>
+	<fx:Binding source="txtpassword.text" destination="usuarioVO.password" twoWay="true"/>
+	<fx:Binding source="txtNombreCompleto.text" destination="usuarioVO.nombre_completo" twoWay="true"/>
+	<fx:Binding source="txtTema.text" destination="usuarioVO.tema" twoWay="true"/>
+	<fx:Binding source="cmbTipoUsuario.selectedItem.id" destination="usuarioVO.tipoUsuario" twoWay="true"/>
+	<fx:Binding source="usuarioVO.tipoUsuarioVO" destination="cmbTipoUsuario.selectedItem" twoWay="true"/>	
+	<fx:Binding source="usuarioVO.grupoResolutorVO" destination="cmbIdGrupoResolutor.selectedItem"/>
+	<fx:Binding source="cmbIdGrupoResolutor.selectedIndex" destination="fnCambioGruporesolutor"/>
+	<fx:Binding source="txtFiltro.text" destination="modelApp.usuarioFilter"/>
+	<!--<fx:Binding source="cmbIdGrupoResolutor.selectedItem" destination="fnCambioGruporesolutor2"/>-->
+	
+	<!--<fx:Declarations>
+	<mx:EmailValidator source="{txtEmail}" property="text" 
+	trigger="{txtEmail}" triggerEvent="focusOut"
+	invalidDomainError="Mal"
+	invalidCharError="Caracter malo"
+	invalidIPDomainError="IP"
+	required="true"
+	requiredFieldError="lll"
+	invalidPeriodsInDomainError="Periodo"
+	valid="Alert.show('Validation Succeeded!')"/>
+	</fx:Declarations>-->
+
+	<s:Group 
+		width="100%" height="100%"
+		>
+		
+		<s:layout>
+			<s:HorizontalLayout paddingBottom="50"/>
+		</s:layout>
+		<components:CustomPanelSpark id="cpMant" title="{dgUsuarios.selectedIndex > -1 ? 'Actualizar id: ' + usuarioVO.id : 'Nuevo'}" width="400" height="600" color="#eeeeee" imgBl="true">
+			<s:Form id="formMant" width="100%">
+				<s:FormItem label="perfil" width="100%" height="30">
+					<s:ComboBox id="cmbPerfil" color="#333333" skinClass="assets.skins.ComboBoxLVNoEditSkin" dataProvider="{modelApp.arrPerfiles}" labelField="perfil" width="100%"></s:ComboBox>
+				</s:FormItem>
+				<s:FormItem label="username" width="100%" height="30">
+					<s:TextInput id="txtUsername" height="30" width="100%"/>
+				</s:FormItem>
+				<s:FormItem label="email" width="100%" height="30">
+					<s:TextInput id="txtEmail" height="30" width="100%"/>
+				</s:FormItem>
+				<s:FormItem label="password" width="100%" height="30">
+					<s:TextInput id="txtpassword" height="30" width="100%"/>
+				</s:FormItem>
+				<s:FormItem label="Repetir password" width="100%" height="30">
+					<s:TextInput id="txtRepassword" height="30" width="100%"/>
+				</s:FormItem>
+				<s:FormItem label="Nombre completo" width="100%" height="30">
+					<s:TextInput id="txtNombreCompleto" height="30" width="100%"/>
+				</s:FormItem>
+				<s:FormItem label="tema" width="100%" height="30">
+					<s:TextInput id="txtTema" height="30" width="100%"/>
+				</s:FormItem>
+				<s:FormItem label="tipoUsuario" width="100%" height="30">
+					<s:ComboBox id="cmbTipoUsuario" color="#333333" skinClass="assets.skins.ComboBoxLVNoEditSkin" dataProvider="{modelApp.arrTipoUsuario}" labelField="valor" width="100%"></s:ComboBox>
+				</s:FormItem>
+				<s:FormItem label="idGrupoResolutor" width="100%" height="30">
+					<!--<s:ComboBox id="cmbIdGrupoResolutor" keyUp="cmbIdGrupoResolutor_keyUpHandler(event)" color="#333333" skinClass="assets.skins.ComboBoxLVSkin" changing="cmbIdGrupoResolutor_changingHandler(event)" change="cmbIdGrupoResolutor_changeHandler(event)" dataProvider="{modelApp.arrGrupoResolutor}" labelField="nombreGrupoResolutor" width="100%"></s:ComboBox>-->
+					<components:CustomComboBox id="cmbIdGrupoResolutor" color="#333333" dataProvider="{modelApp.arrGrupoResolutor}" labelField="nombreGrupoResolutor" width="100%"></components:CustomComboBox>
+				</s:FormItem>
+				
+				<s:FormItem label="" width="100%" height="50">
+					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{usuarioVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnValidaUsuario(event)" height="50" skinClass="assets.skins.ButtonSendLVSkin" width="100%"/>
+				</s:FormItem>
+				<s:FormItem label="" width="100%" height="50">
+					<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo Ticket" click="fnNuevoUsuario(event)" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
+				</s:FormItem>
+				<s:FormItem label="" width="100%" height="50">
+					<s:Button id="btnEliminar" color="white" fontWeight="bold" label="Eliminar" click="fnOperarUsuario(event)" enabled="{dgUsuarios.selectedItem != null ? true : false}" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
+				</s:FormItem>
+				
+			</s:Form>	
+		</components:CustomPanelSpark>
+		
+		<components:CustomPanelSpark title="Lista de usuarios generados" width="100%" height="{cpMant.height}">
+			<s:VGroup width="100%" height="100%" paddingLeft="10" paddingRight="10">
+				<s:Group width="100%">
+					<s:Rect width="100%" height="100%">
+						<s:fill>
+							<s:SolidColor color="#333333"/>
+						</s:fill>
+					</s:Rect>
+					<s:HGroup color="#fefefe" verticalAlign="middle" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
+						<s:Label text="Filtro" fontWeight="bold"/>
+						<s:TextInput id="txtFiltro" change="fnFiltrarTicket(event)"/>
+					</s:HGroup>
+				</s:Group>
+				<s:DataGrid id="dgUsuarios" width="100%" 
+							requestedRowCount="4" dataProvider="{modelApp.arrUsuarios}" gridClick="fnSelectUsuario(event)"
+							rowHeight="35" height="{formMant.height - 35}">
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="id" headerText="Id"></s:GridColumn>
+							<s:GridColumn dataField="perfilVO.perfil" headerText="Perfil"></s:GridColumn>
+							<s:GridColumn dataField="username" headerText="Username"></s:GridColumn>
+							<s:GridColumn dataField="email" headerText="Email"></s:GridColumn>
+							<!--<s:GridColumn dataField="password" headerText="Password"></s:GridColumn>-->
+							<s:GridColumn dataField="nombre_completo" headerText="Nombre_completo"></s:GridColumn>
+							<s:GridColumn dataField="tema" headerText="Tema"></s:GridColumn>
+							<s:GridColumn dataField="tipoUsuarioVO.valor" headerText="Tipo Usuario"></s:GridColumn>
+							<s:GridColumn dataField="grupoResolutorVO.nombreGrupoResolutor" headerText="Grupo Resolutor"></s:GridColumn>
+						</s:ArrayList>
+					</s:columns>
+					
+				</s:DataGrid>
+			</s:VGroup>	
+		</components:CustomPanelSpark>
+		
+		
+		
+	</s:Group>
+	
+</s:Scroller>

@@ -128,7 +128,7 @@
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>
-		<components:CustomPanelSpark title="Clientes" width="20%" color="#eeeeee" imgBl="true">
+		<components:CustomPanelSpark title="Clientes" width="400" color="#eeeeee" imgBl="true">
 			<s:Form width="100%">
 				<s:FormItem label="ID" width="100%" height="30">
 					<s:Label id="idLbl" width="100%" height="30"/>

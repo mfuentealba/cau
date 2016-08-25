@@ -32,5 +32,12 @@ package services
 			return rmtObj;
 		}
 		
+		public static function fnRmtObjTickets():CustomRemoteObject{
+			var rmtObj:CustomRemoteObject = new CustomRemoteObject("TicketService");
+			rmtObj.source = 'Weborb.cau.TicketService';
+			rmtObj.showBusyCursor = true;
+			return rmtObj;
+		}
+		
 	}
 }
