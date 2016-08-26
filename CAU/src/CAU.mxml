@@ -41,7 +41,7 @@
 			protected function iniciaRO(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
-				
+				updater.initialize();
 				var obj1:Object = {id: 1, valor: "Nivel 1"};
 				var obj2:Object = {id: 2, valor: "Nivel 2"};
 				var obj3:Object = {id: 3, valor: "Nivel 3"};
@@ -246,7 +246,7 @@
 			
 			protected function updater_initializedHandler(event:UpdateEvent):void
 			{				
-				//updater.checkNow();
+				updater.checkNow();
 			}
 			
 			protected function fnLinkExt(evento:MouseEvent):void{
@@ -292,7 +292,7 @@
 	<fx:Style source="./assets/css/style.css"/>
 	<fx:Declarations>
 		<ns:NativeApplicationUpdater id="updater" 
-									 updateURL="http://trajano/OrderCapturer/assets/config/configUpdate.xml"
+									 updateURL="http://172.16.240.79:8080/cauUpdate/assets/config/configUpdate.xml"
 									 initialized="updater_initializedHandler(event)"/>
 		
 	</fx:Declarations>
