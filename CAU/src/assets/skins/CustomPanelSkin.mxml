@@ -35,7 +35,14 @@ in accordance with the terms of the license agreement accompanying it.
 	
 	<fx:Script fb:purpose="styling">
 		<![CDATA[
+			import com.larrainvial.gpatrimonial.orders.components.RenderList;
+			
 			import mx.core.FlexVersion;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.BorderContainer;
+			import spark.components.List;
 			
 			/* Define the skin elements that should not be colorized. 
 			For panel, border and title background are skinned, but the content area, background, border, and title text are not. */
@@ -130,6 +137,41 @@ in accordance with the terms of the license agreement accompanying it.
 			}
 			
 			private var cornerRadius:Number;
+			
+			private var bcElementos:List = new List();
+			
+			private function fnClick(evento:* = null):void{
+				btnOpciones.selected = false;
+				PopUpManager.removePopUp(bcElementos);
+				bcElementos = null;
+			}
+			
+			
+			protected function btnOpciones_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(btnOpciones.selected){			
+					bcElementos = new List();
+					bcElementos.minHeight = 0;
+					bcElementos.labelField = 'label';
+					bcElementos.setStyle("skinClass", CustomListSkin);
+					var f:ClassFactory = new ClassFactory(RenderList);
+					bcElementos.itemRenderer = f; 
+					bcElementos.addEventListener(MouseEvent.CLICK, fnClick);
+					PopUpManager.addPopUp(bcElementos, event.target as DisplayObject);
+					PopUpManager.centerPopUp(bcElementos);
+					bcElementos.dataProvider = hostComponent.arrContenido;
+					bcElementos.width = 100;
+					
+					bcElementos.y = event.target.height;	
+					bcElementos.x -= bcElementos.width - event.target.width;
+					//bcElementos.x = event.target.x + event.target.parent.x;
+				} else {
+					PopUpManager.removePopUp(bcElementos);
+					bcElementos = null;
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -234,21 +276,23 @@ in accordance with the terms of the license agreement accompanying it.
 				<!-- layer 3: text -->
 				<!--- @copy spark.components.Panel#titleDisplay -->
 				<s:HGroup left="10"
-						  width="100%" verticalAlign="middle" height="30">
+						  width="100%" verticalAlign="middle" height="30" gap="0">
 					<s:Label id="titleDisplay" maxDisplayedLines="1" color="#ffffff"
 							 left="9" right="3" top="1" bottom="0" minHeight="30"
 							 verticalAlign="middle" textAlign="start" fontWeight="bold" text="Prueba">
 					</s:Label>
 					<!--<s:Button includeInLayout="{hostComponent.imgBl}" visible="{hostComponent.imgBl}" icon="{hostComponent.imgSrc}" skinClass="BtnPanelSkin"/>-->
-					<s:VGroup width="100%" height="30" horizontalAlign="right">
+					<s:VGroup width="100%" height="30" horizontalAlign="right" gap="0">
 						<s:ToggleButton id="btnOpciones" visible="{hostComponent.imgBl}" right="0"
 										width="30" height="28" icon="{hostComponent.imgSrc}"
 										includeInLayout="{hostComponent.imgBl}"
 										skinClass="assets.skins.CustomToggleButtonSkin"
-										/>
-						<s:BorderContainer id="bcElementos" visible="{btnOpciones.selected}" includeInLayout="{btnOpciones.selected}" top="30" height="200" right="0">
-							
-						</s:BorderContainer>
+										click="btnOpciones_clickHandler(event)"/>
+						<!--<s:BorderContainer creationComplete="bcElementos_creationCompleteHandler(event)" id="bcElementos" visible="{btnOpciones.selected}" includeInLayout="{btnOpciones.selected}" top="30" right="0" width="200" height="200">
+							<s:layout>
+								<s:VerticalLayout/>
+							</s:layout>
+						</s:BorderContainer>-->
 					</s:VGroup>
 					
 				</s:HGroup>
