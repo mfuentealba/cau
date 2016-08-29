@@ -153,7 +153,7 @@ package listeners
 				case MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA:
 					trace("ELIMINAR_CATEGORIA_SUBCATEGORIA");
 					
-					rmtObj[evento.type].send(evento.item[0].idCategoria, evento.item[1]);
+					rmtObj[evento.type].send(evento.item[1], evento.item[0].idCategoria, evento.item[2]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					break;
@@ -209,7 +209,7 @@ package listeners
 				case MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS:
 					trace("ELIMINAR_CATEGORIA_SUBCATEGORIA");
 					
-					rmtObj[evento.type].send(evento.item[0].idSubCategoria, evento.item[1]);
+					rmtObj[evento.type].send(evento.item[1], evento.item[2], evento.item[0].idSubCategoria, evento.item[3]);
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					break;

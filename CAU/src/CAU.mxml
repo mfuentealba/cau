@@ -5,6 +5,7 @@
 					   backgroundAlpha="0" width="100%" height="100%" backgroundColor="0x000000" xmlns:components="components.*" resize="fnRedimencion(event)" xmlns:ns="http://updater.riaspace.com/">
 	<fx:Script>
 		<![CDATA[
+			import air.update.events.StatusUpdateErrorEvent;
 			import air.update.events.UpdateEvent;
 			
 			import controller.Controller;
@@ -17,6 +18,7 @@
 			import model.ModelApp;
 			
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.events.ResizeEvent;
 			import mx.rpc.events.FaultEvent;
@@ -287,13 +289,26 @@
 			
 			
 			
+			protected function updater_errorHandler(event:ErrorEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show("Problemas al conectarse al servicio de actualización", "Error");
+			}
+			
+			protected function updater_updateErrorHandler(event:StatusUpdateErrorEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show("Problemas al conectarse al servicio de actualización", "Error");
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Style source="./assets/css/style.css"/>
 	<fx:Declarations>
 		<ns:NativeApplicationUpdater id="updater" 
 									 updateURL="http://172.16.240.79:8080/cauUpdate/assets/config/configUpdate.xml"
-									 initialized="updater_initializedHandler(event)"/>
+									 initialized="updater_initializedHandler(event)"
+									 error="updater_errorHandler(event)" updateError="updater_updateErrorHandler(event)"/>
 		
 	</fx:Declarations>
 	

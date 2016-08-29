@@ -668,6 +668,55 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		
 	}
 	
+	public function removeCategoriaSubcategoria($idCla, $idCat, $arr) {
+		$idSub = implode(',', $arr);
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_categoriaSubcategoria WHERE idClasificacion = ? AND idCategoria = ? AND idSubcategoria in (" . $idSub . ")");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'ii', $idCla, $idCat);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		return $this->getCategoriaSubcategorias($idCat, $idClas);	
+		
+	}
+	
+	public function removeSubcategoriaProblema($idCla, $idCat, $idSub, $arr) {
+		$idPro = implode(',', $arr);
+		$stmt = mysqli_prepare($this->connection, "DELETE FROM asocia_subcategoriaDescripcion WHERE idClasificacion = ? AND idCategoria = ? AND idSubcategoria=? and idDescripcion in (" . $idPro . ")");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'iii', $idCla, $idCat, $idSub);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		return $idPro;
+		return $this->getSubCategoriaProblemas($idSub, $idCat, $idClas);	
+		
+	}
+	
 	public function saveClasificacion($row) {
 		//return 0;
 

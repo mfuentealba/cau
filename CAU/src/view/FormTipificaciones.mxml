@@ -152,9 +152,24 @@
 						
 					}
 					
-					var manEvent:MantenedoresEvent = new MantenedoresEvent(evento, fnActualizaData, [objSelect, arr]);
-					dg.selectedItem.obj.arrAsociadosIn.removeAll();
-					dg.selectedItem.obj.arrAsociadosOut.removeAll();
+					var arrParam:Array = [objSelect];
+					switch(evento){
+						case MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA:
+							arrParam.push(dgClasificacion.selectedItem.idClasificacion);
+							break;
+						case MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS:
+							arrParam.push(dgClasificacion.selectedItem.idClasificacion);
+							arrParam.push(dgCategorias.selectedItem.obj.idCategoria);
+							break;
+					}
+					arrParam.push(arr);
+					
+					var manEvent:MantenedoresEvent = new MantenedoresEvent(evento, fnActualizaData, arrParam);
+					if(dg.selectedItem && dg.selectedItem.obj.hasOwnProperty('arrAsociadosIn')){
+						dg.selectedItem.obj.arrAsociadosIn.removeAll();
+						dg.selectedItem.obj.arrAsociadosOut.removeAll();
+							
+					}
 					dg.selectedItem = null;
 					Controller.getInstance().dispatchEvent(manEvent);	
 					
@@ -303,150 +318,138 @@
 				var pop:PopTipificacion = new PopTipificacion();
 				var sw:Boolean;
 				switch(evento.target.id){
-					case 'btnCrearClasificacion' || 'btnModificarClasificacion':						
+					case 'btnCrearClasificacion':						
+						pop.opcion = evento.target.label; 
+						pop.ext2 = false;
+						pop.title = 'Crear Clasificación';
+						pop.tipoEvento = MantenedoresEvent.CREAR_CLASIFICACION;
+						pop.fnPost = fnNuevaClasificacion;
+						pop.campo1 = 'nombreClasificacion';
+						pop.claseOperacion = ClasificacionVO;
+						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+						PopUpManager.centerPopUp(pop);
+						break;
+					
+					case 'btnModificarClasificacion':
 						pop.opcion = evento.target.label; 
 						pop.ext2 = false;
 						
-						if(evento.target.label != 'Crear'){
-							if(dgClasificacion.selectedIndex > -1){
-								pop.title = 'Modificar Clasificación';
-								pop.obj = dgClasificacion.selectedItem;
-								pop.tipoEvento = MantenedoresEvent.MODIFICAR_CLASIFICACION;
-								pop.fnPost = fnActualizaGrilla;
-								
-								sw = true;
-							} else {
-								Alert.show('Debe Seleccionar Clasificación a modificar');
-							}
-							
-						} else {
-							pop.title = 'Crear Clasificación';
-							pop.tipoEvento = MantenedoresEvent.CREAR_CLASIFICACION;
-							pop.fnPost = fnNuevaClasificacion;
-							
-							sw = true;
-						}
-						if(sw){
-							
-							//pop.arr = modelApp.arrClasificacion;
+						if(dgClasificacion.selectedIndex > -1){
+							pop.title = 'Modificar Clasificación';
+							pop.obj = dgClasificacion.selectedItem;
+							pop.tipoEvento = MantenedoresEvent.MODIFICAR_CLASIFICACION;
+							pop.fnPost = fnActualizaGrilla;
 							pop.campo1 = 'nombreClasificacion';
 							pop.claseOperacion = ClasificacionVO;
-							
 							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
 							PopUpManager.centerPopUp(pop);
+						} else {
+							Alert.show('Debe Seleccionar Clasificación a modificar');
 						}
 						break;
 					
-					case 'btnCrearCategoria' || 'btnModificarCategoria':						
+					case 'btnCrearCategoria':						
 						pop.opcion = evento.target.label; 
-						
-						if(evento.target.label != 'Crear'){
-							if(dgCategorias.selectedIndex > -1){
-								pop.ext2 = false;
-								pop.title = 'Modificar Categoría';
-								pop.obj = dgCategorias.selectedItem.obj;
-								pop.tipoEvento = MantenedoresEvent.MODIFICAR_CATEGORIA;
-								pop.fnPost = fnActualizaGrilla;
-								sw = true;
-							} else {
-								Alert.show('Debe Seleccionar Categoría a modificar');
-							}
-							
-						} else {
-							pop.title = 'Crear Categoría';
-							pop.tipoEvento = MantenedoresEvent.CREAR_CATEGORIA;
-							pop.fnPost = fnNuevaCategoria;
-							pop.dgDataProvider = modelApp.arrClasificacion;
-							pop.campoVisible = 'nombreClasificacion';
-							pop.idCampoVisible = 'idClasificacion';
-							sw = true;
-						}
-						
-						if(sw){
-							
-							//pop.arr = modelApp.arrCategoria;
+						pop.title = 'Crear Categoría';
+						pop.tipoEvento = MantenedoresEvent.CREAR_CATEGORIA;
+						pop.fnPost = fnNuevaCategoria;
+						pop.dgDataProvider = modelApp.arrClasificacion;
+						pop.campoVisible = 'nombreClasificacion';
+						pop.idCampoVisible = 'idClasificacion';
+						pop.campo1 = 'nombreCategoria';
+						pop.claseOperacion = CategoriaVO;
+						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+						PopUpManager.centerPopUp(pop);	
+						break;
+					
+					case 'btnModificarCategoria':
+						pop.opcion = evento.target.label;
+						if(dgCategorias.selectedIndex > -1){
+							pop.ext2 = false;
+							pop.title = 'Modificar Categoría';
+							pop.obj = dgCategorias.selectedItem.obj;
+							pop.tipoEvento = MantenedoresEvent.MODIFICAR_CATEGORIA;
+							pop.fnPost = fnActualizaGrilla;
 							pop.campo1 = 'nombreCategoria';
 							pop.claseOperacion = CategoriaVO;
 							
 							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
-							PopUpManager.centerPopUp(pop);	
+							PopUpManager.centerPopUp(pop);
+						} else {
+							Alert.show('Debe Seleccionar Categoría a modificar');
 						}
+						break;
+					
+					case 'btnCrearSubCategoria':						
+						pop.opcion = evento.target.label; 
+						
+						pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
+						pop.title = 'Crear Subcategoría';
+						pop.tipoEvento = MantenedoresEvent.CREAR_SUBCATEGORIAS;
+						pop.fnPost = fnNuevaSubcategoria;
+						pop.dgDataProvider = modelApp.arrCategoria;
+						pop.campoVisible = 'nombreCategoria';
+						pop.idCampoVisible = 'idCategoria';
+						pop.campo1 = 'nombreSubCategoria';
+						pop.claseOperacion = SubCategoriaVO;
+						
+						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+						PopUpManager.centerPopUp(pop);
 						
 						break;
 					
-					case 'btnCrearSubCategoria' || 'btnModificarSubCategoria':						
-						pop.opcion = evento.target.label; 
-						
-						if(evento.target.label != 'Crear'){
-							if(dgSubCategorias.selectedIndex > -1){
-								pop.ext2 = false;
-								pop.title = 'Modificar Subcategoría';
-								pop.obj = dgSubCategorias.selectedItem.obj;
-								pop.tipoEvento = MantenedoresEvent.MODIFICAR_SUBCATEGORIAS;
-								pop.fnPost = fnActualizaGrilla;
-								sw = true;
-							} else {
-								Alert.show('Debe Seleccionar Subcategoría a modificar');
-							}
-							
-						} else {
-							pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
-							pop.title = 'Crear Subcategoría';
-							pop.tipoEvento = MantenedoresEvent.CREAR_SUBCATEGORIAS;
-							pop.fnPost = fnNuevaSubcategoria;
-							pop.dgDataProvider = modelApp.arrCategoria;
-							pop.campoVisible = 'nombreCategoria';
-							pop.idCampoVisible = 'idCategoria';
-							sw = true;
-						}
-						
-						if(sw){
-							
-							//pop.arr = modelApp.arrSubCategoria;
+					case 'btnModificarSubCategoria':
+						pop.opcion = evento.target.label;
+						if(dgSubCategorias.selectedIndex > -1){
+							pop.ext2 = false;
+							pop.title = 'Modificar Subcategoría';
+							pop.obj = dgSubCategorias.selectedItem.obj;
+							pop.tipoEvento = MantenedoresEvent.MODIFICAR_SUBCATEGORIAS;
+							pop.fnPost = fnActualizaGrilla;
 							pop.campo1 = 'nombreSubCategoria';
 							pop.claseOperacion = SubCategoriaVO;
 							
 							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
-							PopUpManager.centerPopUp(pop);	
+							PopUpManager.centerPopUp(pop);
+						} else {
+							Alert.show('Debe Seleccionar Subcategoría a modificar');
 						}
-						
 						break;
 					
-					case 'btnCrearProblemas' || 'btnModificarProblema':						
+					case 'btnCrearProblemas':						
 						pop.opcion = evento.target.label; 
 						
 						pop.ext = true;
-						if(evento.target.label != 'Crear'){
-							if(dgProblemas.selectedIndex > -1){
-								pop.ext2 = false;
-								pop.title = 'Modificar Problema';
-								pop.obj = dgProblemas.selectedItem.obj;
-								pop.tipoEvento = MantenedoresEvent.MODIFICAR_PROBLEMAS;
-								pop.fnPost = fnActualizaGrilla;
-								sw = true;
-							} else {
-								Alert.show('Debe Seleccionar Problema a modificar');
-							}
-							
-						} else {
-							pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
-							pop.idCat = '' + dgCategorias.selectedItem['obj']['idCategoria'];
-							pop.title = 'Crear Problema';
-							pop.tipoEvento = MantenedoresEvent.CREAR_PROBLEMAS;
-							pop.fnPost = fnNuevoProblema;
-							pop.dgDataProvider = modelApp.arrSubCategoria;
-							pop.campoVisible = 'nombreSubCategoria';
-							pop.idCampoVisible = 'idSubCategoria';
-							sw = true;
-						}
-						if(sw){
-							
-							//pop.arr = modelApp.arrDescripcion;
+						pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
+						pop.idCat = '' + dgCategorias.selectedItem['obj']['idCategoria'];
+						pop.title = 'Crear Problema';
+						pop.tipoEvento = MantenedoresEvent.CREAR_PROBLEMAS;
+						pop.fnPost = fnNuevoProblema;
+						pop.dgDataProvider = modelApp.arrSubCategoria;
+						pop.campoVisible = 'nombreSubCategoria';
+						pop.idCampoVisible = 'idSubCategoria';
+						pop.campo1 = 'nombreDescripcion';
+						pop.claseOperacion = DescripcionVO;
+						
+						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+						PopUpManager.centerPopUp(pop);	
+						break;
+					case 'btnModificarProblema':
+						pop.opcion = evento.target.label; 
+						pop.ext = true;
+						if(dgProblemas.selectedIndex > -1){
+							pop.ext2 = false;
+							pop.title = 'Modificar Problema';
+							pop.obj = dgProblemas.selectedItem.obj;
+							pop.tipoEvento = MantenedoresEvent.MODIFICAR_PROBLEMAS;
+							pop.fnPost = fnActualizaGrilla;
 							pop.campo1 = 'nombreDescripcion';
 							pop.claseOperacion = DescripcionVO;
 							
 							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
-							PopUpManager.centerPopUp(pop);	
+							PopUpManager.centerPopUp(pop);
+						} else {
+							Alert.show('Debe Seleccionar Problema a modificar');
 						}
 						break;
 				}
@@ -498,7 +501,7 @@
 						</s:DataGrid>
 					</s:VGroup> 	
 				</components:CustomPanelSpark>
-				<components:CustomPanelSpark id="cpAsociados" title="Categorias" width="100%" height="350">
+				<components:CustomPanelSpark id="cpAsociados" title="Categorias de: {dgClasificacion.selectedItem['nombreClasificacion']}" width="100%" height="350">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
 						<s:HGroup width="75%">
 							<s:Button id="btnCrearCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
@@ -513,7 +516,7 @@
 							<s:columns>
 								<s:ArrayList>
 									<s:GridColumn dataField="obj.nombreCategoria" headerText="Nombre"/>
-									<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel" width="30"/>	
+									<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Habilitada" itemRenderer="components.RenderSel" width="60"/>	
 								</s:ArrayList>
 							</s:columns>
 						</s:DataGrid>
@@ -524,7 +527,7 @@
 				</components:CustomPanelSpark>	
 			</s:HGroup>
 			<s:HGroup gap="15" width="100%" height="40%">
-				<components:CustomPanelSpark title="Subcategorias" width="100%"  height="350">
+				<components:CustomPanelSpark title="Subcategorias de: {dgCategorias.selectedItem.obj['nombreCategoria']}" width="100%"  height="350">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
 						<s:HGroup width="100%">
 							<s:Button id="btnCrearSubCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
@@ -532,21 +535,21 @@
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.SUBCATEGORIA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
 						<s:HGroup width="100%">
-							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgCategorias.selectedItem ? dgCategorias.selectedItem.obj : null, 'nombreSubCategoria', 'idSubCategoria', MantenedoresEvent.AGREGAR_SUBCATEGORIAS)" width="100%"/>
-							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgCategorias.selectedItem, 'idSubCategoria', MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA, dgSubCategorias)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
+							<s:Button label="Agregar Subcategoría" click="fnPopAgregar(dgCategorias.selectedItem ? dgCategorias.selectedItem.obj : null, 'nombreSubCategoria', 'idSubCategoria', MantenedoresEvent.AGREGAR_SUBCATEGORIAS)" width="100%"/>
+							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgCategorias.selectedItem.obj, 'idSubCategoria', MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA, dgSubCategorias)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>						
 						<s:DataGrid id="dgSubCategorias" dataProvider="{dgCategorias.selectedItem.obj.arrAsociadosIn}" gridClick="fnBuscarAsociados(event)" width="100%" height="100%">
 							<s:columns>
 								<s:ArrayList>
 									<s:GridColumn dataField="obj.idSubCategoria" headerText="Id"/>
 									<s:GridColumn dataField="obj.nombreSubCategoria" headerText="Nombre"/>	
-									<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel" width="30"/>
+									<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Habilitada" itemRenderer="components.RenderSel" width="60"/>
 								</s:ArrayList>
 							</s:columns>
 						</s:DataGrid>
 					</s:VGroup> 	
 				</components:CustomPanelSpark>
-				<components:CustomPanelSpark title="Problemas" width="100%" height="350">
+				<components:CustomPanelSpark title="Problemas de: {dgSubCategorias.selectedItem.obj['nombreSubCategoria']}" width="100%" height="350">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
 						<s:HGroup width="75%">
 							<s:Button id="btnCrearProblemas" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
@@ -554,8 +557,8 @@
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.PROBLEMA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
 						<s:HGroup width="100%">
-							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgSubCategorias.selectedItem ? dgSubCategorias.selectedItem.obj : null, 'nombreDescripcion', 'idDescripcion', MantenedoresEvent.AGREGAR_PROBLEMAS)" width="100%"/>
-							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgSubCategorias.selectedItem, 'idDescripcion', MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS, dgProblemas)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
+							<s:Button label="Agregar Problema" click="fnPopAgregar(dgSubCategorias.selectedItem ? dgSubCategorias.selectedItem.obj : null, 'nombreDescripcion', 'idDescripcion', MantenedoresEvent.AGREGAR_PROBLEMAS)" width="100%"/>
+							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgSubCategorias.selectedItem.obj, 'idDescripcion', MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS, dgProblemas)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
 						<s:DataGrid id="dgProblemas" dataProvider="{dgSubCategorias.selectedItem.obj.arrAsociadosIn}" width="100%" height="100%">
 							<s:columns>
@@ -564,7 +567,7 @@
 									<s:GridColumn dataField="obj.nombreDescripcion" headerText="Nombre"/>
 									<s:GridColumn dataField="obj.idFormaAtencion" headerText="Forma Atención" labelFunction="fnFormaAtencion"/>
 									<s:GridColumn dataField="obj.idTiemposolucion" headerText="Tiempo Solución" labelFunction="fnTiempoSolucion"/>
-									<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel" width="30"/>
+									<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Habilitada" itemRenderer="components.RenderSel" width="60"/>
 								</s:ArrayList>
 							</s:columns>
 						</s:DataGrid>
