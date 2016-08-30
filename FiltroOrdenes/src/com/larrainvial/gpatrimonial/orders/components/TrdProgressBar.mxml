@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
+           backgroundAlpha="0.5" height="100%" backgroundColor="black" horizontalCenter="0" verticalCenter="0">
+    <mx:Canvas width="232" height="50.5" cornerRadius="7" borderStyle="solid" horizontalCenter="0"
+               verticalCenter="-30" borderColor="#E45C5C" backgroundColor="#FFFFFF">
+        <!--<mx:ProgressBar id="progressBar" width="209" indeterminate="true" direction="right"
+                        label="{resourceManager.getString('resources','general.data.progressBar')}" color="#6A6464" themeColor="#CC0000" x="10"
+                        y="13.75"/>-->
+		<mx:ProgressBar id="progressBar" width="209" indeterminate="true" direction="right"
+						label="Esperando conexión al mercado" color="#6A6464" x="10"
+						y="13.75"/>
+    </mx:Canvas>
+</mx:Canvas>

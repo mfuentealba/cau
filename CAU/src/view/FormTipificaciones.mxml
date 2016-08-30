@@ -314,7 +314,7 @@
 				return modelApp.objTiempoSolucion[item.obj.idTiempoSolucion]['descripcion'];
 			}			
 			
-			private function fnPopTipificacion(evento:MouseEvent):void{
+			public function fnPopTipificacion(evento:MouseEvent):void{
 				var pop:PopTipificacion = new PopTipificacion();
 				var sw:Boolean;
 				switch(evento.target.id){
@@ -458,21 +458,187 @@
 			}
 			
 			
-		/*	private function set fnLimpiaGrillasCL(val:*):void{
-				dgCategorias.selectedItem = null;
-				dgCategorias.dataProvider = null;
+			public function fnPopClasificacion(evento:MouseEvent):void{
+				var pop:PopTipificacion = new PopTipificacion();
+				var sw:Boolean;
+				switch(evento.target.id){
+					case 'btnGuardar':						
+						pop.opcion = evento.target.label; 
+						pop.ext2 = false;
+						pop.title = 'Crear Clasificación';
+						pop.tipoEvento = MantenedoresEvent.CREAR_CLASIFICACION;
+						pop.fnPost = fnNuevaClasificacion;
+						pop.campo1 = 'nombreClasificacion';
+						pop.claseOperacion = ClasificacionVO;
+						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+						PopUpManager.centerPopUp(pop);
+						break;
+					
+					case 'btnEditar':
+						pop.opcion = evento.target.label; 
+						pop.ext2 = false;
+						
+						if(dgClasificacion.selectedIndex > -1){
+							pop.title = 'Modificar Clasificación';
+							pop.obj = dgClasificacion.selectedItem;
+							pop.tipoEvento = MantenedoresEvent.MODIFICAR_CLASIFICACION;
+							pop.fnPost = fnActualizaGrilla;
+							pop.campo1 = 'nombreClasificacion';
+							pop.claseOperacion = ClasificacionVO;
+							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+							PopUpManager.centerPopUp(pop);
+						} else {
+							Alert.show('Debe Seleccionar Clasificación a modificar');
+						}
+						break;
+					case 'btnEliminar':
+						optDelete = ModelApp.CLASIFICACION;
+						Alert.show('Esta acción eliminará la clasificación y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
+						break;
+				}
 			}
-
 			
-			private function set fnLimpiaGrillasCA(val:*):void{
-				dgSubCategorias.selectedItem = null;
-				dgSubCategorias.dataProvider = null;
+			public function fnPopcategoria(evento:MouseEvent):void{
+				var pop:PopTipificacion = new PopTipificacion();
+				var sw:Boolean;
+				switch(evento.target.id){
+					
+					
+					case 'btnGuardar':						
+						pop.opcion = evento.target.label; 
+						pop.title = 'Crear Categoría';
+						pop.tipoEvento = MantenedoresEvent.CREAR_CATEGORIA;
+						pop.fnPost = fnNuevaCategoria;
+						pop.dgDataProvider = modelApp.arrClasificacion;
+						pop.campoVisible = 'nombreClasificacion';
+						pop.idCampoVisible = 'idClasificacion';
+						pop.campo1 = 'nombreCategoria';
+						pop.claseOperacion = CategoriaVO;
+						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+						PopUpManager.centerPopUp(pop);	
+						break;
+					
+					case 'btnModificarCategoria':
+						pop.opcion = evento.target.label;
+						if(dgCategorias.selectedIndex > -1){
+							pop.ext2 = false;
+							pop.title = 'Modificar Categoría';
+							pop.obj = dgCategorias.selectedItem.obj;
+							pop.tipoEvento = MantenedoresEvent.MODIFICAR_CATEGORIA;
+							pop.fnPost = fnActualizaGrilla;
+							pop.campo1 = 'nombreCategoria';
+							pop.claseOperacion = CategoriaVO;
+							
+							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+							PopUpManager.centerPopUp(pop);
+						} else {
+							Alert.show('Debe Seleccionar Categoría a modificar');
+						}
+						break;
+					
+					
+				}
+				
+				
 			}
 			
-			private function set fnLimpiaGrillasSUB(val:*):void{
-				dgProblemas.selectedItem = null;
-				dgProblemas.dataProvider = null;
-			}//80537000-9 33*/
+			public function fnPopSubCategoria(evento:MouseEvent):void{
+				var pop:PopTipificacion = new PopTipificacion();
+				var sw:Boolean;
+				switch(evento.target.id){
+				
+					
+					case 'btnGuardar':						
+						pop.opcion = evento.target.label; 
+						
+						pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
+						pop.title = 'Crear Subcategoría';
+						pop.tipoEvento = MantenedoresEvent.CREAR_SUBCATEGORIAS;
+						pop.fnPost = fnNuevaSubcategoria;
+						pop.dgDataProvider = modelApp.arrCategoria;
+						pop.campoVisible = 'nombreCategoria';
+						pop.idCampoVisible = 'idCategoria';
+						pop.campo1 = 'nombreSubCategoria';
+						pop.claseOperacion = SubCategoriaVO;
+						
+						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+						PopUpManager.centerPopUp(pop);
+						
+						break;
+					
+					case 'btnModificarSubCategoria':
+						pop.opcion = evento.target.label;
+						if(dgSubCategorias.selectedIndex > -1){
+							pop.ext2 = false;
+							pop.title = 'Modificar Subcategoría';
+							pop.obj = dgSubCategorias.selectedItem.obj;
+							pop.tipoEvento = MantenedoresEvent.MODIFICAR_SUBCATEGORIAS;
+							pop.fnPost = fnActualizaGrilla;
+							pop.campo1 = 'nombreSubCategoria';
+							pop.claseOperacion = SubCategoriaVO;
+							
+							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+							PopUpManager.centerPopUp(pop);
+						} else {
+							Alert.show('Debe Seleccionar Subcategoría a modificar');
+						}
+						break;
+				
+				}
+				
+				
+			}
+			
+			
+			public function fnPopProblema(evento:MouseEvent):void{
+				var pop:PopTipificacion = new PopTipificacion();
+				var sw:Boolean;
+				switch(evento.target.id){
+				
+					
+					case 'btnGuardar':						
+						pop.opcion = evento.target.label; 
+						
+						pop.ext = true;
+						pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
+						pop.idCat = '' + dgCategorias.selectedItem['obj']['idCategoria'];
+						pop.title = 'Crear Problema';
+						pop.tipoEvento = MantenedoresEvent.CREAR_PROBLEMAS;
+						pop.fnPost = fnNuevoProblema;
+						pop.dgDataProvider = modelApp.arrSubCategoria;
+						pop.campoVisible = 'nombreSubCategoria';
+						pop.idCampoVisible = 'idSubCategoria';
+						pop.campo1 = 'nombreDescripcion';
+						pop.claseOperacion = DescripcionVO;
+						
+						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+						PopUpManager.centerPopUp(pop);	
+						break;
+					case 'btnModificarProblema':
+						pop.opcion = evento.target.label; 
+						pop.ext = true;
+						if(dgProblemas.selectedIndex > -1){
+							pop.ext2 = false;
+							pop.title = 'Modificar Problema';
+							pop.obj = dgProblemas.selectedItem.obj;
+							pop.tipoEvento = MantenedoresEvent.MODIFICAR_PROBLEMAS;
+							pop.fnPost = fnActualizaGrilla;
+							pop.campo1 = 'nombreDescripcion';
+							pop.claseOperacion = DescripcionVO;
+							
+							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+							PopUpManager.centerPopUp(pop);
+						} else {
+							Alert.show('Debe Seleccionar Problema a modificar');
+						}
+						break;
+				}
+				
+				
+			}
+			
+			
+		
 		]]>
 	</fx:Script>
 	<!--<fx:Binding source="clasificacionVO.idClasificacion" destination="fnIdClas"/>-->
@@ -483,7 +649,7 @@
 	<s:Group width="100%" height="100%">
 		<s:VGroup width="100%" height="100%" paddingBottom="30">
 			<s:HGroup gap="15" width="100%" height="40%">
-				<components:CustomPanelSpark id="cpClasificacion" title="Clasificación" width="100%"  height="350" imgBl="true" opBl="true" closeBl="true" minBl="true">
+				<components:CustomPanelSpark id="cpClasificacion" title="Clasificación" width="100%"  height="350" imgBl="true" opBl="true" closeBl="true" minBl="true" fnCallback="fnPopClasificacion">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
 						<s:HGroup width="75%">
 							<s:Button id="btnCrearClasificacion" label="Crear" click="fnPopTipificacion(event)" width="100%"/>

@@ -22,6 +22,7 @@ package components
 		[Bindable] public var minBl:Boolean;
 		[Bindable] public var opBl:Boolean;
 		[Bindable] public var closeBl:Boolean;
+		public var fnCallback:Function;
 		
 		public function CustomPanelSpark()
 		{

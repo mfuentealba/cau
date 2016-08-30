@@ -1,0 +1,48 @@
+<configWS>
+	<WebService>
+			<id>WSOrdenesGP</id>
+			<!--wsdl>http://trajano.larra_dom/WSOrderCapture/OrderCapture.asmx?wsdl</wsdl>
+			<uri>http://trajano.larra_dom/WSOrderCapture/OrderCapture.asmx</uri-->
+			<wsdl>http://localhost:50315/WSOrderCapture/OrderCapture.asmx?wsdl</wsdl>
+			<uri>http://localhost:50315/WSOrderCapture/OrderCapture.asmx</uri>
+			<!-- <wsdl>http://beta.larrainvial.com/Webservices/WSOrderCapture/OrderCapture.asmx?wsdl</wsdl>
+			<uri>http://beta.larrainvial.com/Webservices/WSOrderCapture/OrderCapture.asmx</uri> -->
+			<!-- <wsdl>http://localhost:4790/WSOrdenesGP/WSOrdenesGP.asmx?wsdl</wsdl>
+			<uri>http://localhost:4790/WSOrdenesGP/WSOrdenesGP.asmx</uri> -->
+	</WebService>
+	<!-- WebService>
+			<id>WSInversiones</id>
+			<wsdl>http://webservices.larrainvial.com/WSOrderCapture/OrderCapture.asmx?wsdl</wsdl>
+			<uri>http://webservices.larrainvial.com/WSOrderCapture/OrderCapture.asmx</uri>		
+	</WebService -->	
+	<WebService>
+			<id>WSInversiones</id>
+			<wsdl>http://osb.larrainvial.com:7201/WebServices/OperacionesClienteClon/WSInversiones?wsdl</wsdl>
+			<uri>http://osb.larrainvial.com:7201/WebServices/OperacionesClienteClon/WSInversiones</uri>		
+	</WebService>
+	<WebService>
+		<id>wsValidaNT</id>
+		<wsdl>http://webservices.larrainvial.com/WSLogin/Valida_NT.asmx?wsdl</wsdl>
+		<uri>http://webservices.larrainvial.com/WSLogin/Valida_NT.asmx</uri>
+	</WebService>
+	<WebService>
+		<id>WSResumenEjecutivo</id>
+		<wsdl>http://webservices.larrainvial.com/WSResumenEjecutivo/ResumenEjecutivo.asmx?wsdl</wsdl>
+		<uri>http://webservices.larrainvial.com/WSResumenEjecutivo/ResumenEjecutivo.asmx</uri>
+	</WebService>	
+	<WebService>
+		<id>WST24</id>
+		<!-- <wsdl>http://172.16.240.32:7001/wsMotor1/services?wsdl</wsdl>
+		<uri>http://172.16.240.32:7001/wsMotor1/services</uri> -->
+		<!-- <wsdl>http://172.16.240.33:7001/wsMotor1/services?wsdl</wsdl>
+		<uri>http://172.16.240.33:7001/wsMotor1/services</uri> --> 
+		 <wsdl>http://testelastic:7001/wsTWSPRD/services?wsdl</wsdl>
+		<uri>http://testelastic:7001/wsTWSPRD/services</uri>
+		<!--<wsdl>http://172.16.240.33:7001/wsMotor1/services?WSDL</wsdl>
+		<uri>http://172.16.240.33:7001/wsMotor1/services</uri> -->
+		<!-- <wsdl>http://testelastic:7001/wsMotor1/services?wsdl</wsdl>
+		<uri>http://testelastic:7001/wsMotor1/services</uri> -->
+	</WebService>	
+				
+</configWS>
+ 

@@ -54,7 +54,7 @@ in accordance with the terms of the license agreement accompanying it.
 					bcElementos = new List();
 					bcElementos.minHeight = 0;
 					bcElementos.labelField = 'label';
-					//bcElementos.setStyle("skinClass", CustomListSkin);
+					bcElementos.setStyle("skinClass", CustomListSkin);
 					var f:ClassFactory = new ClassFactory(RenderList);
 					bcElementos.itemRenderer = f; 
 					bcElementos.addEventListener(MouseEvent.CLICK, fnClick);
@@ -68,9 +68,19 @@ in accordance with the terms of the license agreement accompanying it.
 					//bcElementos.x = event.target.x + event.target.parent.x;
 				} else {
 					PopUpManager.removePopUp(bcElementos);
+					hostComponent.fnCallback.call(this, evento);
 					bcElementos = null;
 				}
 			}
+			
+			protected function fnBotones(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				hostComponent.fnCallback.call(this, evento);
+				
+			}
+			
 		]]>
 	</fx:Script>
     <s:states>
@@ -179,7 +189,7 @@ in accordance with the terms of the license agreement accompanying it.
 							 verticalAlign="middle" textAlign="start" fontWeight="bold">
 					</s:Label>
 					<s:HGroup right="0" height="100%" verticalAlign="middle">
-						<s:Button id="btnGuardar" icon="{hostComponent.imgSrcSave}" width="30" includeInLayout="{hostComponent.minBl}" visible="{hostComponent.minBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
+						<s:Button id="btnGuardar" click="fnBotones(event)" icon="{hostComponent.imgSrcSave}" width="30" includeInLayout="{hostComponent.minBl}" visible="{hostComponent.minBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
 						<s:Button id="btnEditar" icon="{hostComponent.imgSrcEdit}" width="30" includeInLayout="{hostComponent.opBl}" visible="{hostComponent.opBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
 						<s:Button id="btnEliminar" icon="{hostComponent.imgSrcDelete}" width="30" includeInLayout="{hostComponent.closeBl}" visible="{hostComponent.closeBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
 						<s:ToggleButton id="btnOpciones" visible="{hostComponent.imgBl}" right="0"

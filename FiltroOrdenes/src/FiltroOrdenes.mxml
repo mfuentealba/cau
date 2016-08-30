@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Application -->
+<!-- mx:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+xmlns:s="library://ns.adobe.com/flex/spark" 
+xmlns:mx="library://ns.adobe.com/flex/mx"
+xmlns:control="com.larrainvial.gpatrimonial.orders.controller.*" 
+xmlns:views="com.larrainvial.gpatrimonial.orders.views.*"
+creationComplete="init()"
+initialize="onInitialize()" paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0"
+fontSize="10" 
+implements="com.larrainvial.applibrary.interfaces.IApp"
+backgroundAlpha="0.75"
+creationPolicy="all"
+frameRate="60" -->
+
+<mx:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						xmlns:s="library://ns.adobe.com/flex/spark" 
+						xmlns:mx="library://ns.adobe.com/flex/mx"
+						xmlns:control="com.larrainvial.gpatrimonial.orders.controller.*" 
+						xmlns:views="com.larrainvial.gpatrimonial.orders.views.*"
+						creationComplete="init(); updater.initialize()"
+						paddingTop="0" paddingRight="0" paddingBottom="0" paddingLeft="0"						
+						title="Order Capture"
+						backgroundAlpha="0.75"
+						creationPolicy="all"
+						maxWidth="1200"
+						minWidth="1200"
+						maxHeight="900"
+						minHeight="900"
+						frameRate="60" xmlns:ns="http://updater.riaspace.com/" xmlns:components="com.larrainvial.gpatrimonial.orders.components.*" fontSize="14">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.controls.Button;
+			import mx.events.FlexEvent;
+			
+			protected function pnlMonto_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				pnlMonto.arrContenido.addItem({label: 'Guardar'});
+				pnlMonto.arrContenido.addItem({label: 'Reestablecer'});
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<control:Controller/>	
+		<s:HTTPService
+			id="webServices"
+			url="./assets/config/configWS.xml"
+			result="loadWebService(event)"
+			fault="errorHttpService(event)"
+			useProxy="false"
+			resultFormat="e4x"/>
+		
+		<ns:NativeApplicationUpdater id="updater" 
+									 updateURL="http://trajano/OrderCapturer/assets/config/configUpdate.xml"
+									 initialized="updater_initializedHandler(event)"/>
+		
+	</fx:Declarations>
+	
+	<!--<fx:Style source="./assets/css/LVBlotter.css"/>-->
+	
+	<fx:Script>
+		<![CDATA[
+			import com.larrainvial.gpatrimonial.orders.events.toService.GetFiltrosEvent;
+			import air.update.events.UpdateEvent;
+			
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import com.larrainvial.gpatrimonial.orders.business.Services;
+			import com.larrainvial.gpatrimonial.orders.events.toService.Login_AgenteEvent;
+			import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
+			import com.larrainvial.gpatrimonial.orders.vo.WebServicesVo;
+			
+			import mx.controls.Alert;
+			import mx.controls.List;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.events.TextOperationEvent;
+			
+			import useful.UtilT24;
+			
+			public var model:ModelLocator = ModelLocator.getInstance();
+			public var servicio:Services;
+			
+			[Bindable] private var warning:Boolean;
+			
+			//****************************************************************************************************
+			
+			protected function updater_initializedHandler(event:UpdateEvent):void
+			{				
+				//updater.checkNow();
+			}
+			
+			
+			//*****************************************************************************************************
+			private function init():void
+			{
+				loadConfigFile();	
+				ModelLocator.arrRut = new ArrayCollection([{rut: '1-9'}, {rut: '2-7'}, {rut: '12334-9'}, {rut: '1005-9'}, {rut: '1546546-9'}, {rut: '12222222-k'}, {rut: '154464664222-9'}]);
+				ModelLocator.arrAgente = new ArrayCollection([{agente: '0024'}, {agente: '0000'}, {agente: '1111'}, {agente: '0059'}, {agente: '2200'}, {agente: '0022'}, {agente: '0542'}]);
+				ModelLocator.arrNemos = new ArrayCollection([{nemo: 'LAN'}, {nemo: 'COPEC'}, {nemo: 'HABITAT'}, {nemo: 'CAP'}, {nemo: 'CENCOSUD'}, {nemo: 'AESGENER'}, {nemo: 'CHILE'}]);
+				ModelLocator.monto = 100000;
+				
+				
+			}		
+			
+			
+			
+			//*****************************************************************************************************
+			private function loadConfigFile():void
+			{
+				webServices.send();
+				
+			}
+			//*****************************************************************************************************
+			private function loadWebService(event:ResultEvent):void
+			{
+				var servicios:XMLList = event.result..WebService;
+				
+				var config:WebServicesVo;
+				
+				for each(var nodeWS:XML in servicios)
+				{
+					config = new WebServicesVo();
+					config.fill = nodeWS;
+					model.servicesCollection.addItem(config);
+				}
+				
+				var serviceLoaded:Services = cargarServicios();
+				var evento:GetFiltrosEvent = new GetFiltrosEvent();
+				evento.dispatch();
+				//CairngormEventDispatcher.getInstance().dispatchEvent(new Login_AgenteEvent());	
+				
+				if(!serviceLoaded)
+				{
+					Alert.show("Error en la carga de servicios. \nPor favor recargue la pagina", "Error");
+				}
+			}
+			
+			
+			
+			
+			
+			//*****************************************************************************************************
+			private function errorHttpService(event:FaultEvent):void
+			{
+				Alert.show("Error en carga de archivo configurador de WebService", "Client Error");
+			}
+			//*****************************************************************************************************
+			private function cargarServicios():com.larrainvial.gpatrimonial.orders.business.Services
+			{
+				servicio = new Services();								
+				
+				return servicio;
+			}			
+			//*****************************************************************************************************
+			
+			protected function fnCambioMonto(event:TextOperationEvent):void
+			{
+				// TODO Auto-generated method stub
+				warning = true;
+			}
+			
+			protected function fnRutValidacion(event:TextOperationEvent):void
+			{
+				// TODO Auto-generated method stub
+				ModelLocator.arrRut.filterFunction = fnFiltroRut;
+				
+				ModelLocator.arrRut.refresh();
+				if(ModelLocator.arrRut.length == 0){
+					 
+					var resp:int = txtRut.text.search(/\d{1,8}\-[0-9|k]/);
+					if(resp > -1){
+						btnGuardarRut.enabled = true;	
+					} else {
+						btnGuardarRut.enabled = false;
+					}
+					
+				} else {
+					btnGuardarRut.enabled = false;
+				}
+					
+			}
+			
+			
+			protected function fnAgentesValidacion(event:TextOperationEvent):void
+			{
+				// TODO Auto-generated method stub
+				ModelLocator.arrAgente.filterFunction = fnFiltroAgente;
+				
+				ModelLocator.arrAgente.refresh();
+				if(ModelLocator.arrAgente.length == 0){
+					
+					var resp:int = txtAgente.text.search(/\d{4}/);
+					if(resp > -1){
+						btnGuardarAgente.enabled = true;	
+					} else {
+						btnGuardarAgente.enabled = false;
+					}
+					
+				} else {
+					btnGuardarAgente.enabled = false;
+				}
+				
+			}
+			
+			
+			
+			protected function fnNemosValidacion(event:TextOperationEvent):void
+			{
+				// TODO Auto-generated method stub
+				txtNemos.text = txtNemos.text.toLocaleUpperCase(); 
+				ModelLocator.arrNemos.filterFunction = fnFiltroNemo;
+				
+				ModelLocator.arrNemos.refresh();
+				if(ModelLocator.arrNemos.length == 0){
+					
+					var resp:int = txtNemos.text.search(/./);
+					if(resp > -1){
+						btnGuardarNemos.enabled = true;	
+					} else {
+						btnGuardarNemos.enabled = false;
+					}
+					
+				} else {
+					btnGuardarNemos.enabled = false;
+				}
+				
+			}
+			
+			
+			private function fnFiltroRut(item:*):Boolean{
+				if(txtRut.text == ''){
+					return true;
+				} else {
+					var res:int = String(item.rut).indexOf(txtRut.text);
+					return res == 0 ? true : false;	
+				}
+			}
+			
+			
+			private function fnFiltroAgente(item:*):Boolean{
+				if(txtAgente.text == ''){
+					return true;
+				} else {
+					var res:int = String(item.agente).indexOf(txtAgente.text);
+					return res == 0 ? true : false;	
+				}
+			}
+			
+			
+			private function fnFiltroNemo(item:*):Boolean{
+				if(txtNemos.text == ''){
+					return true;
+				} else {
+					var res:int = String(item.nemo).indexOf(txtNemos.text);
+					return res == 0 ? true : false;	
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Group width="100%" height="100%">
+		<s:Rect width="100%" height="100%">
+			<s:fill>
+				<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>
+			</s:fill>
+		</s:Rect>
+		<s:VGroup width="100%" height="100%" horizontalAlign="center" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10">
+			<s:HGroup width="100%" height="50%" >
+				<components:CustomPanelSpark id="pnlMonto" title="Indicador de monto en ordenes" 
+											 skinClass="assets.skins.CustomPanelSkin"  color="#dddddd" width="300" height="200" imgBl="true" 
+											 creationComplete="pnlMonto_creationCompleteHandler(event)"
+											 >
+					<s:VGroup width="100%" height="100%" paddingTop="10" horizontalAlign="center">
+						<s:Label text="Monto limite de las ordenes DMA"/>
+						<components:CustomTextInput id="txtCambioMonto" textAlign="right" text="{ModelLocator.monto + ''}" skinClass="assets.skins.TextInputActSkin" restrict="0-9" change="fnCambioMonto(event)"/>
+						
+						<s:HGroup verticalAlign="middle" includeInLayout="{warning}">
+							<s:Image source="@Embed('assets/icons/warning.png')"/>
+							<s:Label text="El valor nuevo no ha sido guardado" fontSize="12"/>	
+						</s:HGroup>
+						
+					</s:VGroup>
+					
+				</components:CustomPanelSpark>
+				<components:CustomPanelSpark  title="Rut restringidos" skinClass="assets.skins.CustomPanelSkin"  color="#dddddd" width="100%" height="100%" imgBl="true">
+					<s:VGroup width="100%" height="100%" paddingTop="10" horizontalAlign="center">
+						<s:HGroup>
+							<s:Label text="Nuevo rut:"/>
+							<components:CustomTextInput id="txtRut" skinClass="assets.skins.TextInputActSkin" restrict="0-9\-k" change="fnRutValidacion(event)"/>
+							<s:Button id="btnGuardarRut" label="Guardar" enabled="false" skinClass="assets.skins.ButtonCleanLVSkin"/>
+						</s:HGroup>
+						<s:DataGrid dataProvider="{ModelLocator.arrRut}" skinClass="assets.skins.CustomDataGrid2Skin" width="100%" height="100%">
+							<s:columns>
+								<s:ArrayList>
+									<s:GridColumn headerText="Rut Filtrados" dataField="rut"/>
+								</s:ArrayList>
+							</s:columns>
+						</s:DataGrid>
+					</s:VGroup>
+					
+				</components:CustomPanelSpark>	
+			</s:HGroup>  
+			
+			
+			<s:HGroup width="100%" height="50%" >
+				<components:CustomPanelSpark  title="Agentes restringidos" skinClass="assets.skins.CustomPanelSkin"  color="#dddddd" width="100%" height="100%" imgBl="true">
+					<s:VGroup width="100%" height="100%" paddingTop="10" horizontalAlign="center">
+						<s:HGroup>
+							<s:Label text="Nuevo Agente:"/>
+							<components:CustomTextInput id="txtAgente" skinClass="assets.skins.TextInputActSkin" restrict="0-9" change="fnAgentesValidacion(event)" maxChars="4"/>
+							<s:Button id="btnGuardarAgente" label="Guardar" enabled="false" skinClass="assets.skins.ButtonCleanLVSkin"/>
+						</s:HGroup>
+						<s:DataGrid dataProvider="{ModelLocator.arrAgente}" skinClass="assets.skins.CustomDataGrid2Skin" width="100%" height="100%">
+							<s:columns>
+								<s:ArrayList>
+									<s:GridColumn headerText="Agentes Filtrados" dataField="agente"/>
+								</s:ArrayList>
+							</s:columns>
+						</s:DataGrid>
+					</s:VGroup>
+					
+				</components:CustomPanelSpark>
+				
+				<components:CustomPanelSpark  title="Nemos restringidos" skinClass="assets.skins.CustomPanelSkin"  color="#dddddd" width="100%" height="100%" imgBl="true">
+					<s:VGroup width="100%" height="100%" paddingTop="10" horizontalAlign="center">
+						<s:HGroup>
+							<s:Label text="Nuevo Nemo:"/>
+							<components:CustomTextInput id="txtNemos" skinClass="assets.skins.TextInputActSkin" change="fnNemosValidacion(event)"/>
+							<s:Button id="btnGuardarNemos" label="Guardar" enabled="false" skinClass="assets.skins.ButtonCleanLVSkin"/>
+						</s:HGroup>
+						<s:DataGrid dataProvider="{ModelLocator.arrNemos}" skinClass="assets.skins.CustomDataGrid2Skin" width="100%" height="100%">
+							<s:columns>
+								<s:ArrayList>
+									<s:GridColumn headerText="Nemos Filtrados" dataField="nemo"/>
+								</s:ArrayList>
+							</s:columns>
+						</s:DataGrid>
+					</s:VGroup>
+					
+				</components:CustomPanelSpark>	
+			</s:HGroup>
+			
+		</s:VGroup>
+		
+	</s:Group>
+	
+	<!-- /mx:Application -->
+</mx:WindowedApplication>
