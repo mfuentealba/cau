@@ -32,7 +32,47 @@ in accordance with the terms of the license agreement accompanying it.
 		[HostComponent("components.CustomPanelSpark")]
         ]]>
     </fx:Metadata> 
-    
+    <fx:Script>
+		<![CDATA[
+			import components.RenderList;
+			
+			import mx.controls.List;
+			import mx.managers.PopUpManager;
+			private var bcElementos:List = new List();
+			
+			private function fnClick(evento:* = null):void{
+				btnOpciones.selected = false;
+				PopUpManager.removePopUp(bcElementos);
+				bcElementos = null;
+			}
+			
+			
+			protected function btnOpciones_clickHandler(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(btnOpciones.selected){			
+					bcElementos = new List();
+					bcElementos.minHeight = 0;
+					bcElementos.labelField = 'label';
+					//bcElementos.setStyle("skinClass", CustomListSkin);
+					var f:ClassFactory = new ClassFactory(RenderList);
+					bcElementos.itemRenderer = f; 
+					bcElementos.addEventListener(MouseEvent.CLICK, fnClick);
+					PopUpManager.addPopUp(bcElementos, evento.target as DisplayObject);
+					PopUpManager.centerPopUp(bcElementos);
+					bcElementos.dataProvider = hostComponent.arrContenido;
+					bcElementos.width = 100;
+					
+					bcElementos.y = evento.target.height;	
+					bcElementos.x -= bcElementos.width - evento.target.width;
+					//bcElementos.x = event.target.x + event.target.parent.x;
+				} else {
+					PopUpManager.removePopUp(bcElementos);
+					bcElementos = null;
+				}
+			}
+		]]>
+	</fx:Script>
     <s:states>
         <s:State name="normal" />
         <s:State name="disabled" />
@@ -139,9 +179,14 @@ in accordance with the terms of the license agreement accompanying it.
 							 verticalAlign="middle" textAlign="start" fontWeight="bold">
 					</s:Label>
 					<s:HGroup right="0" height="100%" verticalAlign="middle">
-						<s:Button width="30" includeInLayout="{hostComponent.minBl}" visible="{hostComponent.minBl}"/>
-						<s:Button width="30" includeInLayout="{hostComponent.opBl}" visible="{hostComponent.opBl}"/>
-						<s:Button width="30" includeInLayout="{hostComponent.closeBl}" visible="{hostComponent.closeBl}"/>
+						<s:Button id="btnGuardar" icon="{hostComponent.imgSrcSave}" width="30" includeInLayout="{hostComponent.minBl}" visible="{hostComponent.minBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
+						<s:Button id="btnEditar" icon="{hostComponent.imgSrcEdit}" width="30" includeInLayout="{hostComponent.opBl}" visible="{hostComponent.opBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
+						<s:Button id="btnEliminar" icon="{hostComponent.imgSrcDelete}" width="30" includeInLayout="{hostComponent.closeBl}" visible="{hostComponent.closeBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
+						<s:ToggleButton id="btnOpciones" visible="{hostComponent.imgBl}" right="0"
+										width="30" height="28" icon="{hostComponent.imgSrcMenu2}"
+										includeInLayout="{hostComponent.imgBl}"
+										skinClass="assets.skins.CustomToggleButtonSkin"
+										click="btnOpciones_clickHandler(event)"/>
 					</s:HGroup>
 				</s:Group>
                 

@@ -11,7 +11,11 @@ package components
 	
 	public class CustomPanelSpark extends Panel
 	{
-		[Bindable][Embed(source="assets/icons/menu.png")] public var imgSrc:Class;
+		[Bindable][Embed(source="assets/icons/menu.png")] public var imgSrcMenu:Class;
+		[Bindable][Embed(source="assets/icons/save2.png")] public var imgSrcSave:Class;
+		[Bindable][Embed(source="assets/icons/edit.png")] public var imgSrcEdit:Class;
+		[Bindable][Embed(source="assets/icons/remove2.png")] public var imgSrcDelete:Class;
+		[Bindable][Embed(source="assets/icons/menu2.png")] public var imgSrcMenu2:Class;
 		[Bindable] public var imgBl:Boolean = false;
 		[SkinPart] public var bcElementos:BorderContainer;
 		private var _arrContenido:ArrayCollection = new ArrayCollection();

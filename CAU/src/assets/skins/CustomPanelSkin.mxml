@@ -29,13 +29,13 @@ in accordance with the terms of the license agreement accompanying it.
 		/** 
 		* @copy spark.skins.spark.ApplicationSkin#hostComponent
 		*/
-		[HostComponent("com.larrainvial.gpatrimonial.orders.components.CustomPanelSpark")]
+		[HostComponent("components.CustomPanelSpark")]
 		]]>
 	</fx:Metadata> 
 	
 	<fx:Script fb:purpose="styling">
 		<![CDATA[
-			import com.larrainvial.gpatrimonial.orders.components.RenderList;
+			import components.RenderList;
 			
 			import mx.core.FlexVersion;
 			import mx.events.FlexEvent;
@@ -147,24 +147,24 @@ in accordance with the terms of the license agreement accompanying it.
 			}
 			
 			
-			protected function btnOpciones_clickHandler(event:MouseEvent):void
+			protected function btnOpciones_clickHandler(evento:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
 				if(btnOpciones.selected){			
 					bcElementos = new List();
 					bcElementos.minHeight = 0;
 					bcElementos.labelField = 'label';
-					bcElementos.setStyle("skinClass", CustomListSkin);
+					//bcElementos.setStyle("skinClass", CustomListSkin);
 					var f:ClassFactory = new ClassFactory(RenderList);
 					bcElementos.itemRenderer = f; 
 					bcElementos.addEventListener(MouseEvent.CLICK, fnClick);
-					PopUpManager.addPopUp(bcElementos, event.target as DisplayObject);
+					PopUpManager.addPopUp(bcElementos, evento.target as DisplayObject);
 					PopUpManager.centerPopUp(bcElementos);
 					bcElementos.dataProvider = hostComponent.arrContenido;
 					bcElementos.width = 100;
 					
-					bcElementos.y = event.target.height;	
-					bcElementos.x -= bcElementos.width - event.target.width;
+					bcElementos.y = evento.target.height;	
+					bcElementos.x -= bcElementos.width - evento.target.width;
 					//bcElementos.x = event.target.x + event.target.parent.x;
 				} else {
 					PopUpManager.removePopUp(bcElementos);
