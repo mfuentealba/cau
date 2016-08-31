@@ -500,13 +500,14 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function setClasificacionCategorias2($arr, $idCat) {
 	
 		for($i = 0; $i < count($arr); $i++){
-			$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_clasificacioncategoria (idCategoria, idClasificacion) VALUES (?,?)");
+			//$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_clasificacioncategoria (idCategoria, idClasificacion) VALUES (?,?)");
+			$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_clasificacioncategoria (idCategoria, idClasificacion)  SELECT idClasificacion, ? FROM clasificacion WHERE (idClasificacion = ? OR ? = 0)");
 			$msg = $this->throwExceptionOnError();
 			if($msg != ''){
 				return $msg;
 			}
 
-			mysqli_stmt_bind_param($stmt, 'ii', $idCat, $arr[$i]);
+			mysqli_stmt_bind_param($stmt, 'iii', $arr[$i], $idCat, $idCat);
 			$msg = $this->throwExceptionOnError();
 			if($msg != ''){
 				return $msg;
@@ -556,13 +557,14 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function setCategoriaSubCategorias2($idClas, $arr, $idSub) {
 	
 		for($i = 0; $i < count($arr); $i++){
-			$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_categoriasubcategoria (idClasificacion, idCategoria, idSubCategoria) VALUES (?,?,?)");
+			//$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_categoriasubcategoria (idClasificacion, idCategoria, idSubCategoria) VALUES (?,?,?)");
+			$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_categoriasubcategoria (idClasificacion, idCategoria, idSubCategoria) SELECT idClasificacion, ?, ? FROM clasificacion WHERE (idClasificacion = ? OR ? = 0)");
 			$msg = $this->throwExceptionOnError();
 			if($msg != ''){
 				return $msg;
 			}
 
-			mysqli_stmt_bind_param($stmt, 'iii', $idClas, $arr[$i], $idSub);
+			mysqli_stmt_bind_param($stmt, 'iiii', $arr[$i], $idSub, $idClas, $idClas);
 			$msg = $this->throwExceptionOnError();
 			if($msg != ''){
 				return $msg;

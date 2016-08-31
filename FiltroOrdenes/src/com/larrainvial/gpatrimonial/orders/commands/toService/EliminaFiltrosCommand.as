@@ -8,6 +8,7 @@ package com.larrainvial.gpatrimonial.orders.commands.toService
 	import com.larrainvial.gpatrimonial.orders.business.OrdenesDelegate;
 	import com.larrainvial.gpatrimonial.orders.business.ValidaNTDelegate;
 	import com.larrainvial.gpatrimonial.orders.events.toService.ClientAccountPreLoadEvent;
+	import com.larrainvial.gpatrimonial.orders.events.toService.EliminaFiltrosEvent;
 	import com.larrainvial.gpatrimonial.orders.events.toService.Lista_EjecutivoSupervisadoEvent;
 	import com.larrainvial.gpatrimonial.orders.events.toWebOrb.AccessLoadedEvent;
 	import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
@@ -21,56 +22,53 @@ package com.larrainvial.gpatrimonial.orders.commands.toService
 	
 	//[Event(name="handlerClientesBloqueados", type="com.adobe.cairngorm.control.CairngormEvent")]
 	
-	public class GetFiltrosCommand implements ICommand, IResponder
+	public class EliminaFiltrosCommand implements ICommand, IResponder
 	{		
 		[Bindable]
 		private var ocDelegate:OrdenesDelegate = new OrdenesDelegate(this as IResponder);
 		public var model:ModelLocator = ModelLocator.getInstance();
+		public var evento:EliminaFiltrosEvent;
+		
+		
 		//****************************************************************************************************
+		
 		public function execute(event:CairngormEvent):void
 		{
-			ocDelegate.Met_GetFiltros();
+			evento = EliminaFiltrosEvent(event);
+			ocDelegate.Met_EliminaFiltros(evento.xmlStr);
 		}
 		//****************************************************************************************************
 		public function result(data:Object):void
 		{
 			try
 			{
-				var userFlag:Boolean = false;
 				
-				ModelLocator.arrRut = new ArrayCollection();
-				ModelLocator.arrAgente = new ArrayCollection();
-				ModelLocator.arrNemos = new ArrayCollection();
-				
-				for each(var item:Object in  XML(data.result)..Filtros.(@tipo == 1))
-				{
-					//var obj:Object = {rut: item.@valor};
-					var i:String = item.@valor;
-					ModelLocator.monto = int(i);
+				if(XML(data.result).Error.@Status == "0"){
+					switch(evento.tipo){
+						case ModelLocator.TIPO_RUT:
+							Alert.show("El registro fue eliminado con éxito", "Información");
+							ModelLocator.arrRut.removeItemAt(ModelLocator.arrRut.getItemIndex(evento.dg.selectedItem));
+							break;
+						case ModelLocator.TIPO_AGENTE:
+							Alert.show("El registro fue eliminado con éxito", "Información");
+							ModelLocator.arrAgente.removeItemAt(ModelLocator.arrAgente.getItemIndex(evento.dg.selectedItem));
+							break;
+						case ModelLocator.TIPO_NEMO:
+							Alert.show("El registro fue eliminado con éxito", "Información");
+							ModelLocator.arrNemos.removeItemAt(ModelLocator.arrNemos.getItemIndex(evento.dg.selectedItem));
+							break;
+					}	
+				} else {
+					Alert.show("Problemas en operación", "Error");
 				}
 				
-				for each(item in  XML(data.result)..Filtros.(@tipo == 2))
-				{
-					//var obj:Object = {rut: item.@valor};
-					ModelLocator.arrRut.addItem({valor: item.@valor + '', tipo: ModelLocator.TIPO_RUT});
-				}
 				
-				for each(item in  XML(data.result)..Filtros.(@tipo == 3))
-				{
-					//var obj:Object = {rut: item.@valor};
-					ModelLocator.arrAgente.addItem({valor: item.@valor + '', tipo: ModelLocator.TIPO_AGENTE});
-				}
-				
-				for each(item in  XML(data.result)..Filtros.(@tipo == 4))
-				{
-					//var obj:Object = {rut: item.@valor};
-					ModelLocator.arrNemos.addItem({valor: item.@valor + '', tipo: ModelLocator.TIPO_NEMO});
-				}
 				
 				
 			}     		
 			catch(e:Error)
 			{
+				trace(e);
 			}  
 		}
 		//****************************************************************************************************

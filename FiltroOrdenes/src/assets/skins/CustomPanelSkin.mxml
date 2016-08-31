@@ -142,8 +142,10 @@ in accordance with the terms of the license agreement accompanying it.
 			
 			private function fnClick(evento:* = null):void{
 				btnOpciones.selected = false;
+				hostComponent.fnPostList.call(this, bcElementos.selectedItem['label']); 
 				PopUpManager.removePopUp(bcElementos);
 				bcElementos = null;
+				
 			}
 			
 			
@@ -163,7 +165,7 @@ in accordance with the terms of the license agreement accompanying it.
 					bcElementos.dataProvider = hostComponent.arrContenido;
 					bcElementos.width = 100;
 					
-					bcElementos.y = event.target.height;	
+					bcElementos.y += event.target.y + event.target.height / 2;	
 					bcElementos.x -= bcElementos.width - event.target.width;
 					//bcElementos.x = event.target.x + event.target.parent.x;
 				} else {

@@ -21,6 +21,14 @@ import spark.components.Group;
 		public static var arrAgente:ArrayCollection;
 		public static var arrNemos:ArrayCollection;
 		public static var monto:int;
+		public static var rut:String;
+		public static var agente:String;
+		public static var nemo:String;
+		public static const TIPO_MONTO:String = '1';
+		public static const TIPO_RUT:String = '2';
+		public static const TIPO_AGENTE:String = '3';
+		public static const TIPO_NEMO:String = '4';
+		public static var warning:Boolean;
 		
 		public var servicesCollection:ArrayCollection = new ArrayCollection();
 		public static var user:ConfigVo = new ConfigVo();

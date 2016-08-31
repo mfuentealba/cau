@@ -100,6 +100,8 @@ package com.larrainvial.gpatrimonial.orders.controller
 
 		
 		public static const EVENT_GETFILTROS:String = UIDUtil.createUID();
+		public static const EVENT_INGRESO_FILTROS:String = UIDUtil.createUID();
+		public static const EVENT_ELIMINA_FILTRO:String = UIDUtil.createUID();
 		
 		
 		
@@ -109,6 +111,9 @@ package com.larrainvial.gpatrimonial.orders.controller
 			//WS Events
 			addCommand(Controller.EVENT_LOGIN_USUARIO, Login_AgenteCommand);
 			addCommand(Controller.EVENT_GETFILTROS, GetFiltrosCommand);
+			addCommand(Controller.EVENT_INGRESO_FILTROS, IngresoFiltrosCommand);
+			addCommand(Controller.EVENT_ELIMINA_FILTRO, EliminaFiltrosCommand);
+			
 			
 			//WebOrb Events
 			
