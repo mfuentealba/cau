@@ -195,24 +195,40 @@
 			{
 				dgSubCategorias.dataProvider = null;
 				dgProblemas.dataProvider = null;
-				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem});
-				Controller.getInstance().dispatchEvent(manEvent);		
+				try{
+					var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem});
+					Controller.getInstance().dispatchEvent(manEvent);	
+				} catch(e:*){
+					
+				}
+						
 			}
 			
 			
 			protected function fnNuevaSubcategoria(event:*):void
 			{
+				
 				dgProblemas.dataProvider = null;
-				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem});
-				Controller.getInstance().dispatchEvent(manEvent);		
+				try{
+					var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem});
+					Controller.getInstance().dispatchEvent(manEvent);	
+				} catch(e:*){
+					
+				}
+						
 			}
 			
 			
 			protected function fnNuevoProblema(event:*):void
 			{
 				dgProblemas.selectedItem = null;
-				var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem.obj.idCategoria, idSubCategoria: dgSubCategorias.selectedItem});
-				Controller.getInstance().dispatchEvent(manEvent);	
+				try{
+					var manEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, fnActualizaData, {idClas: dgClasificacion.selectedItem.idClasificacion, idCategoria: dgCategorias.selectedItem.obj.idCategoria, idSubCategoria: dgSubCategorias.selectedItem});
+					Controller.getInstance().dispatchEvent(manEvent);	
+				} catch(e:*){
+					
+				}
+					
 			}
 			
 			private function fnRemueveGrilla(id:String, opt:String):void{
@@ -498,7 +514,7 @@
 				}
 			}
 			
-			public function fnPopcategoria(evento:MouseEvent):void{
+			public function fnPopCategoria(evento:MouseEvent):void{
 				var pop:PopTipificacion = new PopTipificacion();
 				var sw:Boolean;
 				switch(evento.target.id){
@@ -551,7 +567,7 @@
 					case 'btnGuardar':						
 						pop.opcion = evento.target.label; 
 						
-						pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
+						pop.idClas = dgClasificacion.selectedItem != null ? '' + dgClasificacion.selectedItem['idClasificacion'] : '0';
 						pop.title = 'Crear Subcategoría';
 						pop.tipoEvento = MantenedoresEvent.CREAR_SUBCATEGORIAS;
 						pop.fnPost = fnNuevaSubcategoria;
@@ -600,8 +616,8 @@
 						pop.opcion = evento.target.label; 
 						
 						pop.ext = true;
-						pop.idClas = '' + dgClasificacion.selectedItem['idClasificacion'];
-						pop.idCat = '' + dgCategorias.selectedItem['obj']['idCategoria'];
+						pop.idClas = dgClasificacion.selectedItem != null ? '' + dgClasificacion.selectedItem['idClasificacion'] : '0';
+						pop.idCat = dgCategorias.selectedItem != null ? '' + dgCategorias.selectedItem['obj']['idCategoria'] : '0';
 						pop.title = 'Crear Problema';
 						pop.tipoEvento = MantenedoresEvent.CREAR_PROBLEMAS;
 						pop.fnPost = fnNuevoProblema;
@@ -649,14 +665,14 @@
 	<s:Group width="100%" height="100%">
 		<s:VGroup width="100%" height="100%" paddingBottom="30">
 			<s:HGroup gap="15" width="100%" height="40%">
-				<components:CustomPanelSpark id="cpClasificacion" title="Clasificación" width="100%"  height="350" imgBl="true" opBl="true" closeBl="true" minBl="true" fnCallback="fnPopClasificacion">
+				<components:CustomPanelSpark id="cpClasificacion" title="Clasificación" width="100%"  height="350" opBl="true" closeBl="true" minBl="true" fnCallback="fnPopClasificacion">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
-						<s:HGroup width="75%">
+						<!--<s:HGroup width="75%">
 							<s:Button id="btnCrearClasificacion" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarClasificacion" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.CLASIFICACION)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							
-						</s:HGroup>
+						</s:HGroup>-->
 						<s:DataGrid id="dgClasificacion" dataProvider="{modelApp.arrClasificacion}" gridClick="fnBuscarAsociados(event)" width="100%" height="100%">
 							<s:columns>
 								<s:ArrayList>
@@ -667,13 +683,14 @@
 						</s:DataGrid>
 					</s:VGroup> 	
 				</components:CustomPanelSpark>
-				<components:CustomPanelSpark id="cpAsociados" title="Categorias de: {dgClasificacion.selectedItem['nombreClasificacion']}" width="100%" height="350">
+				<components:CustomPanelSpark id="cpAsociados" title="Categorias de: {dgClasificacion.selectedItem['nombreClasificacion']}" width="100%" height="350"
+											 opBl="true" closeBl="true" minBl="true" fnCallback="fnPopCategoria">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
-						<s:HGroup width="75%">
+						<!--<s:HGroup width="75%">
 							<s:Button id="btnCrearCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarCategoria" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.CATEGORIA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-						</s:HGroup>
+						</s:HGroup>-->
 						<s:HGroup width="100%">
 							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgClasificacion.selectedItem, 'nombreCategoria', 'idCategoria', MantenedoresEvent.AGREGAR_CATEGORIAS)" width="100%"/>
 							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgClasificacion.selectedItem, 'idCategoria', MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS, dgCategorias)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
@@ -693,13 +710,14 @@
 				</components:CustomPanelSpark>	
 			</s:HGroup>
 			<s:HGroup gap="15" width="100%" height="40%">
-				<components:CustomPanelSpark title="Subcategorias de: {dgCategorias.selectedItem.obj['nombreCategoria']}" width="100%"  height="350">
+				<components:CustomPanelSpark title="Subcategorias de: {dgCategorias.selectedItem.obj['nombreCategoria']}" width="100%"  height="350"
+											 opBl="true" closeBl="true" minBl="true" fnCallback="fnPopSubCategoria">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
-						<s:HGroup width="100%">
+						<!--<s:HGroup width="100%">
 							<s:Button id="btnCrearSubCategoria" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarSubCategoria" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.SUBCATEGORIA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-						</s:HGroup>
+						</s:HGroup>-->
 						<s:HGroup width="100%">
 							<s:Button label="Agregar Subcategoría" click="fnPopAgregar(dgCategorias.selectedItem ? dgCategorias.selectedItem.obj : null, 'nombreSubCategoria', 'idSubCategoria', MantenedoresEvent.AGREGAR_SUBCATEGORIAS)" width="100%"/>
 							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgCategorias.selectedItem.obj, 'idSubCategoria', MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA, dgSubCategorias)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
@@ -715,13 +733,14 @@
 						</s:DataGrid>
 					</s:VGroup> 	
 				</components:CustomPanelSpark>
-				<components:CustomPanelSpark title="Problemas de: {dgSubCategorias.selectedItem.obj['nombreSubCategoria']}" width="100%" height="350">
+				<components:CustomPanelSpark title="Problemas de: {dgSubCategorias.selectedItem.obj['nombreSubCategoria']}" width="100%" height="350"
+											 opBl="true" closeBl="true" minBl="true" fnCallback="fnPopProblema">
 					<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" gap="5">
-						<s:HGroup width="75%">
+						<!--<s:HGroup width="75%">
 							<s:Button id="btnCrearProblemas" label="Crear" click="fnPopTipificacion(event)" width="100%"/>
 							<s:Button id="btnModificarProblema" label="Modificar" click="fnPopTipificacion(event)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 							<s:Button label="Eliminar" click="fnEliminacion(ModelApp.PROBLEMA)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
-						</s:HGroup>
+						</s:HGroup>-->
 						<s:HGroup width="100%">
 							<s:Button label="Agregar Problema" click="fnPopAgregar(dgSubCategorias.selectedItem ? dgSubCategorias.selectedItem.obj : null, 'nombreDescripcion', 'idDescripcion', MantenedoresEvent.AGREGAR_PROBLEMAS)" width="100%"/>
 							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgSubCategorias.selectedItem.obj, 'idDescripcion', MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS, dgProblemas)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>

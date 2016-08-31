@@ -611,14 +611,17 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	
 	public function setSubCategoriaProblemas2($idClas, $idCat, $arr, $idProb) {
 	
+		
+			
 		for($i = 0; $i < count($arr); $i++){
-			$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_subcategoriadescripcion (idClasificacion, idCategoria, idSubCategoria, idDescripcion) VALUES (?,?,?,?)");
+			//$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_subcategoriadescripcion (idClasificacion, idCategoria, idSubCategoria, idDescripcion) VALUES (?,?,?,?)");
+			$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_subcategoriadescripcion (idClasificacion, idCategoria, idSubCategoria, idDescripcion) SELECT idClasificacion, idCategoria, ?, ? FROM asocia_clasificacioncategoria WHERE (idClasificacion = ? OR ? = 0) AND (idCategoria = ? OR ? = 0)");
 			$msg = $this->throwExceptionOnError();
 			if($msg != ''){
 				return $msg;
 			}
 
-			mysqli_stmt_bind_param($stmt, 'iiii', $idClas, $idCat, $arr[$i], $idProb);
+			mysqli_stmt_bind_param($stmt, 'iiiiii', $arr[$i], $idProb, $idClas, $idClas, $idCat, $idCat);
 			$msg = $this->throwExceptionOnError();
 			if($msg != ''){
 				return $msg;

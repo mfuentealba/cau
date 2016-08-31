@@ -188,10 +188,10 @@ in accordance with the terms of the license agreement accompanying it.
 							 left="9" right="3" top="1" bottom="0" minHeight="30" fontSize="15"
 							 verticalAlign="middle" textAlign="start" fontWeight="bold">
 					</s:Label>
-					<s:HGroup right="0" height="100%" verticalAlign="middle">
+					<s:HGroup right="0" height="100%" verticalAlign="middle" paddingRight="10">
 						<s:Button id="btnGuardar" click="fnBotones(event)" icon="{hostComponent.imgSrcSave}" width="30" includeInLayout="{hostComponent.minBl}" visible="{hostComponent.minBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
-						<s:Button id="btnEditar" icon="{hostComponent.imgSrcEdit}" width="30" includeInLayout="{hostComponent.opBl}" visible="{hostComponent.opBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
-						<s:Button id="btnEliminar" icon="{hostComponent.imgSrcDelete}" width="30" includeInLayout="{hostComponent.closeBl}" visible="{hostComponent.closeBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
+						<s:Button id="btnEditar" click="fnBotones(event)" icon="{hostComponent.imgSrcEdit}" width="30" includeInLayout="{hostComponent.opBl}" visible="{hostComponent.opBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
+						<s:Button id="btnEliminar" click="fnBotones(event)" icon="{hostComponent.imgSrcDelete}" width="30" includeInLayout="{hostComponent.closeBl}" visible="{hostComponent.closeBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
 						<s:ToggleButton id="btnOpciones" visible="{hostComponent.imgBl}" right="0"
 										width="30" height="28" icon="{hostComponent.imgSrcMenu2}"
 										includeInLayout="{hostComponent.imgBl}"
