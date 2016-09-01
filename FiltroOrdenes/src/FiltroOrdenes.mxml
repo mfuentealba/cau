@@ -39,11 +39,17 @@ frameRate="60" -->
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
 			
+			import spark.formatters.NumberFormatter;
+			
+			[Bindable] private var formater:NumberFormatter = new NumberFormatter(); 
+			
 			protected function pnlMonto_creationCompleteHandler(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
 				pnlMonto.arrContenido.addItem({label: 'Guardar'});
 				pnlMonto.arrContenido.addItem({label: 'Reestablecer'});
+				formater.fractionalDigits = 0;
+				formater.groupingSeparator = '.';
 			}
 			
 			protected function fnGuardarFiltro(valor:String, tipo:String, txt:CustomTextInput):void
@@ -70,6 +76,13 @@ frameRate="60" -->
 				}
 			}
 			
+			private function loadRTMP(event:ResultEvent):void
+			{				
+				ModelLocator.rutaRTMPOC = event.result..RTMPOC;
+				connectWebOrb();
+			}
+			
+			
 		]]>
 	</fx:Script>
 	
@@ -80,6 +93,14 @@ frameRate="60" -->
 			url="./assets/config/configWS.xml"
 			result="loadWebService(event)"
 			fault="errorHttpService(event)"
+			useProxy="false"
+			resultFormat="e4x"/>
+		
+		
+		<s:HTTPService
+			id="rtmpWebOrb"
+			url="./assets/config/appconfig.xml"
+			result="loadRTMP(event)"			
 			useProxy="false"
 			resultFormat="e4x"/>
 		
@@ -144,7 +165,7 @@ frameRate="60" -->
 			private function loadConfigFile():void
 			{
 				webServices.send();
-				
+				rtmpWebOrb.send();
 			}
 			//*****************************************************************************************************
 			private function loadWebService(event:ResultEvent):void
@@ -296,7 +317,7 @@ frameRate="60" -->
 			private function fnOpcionesMonto(opt:String):void{
 				switch(opt){
 					case "Guardar":
-						var ingresoEvent:IngresoFiltrosEvent = new IngresoFiltrosEvent('<WSParam><Parametros><tipo>1</tipo><valor>' + txtCambioMonto.text + '</valor></Parametros></WSParam>', ModelLocator.TIPO_MONTO, txtCambioMonto);
+						var ingresoEvent:IngresoFiltrosEvent = new IngresoFiltrosEvent('<WSParam><Parametros><tipo>1</tipo><valor>' + txtCambioMonto.text.split('.').join('') + '</valor></Parametros></WSParam>', ModelLocator.TIPO_MONTO, txtCambioMonto);
 						ingresoEvent.dispatch();
 						break;
 					case "Reestablecer":
@@ -308,6 +329,8 @@ frameRate="60" -->
 			
 		]]>
 	</fx:Script>
+	
+	<fx:Script source="WebOrb.as"/>
 	<s:Group width="100%" height="100%">
 		<s:Rect width="100%" height="100%">
 			<s:fill>
@@ -324,7 +347,10 @@ frameRate="60" -->
 												 fnPostList="fnOpcionesMonto">
 						<s:VGroup width="100%" height="100%" paddingTop="10" horizontalAlign="center">
 							<s:Label text="Monto limite"/>
-							<components:CustomTextInput id="txtCambioMonto" textAlign="right" text="{ModelLocator.monto + ''}" skinClass="assets.skins.TextInputActSkin" restrict="0-9" change="fnCambioMonto(event)"/>
+							<components:CustomTextInput id="txtCambioMonto" textAlign="right" 
+														focusOut="txtCambioMonto.text = formater.format(txtCambioMonto.text)" 
+														focusIn="txtCambioMonto.text = txtCambioMonto.text.split('.').join('');"
+														text="{formater.format(ModelLocator.monto) + ''}" skinClass="assets.skins.TextInputActSkin" restrict="0-9" change="fnCambioMonto(event)"/>
 							
 							<s:HGroup verticalAlign="middle" includeInLayout="{ModelLocator.warning}" visible="{ModelLocator.warning}">
 								<s:Image source="@Embed('assets/icons/warning.png')"/>

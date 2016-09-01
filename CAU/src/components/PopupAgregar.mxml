@@ -81,16 +81,29 @@
 				arList.addItem(g);
 			}
 			
+			private function fnSeleccion(evento:MouseEvent):void{
+				evento.stopImmediatePropagation();
+				evento.stopPropagation();
+				var opt:Boolean = evento.target.selected;
+				var n:int = objVO.arrAsociadosOut.length;
+				var arr:ArrayCollection = objVO.arrAsociadosOut;
+				for(var i:int = 0; i< n; i++){
+					var obj:* = arr.getItemAt(i);
+					obj.sel = opt;
+					arr.setItemAt(obj, i);
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" horizontalAlign="center">
-		<s:DataGrid id="dgOut" dataProvider="{objVO.arrAsociadosOut}" width="100%" height="200" creationComplete="dgOut_creationCompleteHandler(event)">
-			<s:columns>
+		<components:CustomDataGridSpark id="dgOut" fnEncabezado="fnSeleccion" arrSelectorTodo="{['Sel']}" dataProvider="{objVO.arrAsociadosOut}" width="100%" height="200" creationComplete="dgOut_creationCompleteHandler(event)">
+			<components:columns>
 				<s:ArrayList id="arList">
 					
 				</s:ArrayList>
-			</s:columns>
-		</s:DataGrid>
+			</components:columns>
+		</components:CustomDataGridSpark>
 		<s:HGroup>
 			<s:Button label="Agregar" width="100" click="fnAgregarcategorias(event)"/>
 			<s:Button label="Cancelar" width="100" click="fnCerrar(event)" skinClass="assets.skins.ButtonCleanLVSkin"/>

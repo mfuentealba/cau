@@ -30,6 +30,11 @@ import spark.components.Group;
 		public static const TIPO_NEMO:String = '4';
 		public static var warning:Boolean;
 		
+		public static var serverConnectionOC:NetConnection;
+		public static var rutaRTMPOC:String = "";
+		public static var messageSend:Boolean = false;
+		public static var idClientOC:String = "";
+		
 		public var servicesCollection:ArrayCollection = new ArrayCollection();
 		public static var user:ConfigVo = new ConfigVo();
 		
