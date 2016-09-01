@@ -616,8 +616,14 @@
 						pop.opcion = evento.target.label; 
 						
 						pop.ext = true;
-						pop.idClas = dgClasificacion.selectedItem != null ? '' + dgClasificacion.selectedItem['idClasificacion'] : '0';
-						pop.idCat = dgCategorias.selectedItem != null ? '' + dgCategorias.selectedItem['obj']['idCategoria'] : '0';
+						if(dgCategorias.selectedItem != null){
+							pop.idClas = dgClasificacion.selectedItem['idClasificacion'];
+							pop.idCat = dgCategorias.selectedItem['obj']['idCategoria'];
+								
+						} else {
+							pop.idClas = '0';
+							pop.idCat = '0';
+						}
 						pop.title = 'Crear Problema';
 						pop.tipoEvento = MantenedoresEvent.CREAR_PROBLEMAS;
 						pop.fnPost = fnNuevoProblema;
