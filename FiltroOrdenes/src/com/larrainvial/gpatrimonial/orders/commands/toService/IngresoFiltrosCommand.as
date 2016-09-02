@@ -7,10 +7,9 @@ package com.larrainvial.gpatrimonial.orders.commands.toService
 	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.larrainvial.gpatrimonial.orders.business.OrdenesDelegate;
 	import com.larrainvial.gpatrimonial.orders.business.ValidaNTDelegate;
-	import com.larrainvial.gpatrimonial.orders.events.toService.ClientAccountPreLoadEvent;
 	import com.larrainvial.gpatrimonial.orders.events.toService.IngresoFiltrosEvent;
-	import com.larrainvial.gpatrimonial.orders.events.toService.Lista_EjecutivoSupervisadoEvent;
 	import com.larrainvial.gpatrimonial.orders.events.toWebOrb.AccessLoadedEvent;
+	import com.larrainvial.gpatrimonial.orders.events.toWebOrb.FilterTransactionEvent;
 	import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
 	import com.larrainvial.gpatrimonial.orders.vo.LoginVO;
 	
@@ -46,37 +45,12 @@ package com.larrainvial.gpatrimonial.orders.commands.toService
 			{
 				
 				if(XML(data.result).Error.@Status == "0"){
-					switch(evento.tipo){
-						case ModelLocator.TIPO_MONTO:
-							Alert.show("El monto fue actualizado con éxito", "Información");
-							ModelLocator.monto = int(XML(data.result)..Filtros[0].@valor + '');
-							ModelLocator.warning = false;
-							break;
-						case ModelLocator.TIPO_RUT:
-							Alert.show("Registro ingresado con éxito", "Información");
-							var str:String = XML(data.result)..Filtros[0].@valor + '';
-							ModelLocator.arrRut.addItem({valor: XML(data.result)..Filtros[0].@valor + '', tipo: ModelLocator.TIPO_RUT});
-							evento.txt.text = '';
-							evento.txt.dispatchEvent(new TextOperationEvent(TextOperationEvent.CHANGE));
-							ModelLocator.arrRut.refresh();
-							break;
-						case ModelLocator.TIPO_AGENTE:
-							Alert.show("Registro ingresado con éxito", "Información");
-							ModelLocator.arrAgente.addItem({valor: XML(data.result)..Filtros[0].@valor + '', tipo: ModelLocator.TIPO_AGENTE});
-							evento.txt.text = '';
-							evento.txt.dispatchEvent(new TextOperationEvent(TextOperationEvent.CHANGE));
-							ModelLocator.arrAgente.refresh();
-							break;
-						case ModelLocator.TIPO_NEMO:
-							Alert.show("Registro ingresado con éxito", "Información");
-							ModelLocator.arrNemos.addItem({valor: XML(data.result)..Filtros[0].@valor + '', tipo: ModelLocator.TIPO_NEMO});
-							evento.txt.text = '';
-							evento.txt.dispatchEvent(new TextOperationEvent(TextOperationEvent.CHANGE));
-							ModelLocator.arrNemos.refresh();
-							break;
-					}	
+					
+					var valor:String = XML(data.result)..Filtros[0].@valor + '';
+					var filterTransactionEvent:FilterTransactionEvent = new FilterTransactionEvent("insert", evento.tipo, (evento.tipo == ModelLocator.TIPO_RUT ? valor.split("-")[0] : valor));
+					filterTransactionEvent.dispatch();
 				} else {
-					Alert.show("Problemas en operación", "Error");
+					Alert.show("Problemas en operación en DB", "Error");
 				}
 				
 				

@@ -5,15 +5,15 @@
 	<RTMPMarkedData>rtmp://antuco.larrainvial.com:1962/LVFHXSGO</RTMPMarkedData> -->
 	<!-- RTMPOC>rtmp://172.16.240.87:1935/OrderCapturer</RTMPOC -->
 	  
-	 <RTMPOC>rtmp://172.16.240.79:1935/OrderCapturer</RTMPOC>
+	 <!-- <RTMPOC>rtmp://172.16.240.79:1935/OrderCapturer</RTMPOC>
 	<RTMPB>rtmp://172.16.240.79:1936/Books</RTMPB> 
-	<RMTPPath>rtmp://172.16.240.79:1937/VisorSimultaneas</RMTPPath>      
+	<RMTPPath>rtmp://172.16.240.79:1937/VisorSimultaneas</RMTPPath> -->      
 	
 	<RTMPMantenedorAsoc>rtmp://trajano:1939/LvMantenedorAsoc</RTMPMantenedorAsoc>
 	   
-	   <!-- <RTMPOC>rtmp://bd2k8qa:1945/OrderCapturer</RTMPOC> 
+	   <RTMPOC>rtmp://bd2k8qa:1945/OrderCapturer</RTMPOC> 
 	<RTMPB>rtmp://bd2k8qa:1969/Books</RTMPB>
-	 <RMTPPath>rtmp://bd2k8qa:1946/VisorSimultaneas</RMTPPath> -->    
+	 <RMTPPath>rtmp://bd2k8qa:1946/VisorSimultaneas</RMTPPath>    
 	
 	   
 	   

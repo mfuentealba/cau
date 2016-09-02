@@ -20,7 +20,7 @@ frameRate="60" -->
 						xmlns:views="com.larrainvial.gpatrimonial.orders.views.*"
 						creationComplete="init(); updater.initialize()"
 						paddingTop="3" paddingRight="0" paddingBottom="3" paddingLeft="0"						
-						title="Order Capture"
+						title="Parametrizador de órdenes"
 						backgroundAlpha="0.75"
 						creationPolicy="all"
 						maxWidth="1200"
@@ -105,7 +105,7 @@ frameRate="60" -->
 			resultFormat="e4x"/>
 		
 		<ns:NativeApplicationUpdater id="updater" 
-									 updateURL="http://trajano/OrderCapturer/assets/config/configUpdate.xml"
+									 updateURL="http://trajano/FilterOrder/assets/config/configUpdate.xml"
 									 initialized="updater_initializedHandler(event)"/>
 		
 	</fx:Declarations>
@@ -133,7 +133,6 @@ frameRate="60" -->
 			
 			import spark.events.TextOperationEvent;
 			
-			import useful.UtilT24;
 			
 			public var model:ModelLocator = ModelLocator.getInstance();
 			public var servicio:Services;
@@ -143,7 +142,7 @@ frameRate="60" -->
 			
 			protected function updater_initializedHandler(event:UpdateEvent):void
 			{				
-				//updater.checkNow();
+				updater.checkNow();
 			}
 			
 			

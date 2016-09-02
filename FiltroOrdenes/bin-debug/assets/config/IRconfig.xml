@@ -1,8 +1,0 @@
-<Config>	
-	<tipoOperacion tip="IRV" val="RV"/>
-	<tipoOperacion tip="RRV" val="RV"/>
-	<tipoOperacion tip="IRF" val="RF"/>
-	<tipoOperacion tip="RRF" val="RF"/>
-	<tipoOperacion tip="IIF" val="IF"/>
-	<tipoOperacion tip="RIF" val="IF"/>
-</Config>

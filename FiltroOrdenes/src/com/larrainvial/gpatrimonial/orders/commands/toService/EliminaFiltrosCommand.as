@@ -7,10 +7,9 @@ package com.larrainvial.gpatrimonial.orders.commands.toService
 	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.larrainvial.gpatrimonial.orders.business.OrdenesDelegate;
 	import com.larrainvial.gpatrimonial.orders.business.ValidaNTDelegate;
-	import com.larrainvial.gpatrimonial.orders.events.toService.ClientAccountPreLoadEvent;
 	import com.larrainvial.gpatrimonial.orders.events.toService.EliminaFiltrosEvent;
-	import com.larrainvial.gpatrimonial.orders.events.toService.Lista_EjecutivoSupervisadoEvent;
 	import com.larrainvial.gpatrimonial.orders.events.toWebOrb.AccessLoadedEvent;
+	import com.larrainvial.gpatrimonial.orders.events.toWebOrb.FilterTransactionEvent;
 	import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
 	import com.larrainvial.gpatrimonial.orders.vo.LoginVO;
 	
@@ -44,24 +43,13 @@ package com.larrainvial.gpatrimonial.orders.commands.toService
 			{
 				
 				if(XML(data.result).Error.@Status == "0"){
-					switch(evento.tipo){
-						case ModelLocator.TIPO_RUT:
-							Alert.show("El registro fue eliminado con éxito", "Información");
-							ModelLocator.arrRut.removeItemAt(ModelLocator.arrRut.getItemIndex(evento.dg.selectedItem));
-							break;
-						case ModelLocator.TIPO_AGENTE:
-							Alert.show("El registro fue eliminado con éxito", "Información");
-							ModelLocator.arrAgente.removeItemAt(ModelLocator.arrAgente.getItemIndex(evento.dg.selectedItem));
-							break;
-						case ModelLocator.TIPO_NEMO:
-							Alert.show("El registro fue eliminado con éxito", "Información");
-							ModelLocator.arrNemos.removeItemAt(ModelLocator.arrNemos.getItemIndex(evento.dg.selectedItem));
-							break;
-					}	
+					
+					var valor:String = XML(data.result)..Filtros[0].@valor + '';
+					var filterTransactionEvent:FilterTransactionEvent = new FilterTransactionEvent("delete", evento.tipo, (evento.tipo == ModelLocator.TIPO_RUT ? valor.split("-")[0] : valor), evento.dg);
+					filterTransactionEvent.dispatch();
 				} else {
 					Alert.show("Problemas en operación", "Error");
 				}
-				
 				
 				
 				

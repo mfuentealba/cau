@@ -1,10 +1,10 @@
 <configWS>
 	<WebService>
 			<id>WSOrdenesGP</id>
-			<!--wsdl>http://trajano.larra_dom/WSOrderCapture/OrderCapture.asmx?wsdl</wsdl>
-			<uri>http://trajano.larra_dom/WSOrderCapture/OrderCapture.asmx</uri-->
-			<wsdl>http://localhost:50315/WSOrderCapture/OrderCapture.asmx?wsdl</wsdl>
-			<uri>http://localhost:50315/WSOrderCapture/OrderCapture.asmx</uri>
+			<wsdl>http://trajano.larra_dom/WSOrderCapture/OrderCapture.asmx?wsdl</wsdl>
+			<uri>http://trajano.larra_dom/WSOrderCapture/OrderCapture.asmx</uri>
+			<!-- <wsdl>http://localhost:50315/WSOrderCapture/OrderCapture.asmx?wsdl</wsdl>
+			<uri>http://localhost:50315/WSOrderCapture/OrderCapture.asmx</uri> -->
 			<!-- <wsdl>http://beta.larrainvial.com/Webservices/WSOrderCapture/OrderCapture.asmx?wsdl</wsdl>
 			<uri>http://beta.larrainvial.com/Webservices/WSOrderCapture/OrderCapture.asmx</uri> -->
 			<!-- <wsdl>http://localhost:4790/WSOrdenesGP/WSOrdenesGP.asmx?wsdl</wsdl>

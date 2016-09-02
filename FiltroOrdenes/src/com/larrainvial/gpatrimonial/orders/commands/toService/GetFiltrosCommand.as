@@ -7,8 +7,6 @@ package com.larrainvial.gpatrimonial.orders.commands.toService
 	import com.adobe.cairngorm.control.CairngormEventDispatcher;
 	import com.larrainvial.gpatrimonial.orders.business.OrdenesDelegate;
 	import com.larrainvial.gpatrimonial.orders.business.ValidaNTDelegate;
-	import com.larrainvial.gpatrimonial.orders.events.toService.ClientAccountPreLoadEvent;
-	import com.larrainvial.gpatrimonial.orders.events.toService.Lista_EjecutivoSupervisadoEvent;
 	import com.larrainvial.gpatrimonial.orders.events.toWebOrb.AccessLoadedEvent;
 	import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
 	import com.larrainvial.gpatrimonial.orders.vo.LoginVO;

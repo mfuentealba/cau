@@ -15,14 +15,8 @@ import com.larrainvial.gpatrimonial.orders.events.fromWebOrb.ReceiveQtyAmountEve
 import com.larrainvial.gpatrimonial.orders.events.fromWebOrb.ReceiveSettlTypeEvent;
 import com.larrainvial.gpatrimonial.orders.events.fromWebOrb.ReceiveSidesEvent;
 import com.larrainvial.gpatrimonial.orders.events.fromWebOrb.ReceiveSymbolsEvent;
-import com.larrainvial.gpatrimonial.orders.events.fromWebOrb.SimOrderCompleteEvent;
 import com.larrainvial.gpatrimonial.orders.events.fromWebOrb.UpdateOpeningEvent;
-import com.larrainvial.gpatrimonial.orders.events.inApp.CalculateOrderWorkingAccountEvent;
-import com.larrainvial.gpatrimonial.orders.events.inApp.CalculateOrderWorkingAccountForBustEvent;
-import com.larrainvial.gpatrimonial.orders.events.inApp.NewBustEvent;
-import com.larrainvial.gpatrimonial.orders.events.toService.ClientAccountRefreshSymbolEvent;
 import com.larrainvial.gpatrimonial.orders.events.toService.Login_AgenteEvent;
-import com.larrainvial.gpatrimonial.orders.events.toService.SendOrderStatusEvent;
 import com.larrainvial.gpatrimonial.orders.events.toWebOrb.RequestConfigEvent;
 import com.larrainvial.gpatrimonial.orders.events.toWebOrb.RequestConnectionStatusEvent;
 import com.larrainvial.gpatrimonial.orders.events.toWebOrb.RequestSimOrdersEvent;
@@ -116,14 +110,6 @@ import mx.utils.StringUtil;
 	}
 
 //************************************************************************
-	public function receiveAllOrders(arr:ArrayCollection):void
-	{
-		//ModelLocator.arrSimOrders = arr;
-		var simOrderCompleteEvent:SimOrderCompleteEvent = new SimOrderCompleteEvent(arr);
-		simOrderCompleteEvent.dispatch();
-	}
-
-	//*****************************************************************************************************
 	private function alertListenerServiceUnavailable(eventObj:CloseEvent):void
 	{
 		if (eventObj.detail == Alert.OK) 
@@ -158,20 +144,6 @@ import mx.utils.StringUtil;
 	//*****************************************************************************************************
 	
 	
-public function receiveLogOn():void{
-	
-}
-
-//*****************************************************************************************************
-
-public function receiveLogout():void{
-	FlexGlobals.topLevelApplication.dispatchEvent(new Event(Controller.EVENT_ADD_LOAD));
-}
-
-
-public function receiveLogin():void{
-	FlexGlobals.topLevelApplication.dispatchEvent(new Event(Controller.EVENT_REMOVE_LOAD));
-}
-
-
-
+	public function receiveLogOn():void{
+		
+	}
