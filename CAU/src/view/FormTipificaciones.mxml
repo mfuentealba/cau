@@ -803,7 +803,7 @@
 								<s:ArrayList>
 									<s:GridColumn dataField="obj.idDescripcion" headerText="Id"/>
 									<s:GridColumn dataField="obj.nombreDescripcion" headerText="Nombre"/>
-									<s:GridColumn dataField="obj.idFormaAtencion" headerText="Forma Atención" labelFunction="fnFormaAtencion"/>
+									<!--<s:GridColumn dataField="obj.idFormaAtencion" headerText="Forma Atención" labelFunction="fnFormaAtencion"/>-->
 									<s:GridColumn dataField="obj.idTiemposolucion" headerText="Tiempo Solución" labelFunction="fnTiempoSolucion"/>
 									<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Habilitada" itemRenderer="components.RenderSel" width="100"/>
 								</s:ArrayList>

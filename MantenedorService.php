@@ -429,6 +429,9 @@ FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcatego
 	
 	public function getSubcategoriaProblemas($id, $idCat, $idClas) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"nombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
 		//echo "hfdfgjsfgskdf";
+		
+		/*return "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
+FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas;*/
 		$stmt = mysqli_prepare($this->connection, "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
 FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas);		
 		$msg = $this->throwExceptionOnError();
@@ -693,7 +696,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 			return $msg;
 		}
 		
-		return $this->getCategoriaSubcategorias($idCat, $idClas);	
+		return $this->getCategoriaSubcategorias($idCat, $idCla);	
 		
 	}
 	
@@ -717,8 +720,8 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 			return $msg;
 		}
 		
-		return $idPro;
-		return $this->getSubCategoriaProblemas($idSub, $idCat, $idClas);	
+		//	return $idPro;
+		return $this->getSubCategoriaProblemas($idSub, $idCat, $idCla);	
 		
 	}
 	
@@ -851,14 +854,14 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function saveProblemas($row, $idFormaAtencion, $idTiempoSolucion, $idClas, $idCat, $arr) {
 		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO descripcion (nombreDescripcion, idFormaAtencion, idTiempoSolucion) VALUES (?,?,?)");
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO descripcion (nombreDescripcion, idFormaAtencion, idTiempoSolucion) VALUES (?,0,?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 
 		
-		mysqli_stmt_bind_param($stmt, 'sii', $row, $idFormaAtencion, $idTiempoSolucion);
+		mysqli_stmt_bind_param($stmt, 'si', $row, $idTiempoSolucion);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg . " ----" . $row;

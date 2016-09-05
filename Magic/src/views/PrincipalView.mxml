@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="PrincipalView">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<s:Panel width="20%">
+		<s:List id="lstNotas" width="100%"/>	
+	</s:Panel>
+	
+	<s:ActionBar skinClass="spark.skins.mobile.CalloutActionBarSkin">
+		
+	</s:ActionBar>
+	<s:VGroup width="100%" horizontalAlign="center">
+		<s:HGroup>
+			<s:VGroup>
+				<s:TextInput width="66"/>
+				<s:Label text="Label"/>
+			</s:VGroup>
+			<s:VGroup>
+				<s:TextInput width="66"/>
+				<s:Label text="Label"/>
+			</s:VGroup>	
+		</s:HGroup>
+		
+		
+		<s:HGroup gap="10">
+			
+			<s:VGroup rowHeight="2">
+				<s:HGroup>
+					<s:Button label="+1"/>
+					<s:Button label="+5"/>
+				</s:HGroup>
+				<s:HGroup>
+					<s:Button label="-1"/>		
+					<s:Button label="-5"/>	
+				</s:HGroup>
+				<s:Label text="0"/>
+			</s:VGroup>
+			<s:VGroup rowHeight="2">
+				<s:HGroup>
+					<s:Button label="+1"/>
+					<s:Button label="+5"/>
+				</s:HGroup>
+				<s:HGroup>
+					<s:Button label="-1"/>		
+					<s:Button label="-5"/>	
+				</s:HGroup>
+				<s:Label text="0"/>
+			</s:VGroup>
+		</s:HGroup>
+		<s:Button label="Confirmar"/>
+		
+		<s:VGroup>
+			<s:HGroup>
+				<s:Button label="Dados"/>
+				<s:Button label="Maná"/>
+			</s:HGroup>
+			<s:HGroup>
+				<s:Button label="Veneno"/>
+				<s:Button label="Reset"/>
+			</s:HGroup>
+		</s:VGroup>
+	</s:VGroup>
+	<s:List id="lstHistoria" width="20%">
+		<s:dataProvider>
+			<s:ArrayCollection>
+				
+			</s:ArrayCollection>
+		</s:dataProvider>
+	</s:List>
+
+</s:View>

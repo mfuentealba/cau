@@ -55,7 +55,7 @@
 					obj[campo1] = txtNombre.text;
 					if(ext){
 						obj.idTiempoSolucion = ddlTiempoSolucion.selectedItem.idTiempoSolucion;
-						obj.idFormaAtencion = ddlFormaAtencion.selectedItem.idFormaAtencion;
+						obj.idFormaAtencion = 0//;ddlFormaAtencion.selectedItem.idFormaAtencion;
 					}
 					var arr:ArrayCollection = new ArrayCollection();
 					for each(var obj2:Object in dgDataProvider2){
@@ -76,7 +76,7 @@
 				} else {
 					obj[campo1] = txtNombre.text;
 					if(ext){
-						obj['idFormaAtencion'] = ddlFormaAtencion.selectedItem.idFormaAtencion;
+						obj['idFormaAtencion'] = 0;//ddlFormaAtencion.selectedItem.idFormaAtencion;
 						obj['idTiempoSolucion'] = ddlTiempoSolucion.selectedItem.idTiempoSolucion;
 					}
 					mantenedoresEvent = new MantenedoresEvent(tipoEvento, fnPost, [obj, arr]);
@@ -156,7 +156,7 @@
 			<s:FormItem label="Nombre" width="100%" height="30"> 
 				<s:TextInput id="txtNombre" height="30" width="150"/>
 			</s:FormItem>
-			<s:FormItem label="Forma de atención" width="100%" height="30" visible="{ext}" includeInLayout="{ext}">
+			<s:FormItem label="Forma de atención" visible="false" includeInLayout="false" width="100%" height="30">
 				<s:DropDownList id="ddlFormaAtencion" height="30" width="150" dataProvider="{modelApp.arrFormaAtencion}" labelField="descripcion"/>
 			</s:FormItem>
 			<s:FormItem label="Tiempo de solución" width="100%" height="30" visible="{ext}" includeInLayout="{ext}">
