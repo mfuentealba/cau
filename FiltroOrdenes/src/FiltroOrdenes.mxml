@@ -320,7 +320,7 @@ frameRate="60" -->
 						ingresoEvent.dispatch();
 						break;
 					case "Reestablecer":
-						txtCambioMonto.text = ModelLocator.monto + '';
+						txtCambioMonto.text = formater.format(ModelLocator.monto) + '';
 						ModelLocator.warning = false;
 						break;
 				}
