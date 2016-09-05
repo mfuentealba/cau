@@ -1,27 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="PrincipalView">
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Contador">
+	
+	<fx:Script>
+		<![CDATA[
+			protected function fnActualizaContador(cant:int, lbl:Label):void
+			{
+				// TODO Auto-generated method stub
+				lbl.text = (int(lbl.text) + cant) + '';
+			}
+			
+			protected function fnConfirmaOperacion(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				txtVidaJ1.text = (int(txtVidaJ1.text) - int(lblContJ1.text)) + '';
+				txtVidaJ2.text = (int(txtVidaJ2.text) - int(lblContJ2.text)) + '';
+				lblContJ1.text = '0';
+				lblContJ2.text = '0';
+			}
+			
+		]]>
+	</fx:Script>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:layout>
 		<s:HorizontalLayout/>
 	</s:layout>
-	<s:Panel width="20%">
-		<s:List id="lstNotas" width="100%"/>	
-	</s:Panel>
-	
-	<s:ActionBar skinClass="spark.skins.mobile.CalloutActionBarSkin">
+	<s:Group width="20%">
+		<s:layout>
+			<s:VerticalLayout/>
+		</s:layout>
 		
-	</s:ActionBar>
+		<s:ActionBar width="100%" contentBackgroundColor="0x000000">
+			<s:actionContent>
+				<s:Button label="+"/>
+			</s:actionContent>
+			<s:titleContent>
+				<s:Label text="Notas"/>
+			</s:titleContent>
+		</s:ActionBar>
+		<s:List id="lstNotas" width="100%"/>	
+	</s:Group>
+	
+	
 	<s:VGroup width="100%" horizontalAlign="center">
 		<s:HGroup>
 			<s:VGroup>
-				<s:TextInput width="66"/>
+				<s:TextInput id="txtVidaJ1" text="20" width="66" editable="false"/>
 				<s:Label text="Label"/>
 			</s:VGroup>
 			<s:VGroup>
-				<s:TextInput width="66"/>
+				<s:TextInput id="txtVidaJ2" text="20" width="66" editable="false"/>
 				<s:Label text="Label"/>
 			</s:VGroup>	
 		</s:HGroup>
@@ -31,30 +62,30 @@
 			
 			<s:VGroup rowHeight="2">
 				<s:HGroup>
-					<s:Button label="+1"/>
-					<s:Button label="+5"/>
+					<s:Button label="+1" click="fnActualizaContador(1, lblContJ1)"/>
+					<s:Button label="+5" click="fnActualizaContador(5, lblContJ1)"/>
 				</s:HGroup>
 				<s:HGroup>
-					<s:Button label="-1"/>		
-					<s:Button label="-5"/>	
+					<s:Button label="-1" click="fnActualizaContador(-1, lblContJ1)"/>		
+					<s:Button label="-5" click="fnActualizaContador(-5, lblContJ1)"/>	
 				</s:HGroup>
-				<s:Label text="0"/>
+				<s:Label id="lblContJ1" text="0"/>
 			</s:VGroup>
 			<s:VGroup rowHeight="2">
 				<s:HGroup>
-					<s:Button label="+1"/>
-					<s:Button label="+5"/>
+					<s:Button label="+1" click="fnActualizaContador(1, lblContJ2)"/>
+					<s:Button label="+5" click="fnActualizaContador(5, lblContJ2)"/>
 				</s:HGroup>
 				<s:HGroup>
-					<s:Button label="-1"/>		
-					<s:Button label="-5"/>	
+					<s:Button label="-1" click="fnActualizaContador(-1, lblContJ2)"/>		
+					<s:Button label="-5" click="fnActualizaContador(-5, lblContJ2)"/>	
 				</s:HGroup>
-				<s:Label text="0"/>
+				<s:Label id="lblContJ2" text="0"/>
 			</s:VGroup>
 		</s:HGroup>
-		<s:Button label="Confirmar"/>
+		<s:Button label="Confirmar" click="fnConfirmaOperacion(event)"/>
 		
-		<s:VGroup>
+		<!--<s:VGroup>
 			<s:HGroup>
 				<s:Button label="Dados"/>
 				<s:Button label="Maná"/>
@@ -63,7 +94,7 @@
 				<s:Button label="Veneno"/>
 				<s:Button label="Reset"/>
 			</s:HGroup>
-		</s:VGroup>
+		</s:VGroup>-->
 	</s:VGroup>
 	<s:List id="lstHistoria" width="20%">
 		<s:dataProvider>

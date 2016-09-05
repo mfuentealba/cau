@@ -19,7 +19,7 @@ package com.larrainvial.gpatrimonial.orders.commands.toWebOrb
 		{
 			evento = FilterTransactionEvent(ev);
 			var responder:Responder = new Responder(fnRespuestaOperacion, fault);
-			ModelLocator.serverConnectionOC.call("filterTransaction",responder, evento.operacion, evento.tipo, evento.valor);
+			ModelLocator.serverConnectionOC.call("filterTransaction",responder, evento.operacion, evento.tipo, (evento.tipo == ModelLocator.TIPO_RUT ? evento.valor.split("-")[0] : evento.valor));
 		}
 		
 		private function fnRespuestaOperacion(str:String):void{
@@ -47,7 +47,7 @@ package com.larrainvial.gpatrimonial.orders.commands.toWebOrb
 						break;
 					case ModelLocator.TIPO_RUT:
 						//Alert.show("Registro ingresado con éxito", "Información");
-						var str:String = evento.valor + '';
+						//var str:String = evento.valor + '';
 						ModelLocator.arrRut.addItem({valor: evento.valor + '', tipo: ModelLocator.TIPO_RUT});
 						evento.obj.text = '';
 						evento.obj.dispatchEvent(new TextOperationEvent(TextOperationEvent.CHANGE));

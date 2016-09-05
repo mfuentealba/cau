@@ -47,7 +47,7 @@ package com.larrainvial.gpatrimonial.orders.commands.toService
 				if(XML(data.result).Error.@Status == "0"){
 					
 					var valor:String = XML(data.result)..Filtros[0].@valor + '';
-					var filterTransactionEvent:FilterTransactionEvent = new FilterTransactionEvent("insert", evento.tipo, (evento.tipo == ModelLocator.TIPO_RUT ? valor.split("-")[0] : valor), evento.txt);
+					var filterTransactionEvent:FilterTransactionEvent = new FilterTransactionEvent("insert", evento.tipo, valor, evento.txt);
 					filterTransactionEvent.dispatch();
 				} else {
 					Alert.show("Problemas en operación en DB", "Error");
