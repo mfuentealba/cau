@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <components:CustomPanelSpark xmlns:fx="http://ns.adobe.com/mxml/2009" 
 							 xmlns:s="library://ns.adobe.com/flex/spark" 
-							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" width="400" height="{140 + (ext ? 80 : 0) + (ext2 ? 180 : 0)}"
+							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" width="400" height="{160 + (ext ? 80 : 0) + (ext2 ? 180 : 0)}"
 							 creationComplete="fnSeteo(event)">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -22,6 +22,7 @@
 			import mx.managers.PopUpManager;
 			
 			import spark.components.gridClasses.GridColumn;
+			import spark.events.TextOperationEvent;
 			
 			import vo.ClasificacionVO;
 			[Bindable] public var obj:Object;
@@ -35,6 +36,11 @@
 			public var campo1:String;
 			public var claseOperacion:Class;
 			public var tipoEvento:String;
+			
+			
+			public var objUpdate:*;
+			[Bindable] public var arrUpdate:ArrayCollection;
+			[Bindable] public var warning:Boolean;
 			
 			[Bindable] public var dgDataProvider:ArrayCollection;
 			[Bindable] public var dgDataProvider2:ArrayCollection = new ArrayCollection();
@@ -148,13 +154,35 @@
 					}
 			}
 			
+			
+			private function filter(item:*):Boolean{
+				return txtNombre.text == item[campo1] && (obj == null || obj[campo1] != item[campo1]) ? true : false;
+			}
+			
+			private function set fnArmaUpdate(val:ArrayCollection):void{
+				if(val){
+					arrUpdate.filterFunction = filter;
+					arrUpdate.refresh();
+				}
+				
+			}
+			
+			protected function txtNombre_changeHandler(event:TextOperationEvent):void
+			{
+				// TODO Auto-generated method stub
+				arrUpdate.refresh();
+				warning = arrUpdate.length > 0 ? true : false; 
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Binding source="dgDataProvider" destination="fnArmaDataProvider"/>
+	<fx:Binding source="arrUpdate" destination="fnArmaUpdate"/>
 	<s:VGroup horizontalCenter="0">
 		<s:Form defaultButton="{btnEnviar}" width="100%">
-			<s:FormItem label="Nombre" width="100%" height="30"> 
-				<s:TextInput id="txtNombre" height="30" width="150"/>
+			<s:FormItem label="Nombre" width="100%" height="50"> 
+				<s:TextInput id="txtNombre" height="30" width="150" change="txtNombre_changeHandler(event)"/>
+				<s:Label id="lblRepetido" text="Nombre ya existe" visible="{warning}" includeInLayout="{warning}" fontSize="8" color="RED"/>
 			</s:FormItem>
 			<s:FormItem label="Forma de atención" visible="false" includeInLayout="false" width="100%" height="30">
 				<s:DropDownList id="ddlFormaAtencion" height="30" width="150" dataProvider="{modelApp.arrFormaAtencion}" labelField="descripcion"/>
@@ -178,7 +206,7 @@
 		
 		
 		<s:HGroup>
-			<s:Button id="btnEnviar" label="{obj == null ? 'Crear' : 'Actualizar'}" click="fnOperar(event)" skinClass="assets.skins.CustomButtonEnviar" width="150" height="30"/>	
+			<s:Button id="btnEnviar" label="{obj == null ? 'Crear' : 'Actualizar'}" click="fnOperar(event)" skinClass="assets.skins.CustomButtonEnviar" width="150" height="30" enabled="{txtNombre.text != '' &amp;&amp; !warning ? (ext ? (ddlTiempoSolucion.selectedItem ? true : false) : true) : false}"/>	
 			<s:Button id="btnEliminar" label="Cancelar" click="fnCerrar()" skinClass="assets.skins.CustomButtonTransparenteSkin" width="150" height="30"/>
 		</s:HGroup>	
 	</s:VGroup>

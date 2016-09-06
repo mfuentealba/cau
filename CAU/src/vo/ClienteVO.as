@@ -6,7 +6,7 @@ package vo
 	[Bindable] 
 	dynamic public class ClienteVO
 	{
-		public var id:String;
+		public var id:String = '';
 		public var nombres:String;
 		public var apellidos:String;
 		public var rut:String;

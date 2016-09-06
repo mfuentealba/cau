@@ -21,6 +21,7 @@ package model
 		public var sucursalesFilter:String;
 		
 		public var arrClientes:ArrayCollection;
+		public var arrComboClientes:ArrayCollection;
 		public var objClientes:Object = {};
 		public var fnClientesFilter:Function;
 		public var clientesFilter:String;
@@ -32,6 +33,8 @@ package model
 		public var arrCategoria:ArrayCollection;
 		public var arrSubCategoria:ArrayCollection;
 		public var arrDescripcion:ArrayCollection;
+		
+		public var arrCriticidad:ArrayCollection = new ArrayCollection([{label: 'Baja', id: '1'}, {label: 'Media', id: '2'}, {label: 'Baja', id: '3'}]);
 		
 		
 		public var objTipoUsuario:Object = {};

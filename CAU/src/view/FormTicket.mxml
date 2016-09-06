@@ -8,12 +8,14 @@
 			import controller.Controller;
 			
 			import event.ClienteEvent;
+			import event.MantenedoresEvent;
 			
 			import model.ModelApp;
 			
-			import spark.events.GridEvent;
-		
+			import mx.collections.ArrayCollection;
 			
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
 			
 			import vo.ClienteVO;
 			
@@ -46,20 +48,126 @@
 				btnEnviar.label = 'Crear';
 			}
 			
+			/*
+			`id`, 
+			`tipo_solucion`, 
+			`problema`, 
+			`sub_problema`, 
+			`rotulo`, 
+			--`dir_ip`, 
+			--`cliente_rut`, 
+			`fecha`, 
+			`hora`, 
+			`soporte`, 
+			`estado`, 
+			`descripcion`, 
+			`hora_cierre`, 
+			`fecha_cierre`, 
+			`asignado_por`, 
+			`comentario_cierre`, 
+			`problema_e`, 
+			`sub_problema_e`, 
+			`solucion_dada_por`, 
+			`idClasificacion`, 
+			`idDescripcion`, 
+			`tiempoSolucion`, 
+			`administracionRemota`, 
+			`tipoNivel`, 
+			`reporteSolucionado`, 
+			`fechaSolucion`, 
+			`horaSolucion`, 
+			`solucionadoPor`, 
+			`clasificacionCierre`, 
+			`categoriaCierre`, 
+			`subcategoriaCierre`, 
+			`descripcionCierre`, 
+			`creadoPor`)
+			*/
 			
-			
-			
-			
-			protected function fnFiltrarCliente(event:*):void
+			/*protected function fnFiltrarCliente(event:*):void
 			{
 				// TODO Auto-generated method stub
-				modelApp.arrClientes.refresh();
+				modelApp.arrComboClientes.refresh();
+			}*/
+			
+			
+			private function set fnCargaCliente(val:*):void{
+				if(val is ClienteVO){
+					var auxCliente:ClienteVO = val;
+					clienteVO.id = auxCliente.id; 
+					clienteVO.nombres = auxCliente.nombres;
+					clienteVO.apellidos = auxCliente.apellidos;
+					clienteVO.rut = auxCliente.rut;
+					clienteVO.telefono = auxCliente.telefono;
+					clienteVO.anexo = auxCliente.anexo;
+					clienteVO.email = auxCliente.email;
+					clienteVO.sucursal = auxCliente.sucursal;
+					clienteVO.unidad = auxCliente.unidad;
+					clienteVO.rotulo = auxCliente.rotulo;
+					clienteVO.dir_ip = auxCliente.dir_ip;
+					clienteVO.gerencia = auxCliente.gerencia;
+					clienteVO.password = auxCliente.password;
+					clienteVO.empresa = auxCliente.empresa;	
+				} else {
+					clienteVO = new ClienteVO();
+				}
+				
 			}
 			
 			
+			private function fnActualizaData(auxNuevoVO:*):void{				
+				/*clasificacionVO.idClasificacion = auxNuevoVO.idClasificacion; 
+				clasificacionVO.nombreClasificacion = auxNuevoVO.nombreClasificacion;
+				clasificacionVO.arrCategoriasIn = auxNuevoVO.arrCategoriasIn;
+				clasificacionVO.arrCategoriasOut = auxNuevoVO.arrCategoriasOut;*/
+				
+				var arr:Array = [];
+				for each(var obj:* in auxNuevoVO.arrAsociadosIn){
+					arr.push(obj.obj);
+				}
+				
+				auxNuevoVO.arrAsociadosIn = new ArrayCollection(arr);
+				//auxNuevoVO.arrAsociadosIn.refresh();
+				
+				//cmbCategoria.dataProvider = cmbClasificacion.selectedItem ? cmbClasificacion.selectedItem['arrAsociadosIn'] : null;
+			}
+			
+			protected function cmbClasificacion_changeHandler(evento:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				trace('fnBuscarAsociados');
+				if(evento.newIndex > -1){
+					var manEvent:MantenedoresEvent;
+					switch(evento.currentTarget){
+						case cmbClasificacion:
+							manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: cmbClasificacion.selectedItem});
+							
+							Controller.getInstance().dispatchEvent(manEvent);		
+							break;
+						case cmbCategoria:
+							manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: cmbClasificacion.selectedItem.idClasificacion, idCategoria: cmbCategoria.selectedItem});
+							Controller.getInstance().dispatchEvent(manEvent);		
+							break;
+						case cmbSubcategoria:
+							manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, fnActualizaData, {idClas: cmbClasificacion.selectedItem.idClasificacion, idCategoria: cmbCategoria.selectedItem.idCategoria, idSubCategoria: cmbSubcategoria.selectedItem});
+							Controller.getInstance().dispatchEvent(manEvent);		
+							break;
+						
+					}
+					
+					
+				}
+			}
+			
+			protected function fnTiempoSolucion(event:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				lblTiempoSolucion.text = modelApp.objTiempoSolucion[cmbDescripcion.selectedItem['idTiempoSolucion']]['descripcion'];
+			}
+			
 		]]>
 	</fx:Script>
-	<fx:Binding source="txtRut.text" destination="clienteVO.rut" twoWay="true"/>
+	<fx:Binding source="txtRut.selectedItem" destination="fnCargaCliente"/>
 	<fx:Binding source="txtNombres.text" destination="clienteVO.nombres" twoWay="true"/>
 	<fx:Binding source="txtApellidos.text" destination="clienteVO.apellidos" twoWay="true"/>
 	<fx:Binding source="txtEmail.text" destination="clienteVO.email" twoWay="true"/>
@@ -76,15 +184,16 @@
 		>
 		
 		<s:layout>
-			<s:HorizontalLayout/>
+			<s:VerticalLayout/>
 		</s:layout>
-		<components:CustomPanelSpark title="Clientes" width="400" color="#eeeeee" imgBl="true">
-			<s:Form width="100%">
+		<components:CustomPanelSpark title="Cliente" width="100%" color="#eeeeee" imgBl="true">
+			<s:Form width="100%" bottom="10">
 				<s:layout>
 					<s:TileLayout requestedColumnCount="4"/>
 				</s:layout>
 				<s:FormItem label="Rut" width="100%" height="30">
-					<s:TextInput id="txtRut" width="100%" height="30"/>
+					<!--<s:TextInput id="txtRut" width="100%" height="30"/>-->
+					<s:ComboBox id="txtRut" skinClass="assets.skins.ComboBoxLVSkin" dataProvider="{modelApp.arrComboClientes}" labelField="rut"/>
 				</s:FormItem>
 				<s:FormItem label="Nombres" width="100%" height="30">
 					<s:TextInput id="txtNombres" width="100%" height="30"/>
@@ -121,6 +230,43 @@
 				</s:FormItem>
 				<s:FormItem label="" width="100%" height="50">
 					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{clienteVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarCliente(event)" width="100%" height="50" skinClass="assets.skins.ButtonSendLVSkin"/>
+				</s:FormItem>
+				
+			</s:Form>	
+		</components:CustomPanelSpark>
+		
+		<components:CustomPanelSpark title="Detalle Ticket" width="100%" color="#eeeeee" imgBl="true">
+			<s:Form width="100%" bottom="10">
+				<s:layout>
+					<s:TileLayout requestedColumnCount="4"/>
+				</s:layout>
+				<s:FormItem label="Fecha" width="100%" height="30">
+					<!--<s:TextInput id="txtRut" width="100%" height="30"/>-->
+					<s:TextInput id="txtFecha"/>
+				</s:FormItem>
+				<s:FormItem label="Hora" width="100%" height="30">
+					<s:TextInput id="txtHora" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Clasificación" width="100%" height="30">
+					<s:ComboBox id="cmbClasificacion" change="cmbClasificacion_changeHandler(event)" width="100%" height="30" dataProvider="{modelApp.arrClasificacion}" labelField="nombreClasificacion"/>
+				</s:FormItem>
+				<s:FormItem label="Categoría" width="100%" height="30">
+					<s:ComboBox id="cmbCategoria" change="cmbClasificacion_changeHandler(event)" width="100%" height="30" dataProvider="{cmbClasificacion.selectedItem ? cmbClasificacion.selectedItem['arrAsociadosIn'] : null}" labelField="nombreCategoria"/>
+				</s:FormItem>
+				<s:FormItem label="Subcategoría" width="100%" height="30">
+					<s:ComboBox id="cmbSubcategoria" change="cmbClasificacion_changeHandler(event)" color="#333333" dataProvider="{cmbCategoria.selectedItem ? cmbCategoria.selectedItem['arrAsociadosIn'] : null}" width="100%" height="30" labelField="nombreSubCategoria"></s:ComboBox>
+				</s:FormItem>
+				<s:FormItem label="Descripción" width="100%" height="30">
+					<s:ComboBox id="cmbDescripcion" width="100%" height="30" change="fnTiempoSolucion(event)" labelField="nombreDescripcion" dataProvider="{cmbSubcategoria.selectedItem ? cmbSubcategoria.selectedItem['arrAsociadosIn'] : null}"/>
+				</s:FormItem>
+				<s:FormItem label="Tiempo de Solución" width="100%" height="30">
+					<s:Label id="lblTiempoSolucion" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Criticidad" width="100%" height="30">
+					<s:ComboBox id="cmbCriticidad" width="100%" height="30" dataProvider="{modelApp.arrCriticidad}"/>
+				</s:FormItem>
+				<s:FormItem width="100%" height="30">
+					<s:Button label="Enviar"/>
 				</s:FormItem>
 				
 			</s:Form>	

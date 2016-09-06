@@ -193,36 +193,7 @@
 				
 			}
 			
-			/*private function fnGrupoResolutorFilter(item:GrupoResolutorVO):Boolean{
-				return item.nombreGrupoResolutor.toLowerCase().indexOf(modelApp.grupoResolutorFilter.toLocaleLowerCase()) > -1 || modelApp.grupoResolutorFilter == '' ? true : false;
-			}*/
-			
-			/*protected function togglebutton1_clickHandler(evento:MouseEvent):void
-			{
-				// TODO Auto-generated method stub
-				if(ToggleButton(evento.target).selected){
-					var res:Resize = new Resize(tam);
-					res.duration = 300;
-					res.heightTo = vgContenedorTotal.height;
-					res.play();
-					rectCostado.width = 5;
-					//rectCostado.height = vgContenedorTotal.height;
-				} else {
-					//res.reverse();
-					res = new Resize(tam);
-					res.duration = 300;
-					res.heightTo = 50;
-					res.play();
-					rectCostado.width = 0;
-				}
-				
-			}*/
-			
-			
-			
-			
-			
-			protected function fnArr(evento:FlexEvent):void
+				protected function fnArr(evento:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
 				for(var i:int = 0; i < vgbotones.numElements; i++){
@@ -383,7 +354,7 @@
 									<s:Button verticalCenter="0" right="10" skinClass="assets.skins.CustomButtonLogout" click="fnLogout(event)"/>
 								</s:Group>
 								<components:Titulos id="titulos" titulo="{vsGeneral.selectedChild.label}" fnLinkExt="{fnLinkExt}"/>
-								<mx:ViewStack id="vsGeneral" width="100%" height="100%">
+								<mx:ViewStack id="vsGeneral" width="100%" height="100%" selectedIndex="4">
 									<s:NavigatorContent label="Usuarios">
 										<view:FormUsuario width="100%" height="100%"/>		
 									</s:NavigatorContent>

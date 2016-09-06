@@ -50,17 +50,21 @@ package listeners
 			switch(data.token.message['operation']){
 				case ClienteEvent.LISTAR:
 					modelApp.arrClientes = new ArrayCollection(data.result as Array);
+					modelApp.arrComboClientes = new ArrayCollection(data.result as Array);
 					modelApp.arrClientes.filterFunction = modelApp.fnClientesFilter;
 					break;
 				case ClienteEvent.CREAR:
 					modelApp.arrClientes.addItem(data.result);
+					modelApp.arrComboClientes.refresh();
 					evento.callback.call(null, null);
 					break;
 				case ClienteEvent.MODIFICAR:
 					evento.callback.call(null, data.result);
+					modelApp.arrComboClientes.refresh();
 					break;
 				case ClienteEvent.ELIMINAR:
 					evento.callback.call(null, data.result);
+					modelApp.arrComboClientes.refresh();
 					
 					break;
 			}

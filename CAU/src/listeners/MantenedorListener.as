@@ -139,7 +139,9 @@ package listeners
 						rmtObj.item = evento.item['idCategoria']['obj'];
 						rmtObj.callback = evento.callback;	
 					} catch(e:*){
-						
+						rmtObj[evento.type].send(evento.item.idCategoria.idCategoria, evento.item.idClas);
+						rmtObj.item = evento.item['idCategoria']
+						rmtObj.callback = evento.callback;	
 					}
 					
 					break;
@@ -196,7 +198,9 @@ package listeners
 						rmtObj.item = evento.item['idSubCategoria']['obj'];
 						rmtObj.callback = evento.callback;
 					} catch(e:*){
-						
+						rmtObj[evento.type].send(evento.item.idSubCategoria.idSubCategoria, evento.item.idCategoria, evento.item.idClas);
+						rmtObj.item = evento.item['idSubCategoria'];
+						rmtObj.callback = evento.callback;
 					}
 					break;
 				case MantenedoresEvent.AGREGAR_PROBLEMAS:
