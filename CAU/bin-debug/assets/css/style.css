@@ -1,0 +1,66 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace components "components.*";
+@namespace skins "assets.skins.*";
+@namespace spark "spark.skins.spark.*";
+
+
+s|TextInput{
+	skinClass: ClassReference("assets.skins.TextInputActSkin");
+	focusSkin:ClassReference("assets.skins.BordeSkin");
+}
+
+global
+{
+/*	chromeColor: #294867;
+	color: #CEE7F4;
+	contentBackgroundColor: #39628C;
+	symbolColor: #000000;
+	rollOverColor: #355D89;
+	selectionColor: #294867;
+	focusColor: #333300;
+	accentColor: #6589AD;*/
+	focusSkin:ClassReference("assets.skins.BordeSkin");
+	
+}
+
+s|Scroller{
+	skinClass:ClassReference("assets.skins.ScrollerLVSkin");
+
+}
+	
+
+components|CustomPanelSpark{
+	skinClass: ClassReference("assets.skins.CustomPanelBlancoSkin");
+	dropShadowVisible: true;
+}
+
+/*
+components|CustomToggleButtonLista{
+	skinClass: ClassReference("assets.skins.CustomToggleButtonListadoSkin");
+	
+}
+*/
+components|ListaAcordeon components|CustomToggleButtonLista{
+	skinClass: ClassReference("assets.skins.CustomToggleButtonListadoSkin");
+}
+
+s|DataGrid{
+	skinClass: ClassReference("assets.skins.CustomDataGrid3Skin");
+}
+
+components|CustomDataGridSpark{
+	skinClass: ClassReference("assets.skins.CustomDataGridTodoSkin");
+}
+
+
+s|Button{
+	skinClass:ClassReference("assets.skins.CustomButtonEnviar");	
+}
+
+/*components|CustomTextInput{
+	skinClass: ClassReference("assets.skins.TextInputActSkin");
+	focusSkin:ClassReference("assets.skins.BordeSkin");
+	
+}*/
