@@ -13,7 +13,7 @@ package event
 		
 		
 		
-		public var TicketVO:TicketVO;
+		public var ticketVO:TicketVO;
 		
 		public function TicketEvent(type:String, _TicketVO:TicketVO = null, _callback:Function = null)
 		{

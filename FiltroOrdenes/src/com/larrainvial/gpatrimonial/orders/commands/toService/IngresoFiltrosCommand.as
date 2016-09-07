@@ -45,10 +45,14 @@ package com.larrainvial.gpatrimonial.orders.commands.toService
 			{
 				
 				if(XML(data.result).Error.@Status == "0"){
+					if(XML(data.result)..Filtros[0].@tipo != 'ERROR'){
+						var valor:String = XML(data.result)..Filtros[0].@valor + '';
+						var filterTransactionEvent:FilterTransactionEvent = new FilterTransactionEvent("insert", evento.tipo, valor, evento.txt);
+						filterTransactionEvent.dispatch();	
+					} else {
+						Alert.show("Nemo no existe en base de datos", "Error");
+					}
 					
-					var valor:String = XML(data.result)..Filtros[0].@valor + '';
-					var filterTransactionEvent:FilterTransactionEvent = new FilterTransactionEvent("insert", evento.tipo, valor, evento.txt);
-					filterTransactionEvent.dispatch();
 				} else {
 					Alert.show("Problemas en operación en DB", "Error");
 				}

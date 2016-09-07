@@ -2,7 +2,8 @@
 <s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
-	xmlns:controllerbd="services.controllerbd.*">
+	xmlns:controllerbd="services.controllerbd.*" initialize="ini(event)">
+	
 	<fx:Script>
 		<![CDATA[
 			import controller.Controller;
@@ -13,6 +14,10 @@
 			import model.ModelApp;
 			
 			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.formatters.DateFormatter;
+			import mx.validators.Validator;
 			
 			import spark.events.GridEvent;
 			import spark.events.IndexChangeEvent;
@@ -21,6 +26,10 @@
 			
 			[Bindable] public var clienteVO:ClienteVO = new ClienteVO();
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			[Bindable] private var now:Date;
+			[Bindable] private var formater:DateFormatter;
+			[Bindable] private var dia:String;
+			[Bindable] private var hora:String;
 			
 			protected function fnOperarCliente(evento:MouseEvent):void
 			{
@@ -165,6 +174,34 @@
 				lblTiempoSolucion.text = modelApp.objTiempoSolucion[cmbDescripcion.selectedItem['idTiempoSolucion']]['descripcion'];
 			}
 			
+			protected function ini(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				now = new Date();
+				formater = new DateFormatter();
+				formater.formatString = 'YYYY-MM-DD';
+				dia = formater.format(now);
+				formater.formatString = 'J:NN';
+				hora = formater.format(now);
+			}
+			
+			protected function btnCreaTicket_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				try{
+					var arr:Array = Validator.validateAll(valArr);
+					if (arr.length == 0) {
+						Alert.show("Form is valid!");
+					}
+				} catch(e:*){
+					
+				}
+				
+				
+			}
+			
+
+			
 		]]>
 	</fx:Script>
 	<fx:Binding source="txtRut.selectedItem" destination="fnCargaCliente"/>
@@ -177,8 +214,23 @@
 	<fx:Binding source="txtUnidad.text" destination="clienteVO.unidad" twoWay="true"/>
 	<fx:Binding source="txtRotulo.text" destination="clienteVO.rotulo" twoWay="true"/>
 	<fx:Binding source="txtIp.text" destination="clienteVO.dir_ip" twoWay="true"/>
-	<fx:Binding source="txtGerencia.text" destination="clienteVO.gerencia" twoWay="true"/>
-	<fx:Binding source="txtEmpresa.text" destination="clienteVO.empresa" twoWay="true"/>
+	<!--<fx:Binding source="txtGerencia.text" destination="clienteVO.gerencia" twoWay="true"/>
+	<fx:Binding source="txtEmpresa.text" destination="clienteVO.empresa" twoWay="true"/>-->
+	
+	<fx:Declarations>
+		<fx:Array id="valArr">
+			<!--<mx:StringValidator id="fNameVal" source="{cmbClasificacion.selectedItem}" property="idClasificacion" required="true" maxLength="64" />-->
+			<s:NumberValidator id="nvClasificacion" source="{cmbClasificacion}" property="selectedIndex" allowNegative="false" negativeError="Debe seleccionar clasificación"/>
+			<s:NumberValidator id="nvCategoria" source="{cmbCategoria}" property="selectedIndex" allowNegative="false" negativeError="Debe seleccionar categoría"/>
+			<s:NumberValidator id="nvSubCategoria" source="{cmbSubcategoria}" property="selectedIndex" allowNegative="false" negativeError="Debe seleccionar subcategoría"/>
+			<s:NumberValidator id="nvProblema" source="{cmbDescripcion}" property="selectedIndex" allowNegative="false" negativeError="Debe seleccionar descripción"/>
+			<s:NumberValidator id="nvCriticidad" source="{cmbCriticidad}" property="selectedIndex" allowNegative="false" negativeError="Debe seleccionar Criticidad"/>
+			<!--<mx:StringValidator id="usrnmVal" source="{usrnm}" property="text" required="true" maxLength="32" />
+			<mx:StringValidator id="psswdVal" source="{psswd}" property="text" required="true" maxLength="32" />
+			<mx:SocialSecurityValidator id="ssnVal" source="{ssn}" property="text" required="false" />-->
+		</fx:Array>
+	</fx:Declarations>
+	
 	<s:Group 
 		width="100%" height="100%" xmlns:skins="assets.skins.*" xmlns:components="components.*"
 		>
@@ -187,47 +239,85 @@
 			<s:VerticalLayout/>
 		</s:layout>
 		<components:CustomPanelSpark title="Cliente" width="100%" color="#eeeeee" imgBl="true">
-			<s:Form width="100%" bottom="10">
+			<s:Form id="formCliente" width="100%" bottom="10">
 				<s:layout>
-					<s:TileLayout requestedColumnCount="4"/>
+					<s:TileLayout requestedColumnCount="5"/>
 				</s:layout>
+				<!--<s:FormHeading label="headingLabel"/>-->
 				<s:FormItem label="Rut" width="100%" height="30">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
 					<!--<s:TextInput id="txtRut" width="100%" height="30"/>-->
-					<s:ComboBox id="txtRut" skinClass="assets.skins.ComboBoxLVSkin" dataProvider="{modelApp.arrComboClientes}" labelField="rut"/>
+					<s:ComboBox id="txtRut" height="30" width="170"
+								dataProvider="{modelApp.arrComboClientes}" labelField="rut"/>
 				</s:FormItem>
 				<s:FormItem label="Nombres" width="100%" height="30">
-					<s:TextInput id="txtNombres" width="100%" height="30"/>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtNombres" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Apellidos" width="100%" height="30">
-					<s:TextInput id="txtApellidos" width="100%" height="30"/>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtApellidos" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Email" width="100%" height="30">
-					<s:TextInput id="txtEmail" width="100%" height="30"/>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtEmail" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Sucursal" width="100%" height="30">
-					<s:ComboBox id="cmbSucursal" color="#333333" skinClass="assets.skins.ComboBoxLVSkin" dataProvider="{modelApp.arrSucursales}" labelField="sucursal" width="100%" height="30"></s:ComboBox>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:ComboBox id="cmbSucursal" color="#333333" dataProvider="{modelApp.arrSucursales}" labelField="sucursal" width="170" height="30"></s:ComboBox>
 				</s:FormItem>
 				<s:FormItem label="Teléfono" width="100%" height="30">
-					<s:TextInput id="txtTelefono" width="100%" height="30"/>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtTelefono" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Anexo" width="100%" height="30">
-					<s:TextInput id="txtAnexo" width="100%" height="30"/>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtAnexo" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Unidad" width="100%" height="30">
-					<s:TextInput id="txtUnidad" width="100%" height="30"/>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtUnidad" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Rótulo" width="100%" height="30">
-					<s:TextInput id="txtRotulo" width="100%" height="30"/>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtRotulo" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Dirección ip" width="100%" height="30">
-					<s:TextInput id="txtIp" width="100%" height="30"/>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtIp" width="170" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Gerencia" width="100%" height="30">
-					<s:TextInput id="txtGerencia" width="100%" height="30"/>
+				<!--<s:FormItem label="Gerencia" width="100%" height="30">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtGerencia" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Empresa" width="100%" height="30">
-					<s:TextInput id="txtEmpresa" width="100%" height="30"/>
-				</s:FormItem>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtEmpresa" width="170" height="30"/>
+				</s:FormItem>-->
 				<s:FormItem label="" width="100%" height="50">
 					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{clienteVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarCliente(event)" width="100%" height="50" skinClass="assets.skins.ButtonSendLVSkin"/>
 				</s:FormItem>
@@ -235,38 +325,61 @@
 			</s:Form>	
 		</components:CustomPanelSpark>
 		
-		<components:CustomPanelSpark title="Detalle Ticket" width="100%" color="#eeeeee" imgBl="true">
-			<s:Form width="100%" bottom="10">
+		<components:CustomPanelSpark title="Detalle Ticket" width="100%" color="#eeeeee" imgBl="true" height="300">
+			<s:Form id="formTicket" width="100%" skinClass="spark.skins.spark.StackedFormSkin">
 				<s:layout>
 					<s:TileLayout requestedColumnCount="4"/>
 				</s:layout>
-				<s:FormItem label="Fecha" width="100%" height="30">
-					<!--<s:TextInput id="txtRut" width="100%" height="30"/>-->
-					<s:TextInput id="txtFecha"/>
+				<s:FormItem label="Fecha" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtFecha" text="{dia}" editable="false" width="170" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Hora" width="100%" height="30">
-					<s:TextInput id="txtHora" width="100%" height="30"/>
+				<s:FormItem label="Hora" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:TextInput id="txtHora"  width="170" height="30" editable="false" text="{hora}"/>
 				</s:FormItem>
-				<s:FormItem label="Clasificación" width="100%" height="30">
-					<s:ComboBox id="cmbClasificacion" change="cmbClasificacion_changeHandler(event)" width="100%" height="30" dataProvider="{modelApp.arrClasificacion}" labelField="nombreClasificacion"/>
+				<s:FormItem label="Clasificación" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:ComboBox id="cmbClasificacion" change="cmbClasificacion_changeHandler(event)"  width="170" height="30" dataProvider="{modelApp.arrClasificacion}" labelField="nombreClasificacion"/>
 				</s:FormItem>
-				<s:FormItem label="Categoría" width="100%" height="30">
-					<s:ComboBox id="cmbCategoria" change="cmbClasificacion_changeHandler(event)" width="100%" height="30" dataProvider="{cmbClasificacion.selectedItem ? cmbClasificacion.selectedItem['arrAsociadosIn'] : null}" labelField="nombreCategoria"/>
+				<s:FormItem label="Categoría" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:ComboBox id="cmbCategoria" change="cmbClasificacion_changeHandler(event)" enabled="{cmbClasificacion.selectedItem ? true : false}"  width="170" height="30" dataProvider="{cmbClasificacion.selectedItem ? cmbClasificacion.selectedItem['arrAsociadosIn'] : null}" labelField="nombreCategoria"/>
 				</s:FormItem>
-				<s:FormItem label="Subcategoría" width="100%" height="30">
-					<s:ComboBox id="cmbSubcategoria" change="cmbClasificacion_changeHandler(event)" color="#333333" dataProvider="{cmbCategoria.selectedItem ? cmbCategoria.selectedItem['arrAsociadosIn'] : null}" width="100%" height="30" labelField="nombreSubCategoria"></s:ComboBox>
+				<s:FormItem label="Subcategoría" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:ComboBox id="cmbSubcategoria" change="cmbClasificacion_changeHandler(event)" enabled="{cmbCategoria.selectedItem ? true : false}" color="#333333" dataProvider="{cmbCategoria.selectedItem ? cmbCategoria.selectedItem['arrAsociadosIn'] : null}"  width="170" height="30" labelField="nombreSubCategoria"></s:ComboBox>
 				</s:FormItem>
-				<s:FormItem label="Descripción" width="100%" height="30">
-					<s:ComboBox id="cmbDescripcion" width="100%" height="30" change="fnTiempoSolucion(event)" labelField="nombreDescripcion" dataProvider="{cmbSubcategoria.selectedItem ? cmbSubcategoria.selectedItem['arrAsociadosIn'] : null}"/>
+				<s:FormItem label="Descripción" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:ComboBox id="cmbDescripcion"  width="170" height="30" change="fnTiempoSolucion(event)" enabled="{cmbSubcategoria.selectedItem ? true : false}" labelField="nombreDescripcion" dataProvider="{cmbSubcategoria.selectedItem ? cmbSubcategoria.selectedItem['arrAsociadosIn'] : null}"/>
 				</s:FormItem>
-				<s:FormItem label="Tiempo de Solución" width="100%" height="30">
-					<s:Label id="lblTiempoSolucion" width="100%" height="30"/>
+				<s:FormItem label="Tiempo de Solución" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="lblTiempoSolucion"  width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Criticidad" width="100%" height="30">
-					<s:ComboBox id="cmbCriticidad" width="100%" height="30" dataProvider="{modelApp.arrCriticidad}"/>
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:ComboBox id="cmbCriticidad" width="170" height="30" dataProvider="{modelApp.arrCriticidad}"/>
 				</s:FormItem>
-				<s:FormItem width="100%" height="30">
-					<s:Button label="Enviar"/>
+				<s:FormItem width="100%" height="50">
+					<s:Button id="btnCreaTicket" label="Enviar" width="170" click="btnCreaTicket_clickHandler(event)"/>
 				</s:FormItem>
 				
 			</s:Form>	

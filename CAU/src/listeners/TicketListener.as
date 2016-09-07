@@ -21,31 +21,31 @@ package listeners
 	
 	public class TicketListener //implements IBaseListener
 	{
-		private static var param:Object = {};		
+		private static var evento:TicketEvent;	
 		private static var modelApp:ModelApp = ModelApp.getInstance();
 		
 		
 		
 		public static function exec(_evento:Event):void{
-			param['evento'] = TicketEvent(_evento);
+			evento = TicketEvent(_evento);
 			var rmtObjTickets:RemoteObject = ServiceRO.fnRmtObjTickets();
 			rmtObjTickets.addEventListener(ResultEvent.RESULT, result);
-			switch(param['evento'].type){
+			switch(evento.type){
 				case TicketEvent.LISTAR:
 					rmtObjTickets.getAllUsers();
 					
 					break;
 				case TicketEvent.CREAR:
-					//var s:String = com.adobe.serialization.json.JSON.encode(param['evento'].userVO);
-					rmtObjTickets.createUsers(param['evento'].userVO);
+					//var s:String = com.adobe.serialization.json.JSON.encode(evento.userVO);
+					rmtObjTickets.createUsers(evento.ticketVO);
 					
 					break;
 				case TicketEvent.MODIFICAR:
-					rmtObjTickets.updateUsers(param['evento'].userVO);
+					rmtObjTickets.updateUsers(evento.ticketVO);
 					
 					break;
 				case TicketEvent.ELIMINAR:
-					rmtObjTickets.deleteUsers(param['evento'].userVO.id);
+					rmtObjTickets.deleteUsers(evento.ticketVO.id);
 					
 					break;
 					
@@ -63,7 +63,7 @@ package listeners
 					
 					if(data.result.hasOwnProperty('id')){
 						modelApp.arrTickets.addItem(data.result);
-						param['evento'].callback.call(null, data.result);	
+						evento.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
@@ -71,15 +71,15 @@ package listeners
 					break;
 				case TicketEvent.MODIFICAR:
 					if(data.result.hasOwnProperty('id')){
-						param['evento'].callback.call(null, data.result);	
+						evento.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
 					
 					break;
 				case TicketEvent.ELIMINAR:
-					if(data.result == param['evento'].userVO.id){
-						param['evento'].callback.call(null, data.result);	
+					if(data.result == evento.ticketVO.id){
+						evento.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}

@@ -33,6 +33,8 @@ frameRate="60" -->
 			import com.larrainvial.gpatrimonial.orders.components.Callback;
 			import com.larrainvial.gpatrimonial.orders.events.toService.EliminaFiltrosEvent;
 			
+			import flash.globalization.StringTools;
+			
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
 			import mx.controls.Button;
@@ -40,6 +42,7 @@ frameRate="60" -->
 			import mx.events.FlexEvent;
 			
 			import spark.formatters.NumberFormatter;
+			import spark.globalization.StringTools;
 			
 			[Bindable] private var formater:NumberFormatter = new NumberFormatter(); 
 			
@@ -55,8 +58,13 @@ frameRate="60" -->
 			protected function fnGuardarFiltro(valor:String, tipo:String, txt:CustomTextInput):void
 			{
 				// TODO Auto-generated method stub
-				var ingresoEvent:IngresoFiltrosEvent = new IngresoFiltrosEvent('<WSParam><Parametros><tipo>' + tipo + '</tipo><valor>' + valor + '</valor></Parametros></WSParam>', tipo, txt);
-				ingresoEvent.dispatch();				
+				if(tipo == ModelLocator.TIPO_RUT && !revisarDigito2(valor)){
+					
+				} else {
+					var ingresoEvent:IngresoFiltrosEvent = new IngresoFiltrosEvent('<WSParam><Parametros><tipo>' + tipo + '</tipo><valor>' + valor + '</valor></Parametros></WSParam>', tipo, txt);
+					ingresoEvent.dispatch();	
+				}
+								
 			}
 			
 			protected function fnEliminarFiltro(event:MouseEvent):void
@@ -81,6 +89,70 @@ frameRate="60" -->
 				ModelLocator.rutaRTMPOC = event.result..RTMPOC;
 				connectWebOrb();
 			}
+			
+			
+			
+			
+			
+			//
+			// Validador de Rut
+			// Descargado desde http://www.juque.cl/
+			//
+			private function revisarDigito(dvr:String):Boolean
+			{	
+				var dv:String = dvr + "";	
+				if ( dv != '0' && dv != '1' && dv != '2' && dv != '3' && dv != '4' && dv != '5' && dv != '6' && dv != '7' && dv != '8' && dv != '9' && dv != 'k'  && dv != 'K')	
+				{		
+					Alert.show("Debe ingresar un digito verificador valido", 'Atención');		
+					txtRut.setFocus();	
+					return false;	
+				}	
+				return true;
+			}
+			
+			private function revisarDigito2(crut:String):Boolean
+			{	
+				var arr:Array = crut.split('-');
+					
+						
+				var rut:String = arr[0];	
+				var dv:String = arr[1];	
+				revisarDigito(dv);	
+				
+				var dvr:String = '0';	
+				var suma:int = 0;	
+				var mul:int  = 2;	
+				
+				for(var i:int = rut.length -1 ; i >= 0; i--)	
+				{	
+					suma = suma + int(rut.charAt(i)) * mul;		
+					if (mul == 7)			
+						mul = 2;		
+					else    			
+						mul++;
+				}	
+				var res:int = suma % 11;	
+				if (res==1)		
+					dvr = 'k';	
+				else if (res==0)		
+					dvr = '0';	
+				else	
+				{		
+					var dvi:int = 11 - res;		
+					dvr = dvi + "";	
+				}
+				if ( dvr != dv.toLowerCase() )	
+				{		
+					Alert.show("EL rut es incorrecto", 'Atención');
+					txtRut.setFocus();
+					return false	
+				}
+				
+				return true
+			}
+			
+			
+
 			
 			
 		]]>
@@ -221,15 +293,16 @@ frameRate="60" -->
 				ModelLocator.arrRut.filterFunction = fnFiltroRut;
 				
 				ModelLocator.arrRut.refresh();
-				if(ModelLocator.arrRut.length == 0){
-					 
-					var resp:int = txtRut.text.search(/\d{1,8}\-[0-9|k]/);
-					if(resp > -1){
-						btnGuardarRut.enabled = true;	
-					} else {
-						btnGuardarRut.enabled = false;
+				var resp:int = txtRut.text.search(/\d{1,8}\-[0-9|k]$/);
+				if(resp > -1){
+					var val:Boolean = true;
+					for each(var obj:Object in ModelLocator.arrRut){
+						if(obj.valor == txtRut.text){
+							val = false;
+							break;
+						}
 					}
-					
+					btnGuardarRut.enabled = val;	
 				} else {
 					btnGuardarRut.enabled = false;
 				}
@@ -253,7 +326,14 @@ frameRate="60" -->
 					}
 					
 				} else {
-					btnGuardarAgente.enabled = false;
+					var val:Boolean = true;
+					for each(var obj:Object in ModelLocator.arrAgente){
+						if(obj.valor == txtAgente.text){
+							val = false;
+							break;
+						}
+					}
+					btnGuardarAgente.enabled = val;
 				}
 				
 			}
@@ -277,7 +357,14 @@ frameRate="60" -->
 					}
 					
 				} else {
-					btnGuardarNemos.enabled = false;
+					var val:Boolean = true;
+					for each(var obj:Object in ModelLocator.arrNemos){
+						if(obj.valor == txtNemos.text){
+							val = false;
+							break;
+						}
+					}
+					btnGuardarNemos.enabled = val;
 				}
 				
 			}
@@ -345,7 +432,7 @@ frameRate="60" -->
 												 creationComplete="pnlMonto_creationCompleteHandler(event)"
 												 fnPostList="fnOpcionesMonto">
 						<s:VGroup width="100%" height="100%" paddingTop="10" horizontalAlign="center">
-							<s:Label text="Monto limite"/>
+							<s:Label text="Monto límite"/>
 							<components:CustomTextInput id="txtCambioMonto" textAlign="right" 
 														focusOut="txtCambioMonto.text = formater.format(txtCambioMonto.text)" 
 														focusIn="txtCambioMonto.text = txtCambioMonto.text.split('.').join('');"
@@ -365,7 +452,7 @@ frameRate="60" -->
 					<s:VGroup width="100%" height="100%" paddingTop="10" horizontalAlign="center">
 						<s:HGroup>
 							<s:Label text="Nuevo rut:"/>
-							<components:CustomTextInput id="txtRut" skinClass="assets.skins.TextInputActSkin" restrict="0-9\-k" change="fnRutValidacion(event)"/>
+							<components:CustomTextInput id="txtRut" skinClass="assets.skins.TextInputActSkin" restrict="0-9\-k" maxChars="15" change="fnRutValidacion(event)"/>
 							<s:Button id="btnGuardarRut" label="Guardar" enabled="false" skinClass="assets.skins.BtnExcelSkin" click="fnGuardarFiltro(txtRut.text, ModelLocator.TIPO_RUT, txtRut)"/>
 						</s:HGroup>
 						<s:DataGrid dataProvider="{ModelLocator.arrRut}" rollOverColor="#000000" selectionColor="#000000" skinClass="assets.skins.CustomDataGrid2Skin" width="100%" height="100%"
@@ -408,7 +495,7 @@ frameRate="60" -->
 					<s:VGroup width="100%" height="100%" paddingTop="10" horizontalAlign="center">
 						<s:HGroup>
 							<s:Label text="Nuevo Nemo:"/>
-							<components:CustomTextInput id="txtNemos" skinClass="assets.skins.TextInputActSkin" change="fnNemosValidacion(event)"/>
+							<components:CustomTextInput id="txtNemos" skinClass="assets.skins.TextInputActSkin" change="fnNemosValidacion(event)" maxChars="15"/>
 							<s:Button id="btnGuardarNemos" label="Guardar" enabled="false" skinClass="assets.skins.BtnExcelSkin" click="fnGuardarFiltro(txtNemos.text, ModelLocator.TIPO_NEMO, txtNemos)"/>
 						</s:HGroup>
 						<s:DataGrid dataProvider="{ModelLocator.arrNemos}" skinClass="assets.skins.CustomDataGrid2Skin" width="100%" height="100%" rollOverColor="#000000" selectionColor="#000000"

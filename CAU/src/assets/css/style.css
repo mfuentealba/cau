@@ -58,6 +58,14 @@ components|CustomDataGridSpark{
 s|Button{
 	skinClass:ClassReference("assets.skins.CustomButtonEnviar");	
 }
+/*
+s|FormItem{
+	skinClass:ClassReference("spark.skins.spark.StackedFormItemSkin");
+}
+*/
+#formTicket s|FormItem{
+	skinClass:ClassReference("spark.skins.spark.StackedFormItemSkin");
+}
 
 /*components|CustomTextInput{
 	skinClass: ClassReference("assets.skins.TextInputActSkin");
