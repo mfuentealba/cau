@@ -189,9 +189,12 @@ in accordance with the terms of the license agreement accompanying it.
 							 verticalAlign="middle" textAlign="start" fontWeight="bold">
 					</s:Label>
 					<s:HGroup right="0" height="100%" verticalAlign="middle" paddingRight="10">
+						<s:Button id="btnBuscar" click="fnBotones(event)" icon="{hostComponent.imgSrcSearch}" width="30" includeInLayout="{hostComponent.searchBl}" visible="{hostComponent.searchBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
 						<s:Button id="btnGuardar" click="fnBotones(event)" icon="{hostComponent.imgSrcSave}" width="30" includeInLayout="{hostComponent.minBl}" visible="{hostComponent.minBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
 						<s:Button id="btnEditar" click="fnBotones(event)" icon="{hostComponent.imgSrcEdit}" width="30" includeInLayout="{hostComponent.opBl}" visible="{hostComponent.opBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
 						<s:Button id="btnEliminar" click="fnBotones(event)" icon="{hostComponent.imgSrcDelete}" width="30" includeInLayout="{hostComponent.closeBl}" visible="{hostComponent.closeBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
+						<s:Button id="btnCerrar" click="fnBotones(event)" icon="{hostComponent.imgSrcClose}" width="30" includeInLayout="{hostComponent.closePopBl}" visible="{hostComponent.closePopBl}" skinClass="assets.skins.CustomButtonPanelSkin"/>
+						
 						<s:ToggleButton id="btnOpciones" visible="{hostComponent.imgBl}" right="0"
 										width="30" height="28" icon="{hostComponent.imgSrcMenu2}"
 										includeInLayout="{hostComponent.imgBl}"
@@ -248,7 +251,7 @@ in accordance with the terms of the license agreement accompanying it.
                 <!--- @copy spark.components.Panel#controlBarGroup -->
                 <s:Group id="controlBarGroup" left="0" right="0" top="1" bottom="1" minWidth="0" minHeight="0">
                     <s:layout>
-                        <s:HorizontalLayout paddingLeft="10" paddingRight="10" paddingTop="7" paddingBottom="7" gap="10" />
+                        <s:HorizontalLayout paddingLeft="10" paddingRight="10" paddingTop="7" paddingBottom="7" gap="10" horizontalAlign="center"/>
                     </s:layout>
                 </s:Group>
             </s:Group>

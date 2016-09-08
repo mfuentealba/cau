@@ -55,8 +55,8 @@ package listeners
 					break;
 				case ClienteEvent.CREAR:
 					modelApp.arrClientes.addItem(data.result);
-					modelApp.arrComboClientes.refresh();
-					evento.callback.call(null, null);
+					//modelApp.arrComboClientes.refresh();
+					evento.callback.call(null, data.result);
 					break;
 				case ClienteEvent.MODIFICAR:
 					evento.callback.call(null, data.result);

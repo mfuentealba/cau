@@ -127,7 +127,7 @@
 			}
 			
 			private function fnClientesFilter(item:ClienteVO):Boolean{
-				return item.apellidos.toLowerCase().indexOf(modelApp.clientesFilter.toLocaleLowerCase()) || item.nombres.toLowerCase().indexOf(modelApp.clientesFilter.toLocaleLowerCase()) > -1 ? true : false;
+				return item.apellidos.toLowerCase().indexOf(modelApp.clientesFilter.toLocaleLowerCase()) > -1 || item.nombres.toLowerCase().indexOf(modelApp.clientesFilter.toLocaleLowerCase()) > -1 ? true : false;
 			}
 			
 			private function fnUsuariosFilter(item:UserVO):Boolean{
