@@ -40,6 +40,9 @@ is defined by the ComboBoxTextInputSkin class.
     
     <fx:Script fb:purpose="styling">
         <![CDATA[       
+			import mx.collections.ArrayCollection;
+			
+			import spark.events.TextOperationEvent;
             private var paddingChanged:Boolean;
             private var cornerRadiusChanged:Boolean;
             private var cornerRadius:Number = 0;            
@@ -156,7 +159,52 @@ is defined by the ComboBoxTextInputSkin class.
                 }
                 super.updateDisplayList(unscaledWidth, unscaledHeight);
             }
-        ]]>
+			
+			
+			
+			public function fnFiltra(item:*):Boolean{
+				if(item is String){
+					return textInput.text == '' || item.toLocaleUpperCase().indexOf(textInput.text.toLocaleUpperCase()) == 0 ? true : false;
+				} else {
+					return textInput.text == '' || String(item[hostComponent.labelField]).toLocaleUpperCase().indexOf(textInput.text.toLocaleUpperCase()) == 0 ? true : false;	
+				}
+				 
+			}
+			
+			
+				
+				
+			
+			protected function textInput_changeHandler(event:TextOperationEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(hostComponent.dataProvider.length == 0){
+					trace('test');
+					ArrayCollection(hostComponent.dataProvider).filterFunction = null;
+				} else {
+					ArrayCollection(hostComponent.dataProvider).filterFunction = fnFiltra;	
+				}				
+				ArrayCollection(hostComponent.dataProvider).refresh();
+			}
+			
+			protected function textInput_keyDownHandler(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function textInput_keyUpHandler(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(hostComponent.dataProvider.length == 0){
+					trace('test');
+					ArrayCollection(hostComponent.dataProvider).filterFunction = null;
+					ArrayCollection(hostComponent.dataProvider).refresh();
+				}
+				
+			}
+			
+		]]>
     </fx:Script>
     
     <s:states>
@@ -227,7 +275,7 @@ is defined by the ComboBoxTextInputSkin class.
 	
 	<s:TextInput id="textInput" enabled.disabled="false"
 				 left="0" right="18" top="0" bottom="0" 
-				 skinClass="assets.skins.TextInputLVSkin" color.disabled="#ffffff" fontWeight.disabled="bold"/>
+				 skinClass="assets.skins.TextInputLVSkin" color.disabled="#ffffff" fontWeight.disabled="bold" change="textInput_changeHandler(event)" keyUp="textInput_keyUpHandler(event)"/>
 	<s:Button id="openButton" width="19" right="0" top="1" bottom="1" focusEnabled="false"
 			  skinClass="assets.skins.ComboBoxButtonLVSkin" tabEnabled="false" /> <!--skinClass="spark.skins.spark.ComboBoxButtonSkin"-->	
 		<!--- @copy spark.components.ComboBox#textInput -->

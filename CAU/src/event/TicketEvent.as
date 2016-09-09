@@ -19,7 +19,7 @@ package event
 		{
 			super(type, bubbles, cancelable);
 			clase = "TicketsEvent";
-			TicketVO = _TicketVO;
+			ticketVO = _TicketVO;
 			callback = _callback;
 		}
 	}

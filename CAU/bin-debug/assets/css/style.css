@@ -63,17 +63,9 @@ s|FormItem{
 	skinClass:ClassReference("spark.skins.spark.StackedFormItemSkin");
 }
 */
-
-
 #formTicket s|FormItem{
 	skinClass:ClassReference("spark.skins.spark.StackedFormItemSkin");
 }
-
-s|Form{
-	skinClass:ClassReference("spark.skins.spark.StackedFormSkin");
-}
-
-
 
 /*components|CustomTextInput{
 	skinClass: ClassReference("assets.skins.TextInputActSkin");

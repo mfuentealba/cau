@@ -2,6 +2,7 @@
 <s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:comp="components.*"
 	xmlns:controllerbd="services.controllerbd.*" initialize="ini(event)">
 	
 	<fx:Script>
@@ -13,6 +14,7 @@
 			
 			import event.ClienteEvent;
 			import event.MantenedoresEvent;
+			import event.TicketEvent;
 			
 			import model.ModelApp;
 			
@@ -29,8 +31,10 @@
 			import spark.events.TextOperationEvent;
 			
 			import vo.ClienteVO;
+			import vo.TicketVO;
 			
 			[Bindable] public var clienteVO:ClienteVO = new ClienteVO();
+			[Bindable] public var ticketVO:TicketVO = new TicketVO();
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
 			[Bindable] private var now:Date;
 			[Bindable] private var formater:DateFormatter;
@@ -55,7 +59,28 @@
 				}
 				
 				Controller.getInstance().dispatchEvent(clienteEvent);
-			}			
+			}	
+			
+			
+			protected function fnOperarTicket(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var ticketEvent:TicketEvent;
+				switch(evento.target){
+					case btnEnviar:
+						if(btnEnviar.label == 'Crear'){
+							ticketVO.rut = txtRut.text;
+							ticketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO, fnNuevoTicket);						
+						} else {
+							ticketEvent = new TicketEvent(TicketEvent.MODIFICAR, ticketVO);
+						}
+						
+						break;
+					
+				}
+				
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}	
 			
 			protected function fnNuevoCliente(auxCliente:ClienteVO):void
 			{
@@ -66,41 +91,17 @@
 				
 			}
 			
-			/*
-			`id`, 
-			`tipo_solucion`, 
-			`problema`, 
-			`sub_problema`, 
-			`rotulo`, 
-			--`dir_ip`, 
-			--`cliente_rut`, 
-			`fecha`, 
-			`hora`, 
-			`soporte`, 
-			`estado`, 
-			`descripcion`, 
-			`hora_cierre`, 
-			`fecha_cierre`, 
-			`asignado_por`, 
-			`comentario_cierre`, 
-			`problema_e`, 
-			`sub_problema_e`, 
-			`solucion_dada_por`, 
-			`idClasificacion`, 
-			`idDescripcion`, 
-			`tiempoSolucion`, 
-			`administracionRemota`, 
-			`tipoNivel`, 
-			`reporteSolucionado`, 
-			`fechaSolucion`, 
-			`horaSolucion`, 
-			`solucionadoPor`, 
-			`clasificacionCierre`, 
-			`categoriaCierre`, 
-			`subcategoriaCierre`, 
-			`descripcionCierre`, 
-			`creadoPor`)
-			*/
+			
+			protected function fnNuevoTicket(auxTicket:TicketVO):void
+			{
+				// TODO Auto-generated method stub
+				//clienteVO = new ClienteVO();
+				/*fnCargaCliente(auxCliente);
+				btnEnviar.label = 'Actualizar';*/
+				
+			}
+			
+			
 			
 			/*protected function fnFiltrarCliente(event:*):void
 			{
@@ -285,6 +286,9 @@
 	
 	<fx:Declarations>
 		<fx:Array id="valArr">
+			<comp:RutValidacion id="rvRut" source="{txtRut}" property="text" minLength="3" requiredFieldError="El rut es requerido" tooShortError="Rut debe tener mínimo 3 caracteres" />
+			
+			
 			<!--<mx:StringValidator id="fNameVal" source="{cmbClasificacion.selectedItem}" property="idClasificacion" required="true" maxLength="64" />-->
 			<s:NumberValidator id="nvClasificacion" source="{cmbClasificacion}" property="selectedIndex" allowNegative="false" negativeError="Debe seleccionar clasificación"/>
 			<s:NumberValidator id="nvCategoria" source="{cmbCategoria}" property="selectedIndex" allowNegative="false" negativeError="Debe seleccionar categoría"/>
@@ -392,7 +396,7 @@
 		</components:CustomPanelSpark>
 		
 		<components:CustomPanelSpark title="Detalle Ticket" width="100%" color="#eeeeee" imgBl="true" height="300">
-			<s:Form id="formTicket" width="100%" skinClass="spark.skins.spark.StackedFormSkin">
+			<s:Form id="formTicket" width="100%">
 				<s:layout>
 					<s:TileLayout requestedColumnCount="4"/>
 				</s:layout>
@@ -460,7 +464,7 @@
 				
 			</components:layout>
 			<s:TextArea id="txtDetalle" width="100%" height="100%" prompt="Prr favor sea elocuente al detallar el problema."/>
-			<s:Button id="btnCreaTicket" label="Enviar" width="170" click="btnCreaTicket_clickHandler(event)"/>
+			<s:Button id="btnCreaTicket" label="Crear" width="170" click="btnCreaTicket_clickHandler(event)"/>
 		</components:CustomPanelSpark>
 		
 		
