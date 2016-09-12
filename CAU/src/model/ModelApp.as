@@ -23,6 +23,7 @@ package model
 		public var arrClientes:ArrayCollection;
 		public var arrComboClientes:ArrayCollection;
 		public var objClientes:Object = {};
+		public var objClientesRut:Object = {};
 		public var fnClientesFilter:Function;
 		public var clientesFilter:String;
 		
@@ -47,7 +48,7 @@ package model
 		
 		
 		public var objTicket:Object = {};
-		public var arrTickets:ArrayCollection;
+		public var arrTickets:ArrayCollection = new ArrayCollection();
 		public var fnTicketsFilter:Function;
 		
 		public var arrUsuarios:ArrayCollection;
@@ -61,6 +62,12 @@ package model
 		public var arrTiempoSolucion:ArrayCollection;
 		public var objFormaAtencion:Object = {};
 		public var objTiempoSolucion:Object = {};
+		
+		public var totalPaginas:int;
+		public var totalRegistros:int;
+		public var arrPaginas:Array = [];
+		public var cantidadPagina:int = 5000;
+		public var paginaActual:int = 0;
 		
 		public static const CLASIFICACION:String = 'Clasificacion';
 		public static const CATEGORIA:String = 'Categoria';

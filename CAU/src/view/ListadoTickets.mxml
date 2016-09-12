@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
+			xmlns:s="library://ns.adobe.com/flex/spark"
+			xmlns:mx="library://ns.adobe.com/flex/mx"
+			xmlns:controllerbd="services.controllerbd.*"
+			xmlns:skins="assets.skins.*" 
+			xmlns:components="components.*" initialize="ini(event)">
+	<fx:Script>
+		<![CDATA[
+			import controller.Controller;
+			
+			import event.ClienteEvent;
+			import event.TicketEvent;
+			import event.UsuarioEvent;
+			
+			import model.ModelApp;
+			
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.formatters.DateFormatter;
+			import mx.validators.EmailValidator;
+			
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
+			
+			import vo.ClienteVO;
+			import vo.TicketVO;
+			import vo.UserVO;
+			
+			
+			[Bindable] public var usuarioVO:UserVO = new UserVO();
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			[Bindable] private var formater:DateFormatter = new DateFormatter();
+			
+			
+			
+			
+						
+			protected function fnSelectUsuario(evento:GridEvent):void
+			{
+				// TODO Auto-generated method stub
+				//sucursales = dgClientees.selectedItem as UserVO;
+				
+				if(evento.rowIndex > -1){
+					var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+					usuarioVO.id = auxUsuario.id; 
+					usuarioVO.perfil = auxUsuario.perfil;
+					usuarioVO.username = auxUsuario.username;
+					usuarioVO.email = auxUsuario.email;
+					usuarioVO.password = auxUsuario.password;
+					usuarioVO.nombre_completo = auxUsuario.nombre_completo;
+					usuarioVO.tema = auxUsuario.tema;
+					usuarioVO.tipoUsuario = auxUsuario.tipoUsuario;
+					usuarioVO.idGrupoResolutor = auxUsuario.idGrupoResolutor;
+				}
+				
+			}
+			
+			private function fnActualizaGrilla(item:UserVO):void{
+				var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+				auxUsuario.id = item.id; 
+				auxUsuario.perfil = item.perfil;
+				auxUsuario.username = item.username;
+				auxUsuario.email = item.email;
+				auxUsuario.password = item.password;
+				auxUsuario.nombre_completo = item.nombre_completo;
+				auxUsuario.tema = item.tema;
+				auxUsuario.tipoUsuario = item.tipoUsuario;
+				auxUsuario.idGrupoResolutor = item.idGrupoResolutor;
+			}
+			
+			protected function fnFiltrarCliente(event:*):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.arrUsuarios.refresh();
+			}
+			
+			
+			protected function cmbIdGrupoResolutor_changingHandler(evento:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function cmbIdGrupoResolutor_keyUpHandler(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				//modelApp.grupoResolutorFilter = cmbIdGrupoResolutor.textInput.text;
+				modelApp.arrGrupoResolutor.refresh();	
+				
+				
+			}	
+			
+			
+			
+			private function fnCliente(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objClientesRut[item.cliente_rut]['nombres'] + ' ' + modelApp.objClientesRut[item.cliente_rut]['apellidos'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			private function fnSucursal(item:TicketVO, column:GridColumn):String{
+				try{
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]).sucursalVO.sucursal;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnUnidad(item:TicketVO, column:GridColumn):String{
+				try{
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]).unidad;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnClasificacion(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objClasificacion[item.idClasificacion]['nombreClasificacion'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnCategoria(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objCategoria[item.problema]['nombreCategoria'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnSubCategoria(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objSubCategoria[item.sub_problema]['nombreSubCategoria'];	
+				} catch(e:*){
+					return '';
+				}
+				return ''; 
+			}
+			
+			
+			private function fnDescripcion(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objDescripcion[item.idDescripcion]['nombreDescripcion'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnIP(item:TicketVO, column:GridColumn):String{
+				try{
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]).dir_ip;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnFecha(item:TicketVO, column:GridColumn):String{
+				try{
+					var f:String = String(item.fecha);
+					return f.substr(0, 4) + '-' + f.substr(2, 2) + '-' + f.substr(4, 2);	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			
+			
+			protected function ini(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				formater.formatString = 'YYYY-MM-DD';
+			}
+			
+			protected function fnNavegaPaginasHandler(opt:String):void
+			{
+				// TODO Auto-generated method stub
+				if(opt == 'Previa'){
+					modelApp.paginaActual--;
+				} else {
+					modelApp.paginaActual++;
+				}
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_PAGINA, null, null, modelApp.arrPaginas[modelApp.paginaActual]);				
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Group 
+		width="100%" height="100%"
+		>
+		
+		<s:layout>
+			<s:HorizontalLayout paddingBottom="50"/>
+		</s:layout>
+		
+		
+		<components:CustomPanelSpark title="Lista de Tickets" width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" paddingLeft="10" paddingRight="10">
+				<s:Group width="100%">
+					<s:Rect width="100%" height="100%">
+						<s:fill>
+							<s:SolidColor color="#333333"/>
+						</s:fill>
+					</s:Rect>
+					<s:HGroup color="#fefefe" verticalAlign="middle" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
+						<s:Label text="Filtro" fontWeight="bold"/>
+						<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
+					</s:HGroup>
+				</s:Group>
+				<s:DataGrid id="dgUsuarios" width="100%" 
+							requestedRowCount="4" dataProvider="{modelApp.arrTickets}"
+							rowHeight="35" height="100%">
+					<s:columns>
+						<s:ArrayList> 	 	 	 	 	 	 	 	 	 	 	
+							<s:GridColumn dataField="id" headerText="Nº de Ticket"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnCliente}" headerText="Cliente"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnSucursal}" headerText="Sucursal"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnUnidad}" headerText="Unidad"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnClasificacion}" headerText="Clasificacion"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnCategoria}" headerText="Categoria"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnSubCategoria}" headerText="SubCategoria"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnDescripcion}" headerText="Descripción"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnIP}" headerText="Dir IP"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnFecha}" headerText="Fecha"></s:GridColumn>
+							<s:GridColumn dataField="hora" headerText="Hora"></s:GridColumn>
+							<s:GridColumn dataField="soporte" headerText="Soporte"></s:GridColumn>
+						</s:ArrayList>
+					</s:columns>
+					
+				</s:DataGrid>
+				<s:HGroup width="100%" verticalAlign="middle" height="30">
+					<s:Label text="Mostrando"/>
+					<s:Label text="{(modelApp.paginaActual * modelApp.cantidadPagina) + 1}"/>
+					<s:Label text="hasta"/>
+					<s:Label text="{(modelApp.paginaActual + 1) * modelApp.cantidadPagina}"/>
+					<s:Label text="de"/>
+					<s:Label text="{modelApp.totalRegistros}"/>
+					<mx:LinkButton label="Previa" enabled="{modelApp.paginaActual > 0 ? true : false}" click="fnNavegaPaginasHandler('Previa')"/>
+					<mx:LinkButton label="Siguiente" enabled="{modelApp.paginaActual != modelApp.totalPaginas ? true : false}" click="fnNavegaPaginasHandler('Siguiente')"/>
+					
+				</s:HGroup>
+			</s:VGroup>	
+		</components:CustomPanelSpark>
+		
+		
+		
+	</s:Group>
+	
+</s:Scroller>

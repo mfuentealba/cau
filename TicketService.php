@@ -58,22 +58,37 @@ class TicketService {
 	 */
 	public function getAllTickets() {
 		//echo "hfdfgjsfgskdf";
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename");		
+		$stmt = mysqli_prepare($this->connection, "SELECT `id`, `tipo_solucion`, `problema`, `sub_problema`, `rotulo`, `dir_ip`, `cliente_rut`, `fecha`, `hora`, `soporte`, `estado`, `descripcion`, `hora_cierre`, `fecha_cierre`, `asignado_por`, `comentario_cierre`, `problema_e`, `sub_problema_e`, `solucion_dada_por`, `idClasificacion`, `idDescripcion`, `tiempoSolucion`, `administracionRemota`, `tipoNivel`, `reporteSolucionado`, `fechaSolucion`, `horaSolucion`, `solucionadoPor`, `clasificacionCierre`, `categoriaCierre`, `subcategoriaCierre`, `descripcionCierre`, `creadoPor` FROM $this->tablename order by fecha desc limit 1,10");		
 		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_execute($stmt);
 		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		$rows = array();
-		$row = new UserVO();
+		$row = new TicketVO();
 		
-		mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
+		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
+		
+		//$data = $row->id;
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
+		  //return $data;//$row;
 	      //$row = new stdClass();
-		  $row = new UserVO();
-	      mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
+		  $row = new TicketVO();
+	      mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -98,7 +113,10 @@ class TicketService {
 	public function getUsersByID($itemID) {
 		
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename where id=?");
-		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_bind_param($stmt, 'i', $itemID);		
 		$this->throwExceptionOnError();
@@ -132,8 +150,14 @@ class TicketService {
 			return $msg;
 		}
 		
-		$autoid = mysqli_stmt_insert_id($stmt);
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
+		$autoid = mysqli_stmt_insert_id($stmt);
+		//return $autoid;
 		$stmt = mysqli_prepare($this->connection, "INSERT INTO $this->tablename (id,  tipo_solucion,  problema,  sub_problema,  rotulo,  dir_ip,  cliente_rut,  fecha,  hora,  soporte,  estado,  descripcion,  hora_cierre,  fecha_cierre,  asignado_por,  comentario_cierre,  problema_e,  sub_problema_e,  solucion_dada_por,  idClasificacion,  idDescripcion,  tiempoSolucion,  administracionRemota,  tipoNivel,  reporteSolucionado,  fechaSolucion,  horaSolucion,  solucionadoPor,  clasificacionCierre,  categoriaCierre,  subcategoriaCierre,  descripcionCierre,  creadoPor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
@@ -155,7 +179,7 @@ class TicketService {
 			return $msg;
 		}
 
-		$autoid = mysqli_stmt_insert_id($stmt);
+		//$autoid = mysqli_stmt_insert_id($stmt);
 
 		mysqli_stmt_free_result($stmt);		
 		mysqli_close($this->connection);
@@ -250,7 +274,11 @@ class TicketService {
 		mysqli_stmt_free_result($stmt);
 		mysqli_close($this->connection);
 		
-		return $rec_count;
+		$obj = new stdClass();
+		$obj->paginas = round($rec_count / 5000, 0, PHP_ROUND_HALF_UP);
+		$obj->registros = $rec_count;
+		
+		return $obj;
 	}
 
 
@@ -264,27 +292,41 @@ class TicketService {
 	 * 
 	 * @return array
 	 */
-	public function getClientes_paged($startIndex, $numItems) {
+	public function getTickets_paged($startIndex, $numItems) {
 		
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename LIMIT ?, ?");
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename order by fecha desc limit $startIndex, $numItems");		
 		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
-		mysqli_stmt_bind_param($stmt, 'ii', $startIndex, $numItems);
 		mysqli_stmt_execute($stmt);
 		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		$rows = array();
+		$row = new TicketVO();
 		
-		mysqli_stmt_bind_result($stmt, $row->id, $row->sucursal, $row->direccion);
+		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
+		
+		//$data = $row->id;
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
-	      $row = new stdClass();
-	      mysqli_stmt_bind_result($stmt, $row->id, $row->sucursal, $row->direccion);
+		  $row = new TicketVO();
+	      mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
 	    }
 		
-		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
 		
 		return $rows;
 	}

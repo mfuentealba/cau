@@ -1,5 +1,6 @@
 package services
 {
+	import mx.rpc.events.FaultEvent;
 	
 
 	public class ServiceRO
@@ -36,7 +37,12 @@ package services
 			var rmtObj:CustomRemoteObject = new CustomRemoteObject("TicketService");
 			rmtObj.source = 'Weborb.cau.TicketService';
 			rmtObj.showBusyCursor = true;
+			rmtObj.addEventListener(FaultEvent.FAULT, fnFault);
 			return rmtObj;
+		}
+		
+		public static function fnFault(ev:FaultEvent):void{
+			
 		}
 		
 	}

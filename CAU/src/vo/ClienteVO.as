@@ -4,7 +4,7 @@ package vo
 
 	[RemoteClass(alias="Weborb.cau.ClienteVO")]
 	[Bindable] 
-	dynamic public class ClienteVO
+	public class ClienteVO
 	{
 		public var id:String = '';
 		public var nombres:String = '';

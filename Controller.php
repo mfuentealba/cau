@@ -3,6 +3,7 @@
 require_once("SucursalesService.php");
 require_once("MantenedorService.php");
 require_once("UsuariosService.php");
+require_once("TicketService.php");
 
 $objSuc = new $_REQUEST['servicio']();
 $resp = 0;

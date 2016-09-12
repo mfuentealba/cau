@@ -97,6 +97,7 @@
 				/*fnCargaCliente(auxCliente);
 				btnEnviar.label = 'Actualizar';*/
 				
+				
 			}
 			
 			
@@ -220,7 +221,7 @@
 							ticketVO.idClasificacion = cmbClasificacion.selectedItem['idClasificacion'];
 							ticketVO.idDescripcion = cmbDescripcion.selectedItem['idDescripcion'];
 							ticketVO.tiempoSolucion = cmbDescripcion.selectedItem['idTiempoSolucion'];
-							var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO);
+							var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO, fnNuevoTicket);
 							Controller.getInstance().dispatchEvent(ticketEvent);
 						}
 						
@@ -252,7 +253,7 @@
 				ticketVO.idClasificacion = cmbClasificacion.selectedItem['idClasificacion'];
 				ticketVO.idDescripcion = cmbDescripcion.selectedItem['idDescripcion'];
 				ticketVO.tiempoSolucion = cmbDescripcion.selectedItem['idTiempoSolucion'];
-				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO, fnNuevoTicket);
 				Controller.getInstance().dispatchEvent(ticketEvent);
 				
 				
@@ -317,9 +318,7 @@
 			
 			private function set fnActualizaSucursal(item:*):void{
 				if(item){
-					clienteVO.sucursalVO = item;
-				} else {
-					clienteVO.sucursalVO = null;
+					clienteVO.sucursal = item.id;
 				}
 			}
 			

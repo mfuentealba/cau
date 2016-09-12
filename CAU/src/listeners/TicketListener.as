@@ -32,7 +32,7 @@ package listeners
 			rmtObjTickets.addEventListener(ResultEvent.RESULT, result);
 			switch(evento.type){
 				case TicketEvent.LISTAR:
-					rmtObjTickets.getAllUsers();
+					rmtObjTickets.getAllTickets();
 					
 					break;
 				case TicketEvent.CREAR:
@@ -46,6 +46,15 @@ package listeners
 					break;
 				case TicketEvent.ELIMINAR:
 					rmtObjTickets.deleteUsers(evento.ticketVO.id);
+					
+					break;
+				
+				case TicketEvent.TOTAL_PAGINAS:
+					rmtObjTickets.count();
+					
+					break;
+				case TicketEvent.LISTAR_PAGINA:
+					rmtObjTickets.getTickets_paged(evento.objCantidad['ini'], evento.objCantidad['fin']);
 					
 					break;
 					
@@ -85,7 +94,20 @@ package listeners
 					}
 					
 					break;
-				
+				case TicketEvent.TOTAL_PAGINAS:
+					if(data.result){
+						modelApp.totalPaginas = int(data.result.paginas);
+						modelApp.totalRegistros = int(data.result.registros);
+						evento.callback.call(null);
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					break;
+				case TicketEvent.LISTAR_PAGINA:
+					modelApp.arrTickets.removeAll();
+					modelApp.arrTickets = new ArrayCollection(data.result as Array);
+					modelApp.arrTickets.filterFunction = modelApp.fnTicketsFilter;
+					break;
 			}
 		}
 		

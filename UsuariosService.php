@@ -231,29 +231,23 @@ class UsuariosService {
 	 
 	public function login($user, $pass) {
 		$pass = md5($pass);
-		//return "SELECT * FROM $this->tablename WHERE username = '" . $user . "' AND password = '" . $pass . "'";
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename WHERE username = '" . $user . "' AND password = '" . $pass . "'");
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-		//mysqli_stmt_bind_param($stmt, 's', $user);
+		$stmt = mysqli_prepare($this->connection, "SELECT id, perfil, username, email, password, nombre_completo, tema, tipoUsuario, idGrupoResolutor FROM $this->tablename WHERE username = '" . $user . "' AND password = '" . $pass . "'");		
+		$this->throwExceptionOnError();
+		
 		mysqli_stmt_execute($stmt);
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-		$row = new stdclass();//UserVO();
+		$this->throwExceptionOnError();
+		
+		$rows = array();
+		$row = new UserVO();
 		
 		mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
 		
-		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
-		return $row;
+	    
+		if(mysqli_stmt_fetch($stmt)) {
+	      return $row;
+		} else {
+	      return null;
+		}
 	}
 	 
 	 

@@ -7,20 +7,24 @@ package event
 	public class TicketEvent extends BaseEvent
 	{
 		public static const LISTAR:String = 'getAllTickets';
-		public static const CREAR:String = 'createTickets';
+		public static const CREAR:String = 'createTicket';
 		public static const MODIFICAR:String = 'updateTickets';
 		public static const ELIMINAR:String = 'deleteTickets';
+		public static const TOTAL_PAGINAS:String = 'count';
+		public static const LISTAR_PAGINA:String = 'getTickets_paged';
 		
 		
 		
 		public var ticketVO:TicketVO;
+		public var objCantidad:Object;
 		
-		public function TicketEvent(type:String, _TicketVO:TicketVO = null, _callback:Function = null)
+		public function TicketEvent(type:String, _TicketVO:TicketVO = null, _callback:Function = null, _objCantidad:Object = null)
 		{
 			super(type, bubbles, cancelable);
 			clase = "TicketsEvent";
 			ticketVO = _TicketVO;
 			callback = _callback;
+			objCantidad = _objCantidad;
 		}
 	}
 }

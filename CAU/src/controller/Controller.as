@@ -97,6 +97,9 @@ package controller
 			addEventListenerNew(MantenedoresEvent.MODIFICAR_PROBLEMAS, MantenedorListener);
 			
 			addEventListenerNew(TicketEvent.CREAR, TicketListener);
+			addEventListenerNew(TicketEvent.LISTAR, TicketListener);
+			addEventListenerNew(TicketEvent.TOTAL_PAGINAS, TicketListener);
+			addEventListenerNew(TicketEvent.LISTAR_PAGINA, TicketListener);
 		}	
 	}
 }

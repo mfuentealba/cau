@@ -14,6 +14,8 @@ package listeners
 	
 	import services.ServiceRO;
 	
+	import vo.ClienteVO;
+	
 	public class ClienteListener //implements IBaseListener
 	{
 		private static var evento:ClienteEvent;		
@@ -51,10 +53,12 @@ package listeners
 				case ClienteEvent.LISTAR:
 					modelApp.arrClientes = new ArrayCollection(data.result as Array);
 					modelApp.arrComboClientes = new ArrayCollection(data.result as Array);
+					modelApp.arrClientes.source.forEach(fnDictCliente);
 					modelApp.arrClientes.filterFunction = modelApp.fnClientesFilter;
 					break;
 				case ClienteEvent.CREAR:
 					modelApp.arrClientes.addItem(data.result);
+					modelApp.objClientesRut[data.result.rut] = data.result;
 					//modelApp.arrComboClientes.refresh();
 					evento.callback.call(null, data.result);
 					break;
@@ -69,6 +73,12 @@ package listeners
 					break;
 			}
 		}
+		
+		
+		private static function fnDictCliente(item:ClienteVO, index:int, arr:Array):void{
+			modelApp.objClientesRut[item.rut + ''] = item;
+		}
+		
 		
 		public static function fault(info:Object):void
 		{

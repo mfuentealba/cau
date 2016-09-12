@@ -13,6 +13,7 @@
 			import event.ClienteEvent;
 			import event.MantenedoresEvent;
 			import event.SucursalEvent;
+			import event.TicketEvent;
 			import event.UsuarioEvent;
 			
 			import model.ModelApp;
@@ -107,12 +108,27 @@
 				Controller.getInstance().dispatchEvent(mantenedorEvent);
 				
 				
+				/*var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR);				
+				Controller.getInstance().dispatchEvent(ticketEvent);*/
+				
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.TOTAL_PAGINAS, null, fnArmaPaginador);				
+				Controller.getInstance().dispatchEvent(ticketEvent);
 				
 				/*
 				var mantenedor2Event:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
 				Controller.getInstance().dispatchEvent(mantenedor2Event);*/
 				
 				
+			}
+			
+			private function fnArmaPaginador():void{
+				var arr:Array = modelApp.arrPaginas; 
+				var pag:int = modelApp.cantidadPagina;
+				for(var i:int = 0; i < modelApp.totalPaginas; i++){
+					arr.push({ini: pag * i, fin: pag});
+				}
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_PAGINA, null, null, arr[0]);				
+				Controller.getInstance().dispatchEvent(ticketEvent);
 			}
 			
 			private function fnListaClientes():void{
@@ -139,7 +155,7 @@
 				switch(evento.target.label){
 					case 'Tickets':
 						vsGeneral.selectedIndex = 4;
-						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Usuarios', data: vsGeneral.getElementAt(0)}];
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(4)}, {label: 'Creación', data: vsGeneral.getElementAt(3)}];
 						break;
 					case 'Usuarios':
 						vsGeneral.selectedIndex = 0;
@@ -153,15 +169,15 @@
 						vsGeneral.selectedIndex = 2;
 						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Sucursales', data: vsGeneral.getElementAt(2)}];
 						break;
-					/*case 'Clasificación':
-						vsGeneral.selectedIndex = 3;
-						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}, {label: 'Clasificación', data: vsGeneral.getElementAt(3)}];
-						break;
-					case 'Categorías':
+					case 'Creación':
 						vsGeneral.selectedIndex = 4;
-						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}, {label: 'Categorías', data: vsGeneral.getElementAt(4)}];
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(4)}, {label: 'Creación', data: vsGeneral.getElementAt(3)}];
 						break;
-					case 'Subcategorías':
+					case 'Listado':
+						vsGeneral.selectedIndex = 5;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(4)}, {label: 'Listado', data: vsGeneral.getElementAt(3)}];
+						break;
+					/*case 'Subcategorías':
 						vsGeneral.selectedIndex = 5;
 						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}, {label: 'Subcategorías', data: vsGeneral.getElementAt(5)}];
 						break;
@@ -332,7 +348,7 @@
 								</s:fill>
 							</s:Rect>
 							<s:VGroup id="vgbotones" click="fnNavegar(event)" width="100%" gap="0" creationComplete="fnArr(event)">
-								<components:ListaAcordeon id="laTicket" label="Tickets" img="assets/icons/usuarios.png"/>
+								<components:ListaAcordeon id="laTicket" label="Tickets" img="assets/icons/issue.png" arrData="{[{icono: '', data: {label: 'Creación', accion: fnNavegar}}, {icono: '', data: {label: 'Listado', accion: fnNavegar}}]}"/>
 								<components:ListaAcordeon id="laUsuarios" label="Usuarios" img="assets/icons/usuarios.png"/>
 								<components:ListaAcordeon id="laSucursales" label="Sucursales" img="assets/icons/sucursal.png"/>
 								<components:ListaAcordeon id="laClientes" label="Clientes" img="assets/icons/clientes.png"/>
@@ -367,8 +383,11 @@
 									<s:NavigatorContent label="Tipificaciones">
 										<view:FormTipificaciones width="100%" height="100%"/>
 									</s:NavigatorContent>
-									<s:NavigatorContent label="Ticket">
+									<s:NavigatorContent label="Creación Ticket">
 										<view:FormTicket width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Listado Ticket">
+										<view:ListadoTickets width="100%" height="100%"/>		
 									</s:NavigatorContent>
 									
 								</mx:ViewStack>	
