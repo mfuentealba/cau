@@ -3,6 +3,7 @@ package controller
 	import event.ClienteEvent;
 	import event.MantenedoresEvent;
 	import event.SucursalEvent;
+	import event.TicketEvent;
 	import event.UsuarioEvent;
 	
 	import flash.events.EventDispatcher;
@@ -11,6 +12,7 @@ package controller
 	import listeners.ClienteListener;
 	import listeners.MantenedorListener;
 	import listeners.SucursalListener;
+	import listeners.TicketListener;
 	import listeners.UsuarioListener;
 	
 	import model.ModelApp;
@@ -93,6 +95,8 @@ package controller
 			addEventListenerNew(MantenedoresEvent.CREAR_PROBLEMAS, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.ELIMINAR_PROBLEMAS, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.MODIFICAR_PROBLEMAS, MantenedorListener);
+			
+			addEventListenerNew(TicketEvent.CREAR, TicketListener);
 		}	
 	}
 }

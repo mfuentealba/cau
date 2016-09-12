@@ -38,6 +38,16 @@
           <source>Weborb.cau.UsuariosService</source>
         </properties>
       </destination>
+      
+      <destination id="TicketService">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.cau.TicketService</source>
+        </properties>
+      </destination>
+      
       <destination id="GenericDestination">
         <channels>
           <channel ref="my-amf"/>

@@ -41,22 +41,20 @@
 			[Bindable] private var dia:String;
 			[Bindable] private var hora:String;
 			
-			protected function fnOperarCliente(evento:MouseEvent):void
+			protected function fnOperarCliente(fn:Function = null):void
 			{
 				// TODO Auto-generated method stub
 				var clienteEvent:ClienteEvent;
-				switch(evento.target){
-					case btnEnviar:
-						if(btnEnviar.label == 'Crear'){
-							clienteVO.rut = txtRut.text;
-							clienteEvent = new ClienteEvent(ClienteEvent.CREAR, clienteVO, fnNuevoCliente);						
-						} else {
-							clienteEvent = new ClienteEvent(ClienteEvent.MODIFICAR, clienteVO);
-						}
-						
-						break;
-					
+				if(btnEnviar.label == 'Crear'){
+					clienteVO.rut = txtRut.text;
+					clienteEvent = new ClienteEvent(ClienteEvent.CREAR, clienteVO, fn);						
+				} else {
+					clienteEvent = new ClienteEvent(ClienteEvent.MODIFICAR, clienteVO);
 				}
+				
+				
+					
+				
 				
 				Controller.getInstance().dispatchEvent(clienteEvent);
 			}	
@@ -69,7 +67,7 @@
 				switch(evento.target){
 					case btnEnviar:
 						if(btnEnviar.label == 'Crear'){
-							ticketVO.rut = txtRut.text;
+							ticketVO.cliente_rut = txtRut.text;
 							ticketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO, fnNuevoTicket);						
 						} else {
 							ticketEvent = new TicketEvent(TicketEvent.MODIFICAR, ticketVO);
@@ -200,12 +198,62 @@
 				// TODO Auto-generated method stub
 				try{
 					var arr:Array = Validator.validateAll(valArr);
-					if (arr.length == 0) {
-						Alert.show("Form is valid!");
+					if (arr.length == 0){ 
+						if(btnEnviar.label == 'Crear') {
+							fnOperarCliente(fnRetornoTicket);
+						} else {
+							var fecha:Date = new Date();
+							formater.formatString = 'YYYYMMDD';
+							var ticketVO:TicketVO = new TicketVO();
+							ticketVO.cliente_rut = txtRut.text;
+							ticketVO.fecha = int(formater.format(fecha));
+							formater.formatString = 'J:NN';
+							ticketVO.hora = formater.format(fecha);
+							ticketVO.asignado_por = modelApp.usuarioActivo.username;
+							ticketVO.soporte = modelApp.usuarioActivo.username;
+							ticketVO.creadoPor = modelApp.usuarioActivo.username;
+							ticketVO.descripcion = txtDetalle.text;
+							ticketVO.estado = 'Asignado';
+							ticketVO.tipo_solucion = cmbCriticidad.selectedItem['label'];
+							ticketVO.problema = cmbCategoria.selectedItem['idCategoria'];
+							ticketVO.sub_problema = cmbSubcategoria.selectedItem['idSubCategoria'];
+							ticketVO.idClasificacion = cmbClasificacion.selectedItem['idClasificacion'];
+							ticketVO.idDescripcion = cmbDescripcion.selectedItem['idDescripcion'];
+							ticketVO.tiempoSolucion = cmbDescripcion.selectedItem['idTiempoSolucion'];
+							var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO);
+							Controller.getInstance().dispatchEvent(ticketEvent);
+						}
+						
 					}
 				} catch(e:*){
 					
 				}
+				
+				
+			}
+			
+			private function fnRetornoTicket(auxCliente:ClienteVO):void{
+				fnNuevoCliente(auxCliente);
+				var fecha:Date = new Date();
+				formater.formatString = 'YYYYMMDD';
+				var ticketVO:TicketVO = new TicketVO();
+				ticketVO.cliente_rut = auxCliente.rut;
+				ticketVO.fecha = int(formater.format(fecha));
+				formater.formatString = 'J:NN';
+				ticketVO.hora = formater.format(fecha);
+				ticketVO.asignado_por = modelApp.usuarioActivo.username;
+				ticketVO.soporte = modelApp.usuarioActivo.username;
+				ticketVO.creadoPor = modelApp.usuarioActivo.username;
+				ticketVO.descripcion = txtDetalle.text;
+				ticketVO.estado = 'Asignado';
+				ticketVO.tipo_solucion = cmbCriticidad.selectedItem['label'];
+				ticketVO.problema = cmbCategoria.selectedItem['idCategoria'];
+				ticketVO.sub_problema = cmbSubcategoria.selectedItem['idSubCategoria'];
+				ticketVO.idClasificacion = cmbClasificacion.selectedItem['idClasificacion'];
+				ticketVO.idDescripcion = cmbDescripcion.selectedItem['idDescripcion'];
+				ticketVO.tiempoSolucion = cmbDescripcion.selectedItem['idTiempoSolucion'];
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO);
+				Controller.getInstance().dispatchEvent(ticketEvent);
 				
 				
 			}
@@ -267,6 +315,14 @@
 					
 			}
 			
+			private function set fnActualizaSucursal(item:*):void{
+				if(item){
+					clienteVO.sucursalVO = item;
+				} else {
+					clienteVO.sucursalVO = null;
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	<!--<fx:Binding source="txtRut.selectedItem" destination="fnCargaCliente"/>-->
@@ -275,7 +331,8 @@
 	<fx:Binding source="txtNombres.text" destination="clienteVO.nombres" twoWay="true"/>
 	<fx:Binding source="txtApellidos.text" destination="clienteVO.apellidos" twoWay="true"/>
 	<fx:Binding source="txtEmail.text" destination="clienteVO.email" twoWay="true"/>
-	<fx:Binding source="cmbSucursal.selectedItem" destination="clienteVO.sucursalVO" twoWay="true"/>
+	<fx:Binding source="clienteVO.sucursalVO" destination="cmbSucursal.selectedItem"/>
+	<fx:Binding source="cmbSucursal.selectedItem" destination="fnActualizaSucursal"/>
 	<fx:Binding source="txtTelefono.text" destination="clienteVO.telefono" twoWay="true"/>
 	<fx:Binding source="txtAnexo.text" destination="clienteVO.anexo" twoWay="true"/>
 	<fx:Binding source="txtUnidad.text" destination="clienteVO.unidad" twoWay="true"/>
@@ -287,7 +344,12 @@
 	<fx:Declarations>
 		<fx:Array id="valArr">
 			<comp:RutValidacion id="rvRut" source="{txtRut}" property="text" minLength="3" requiredFieldError="El rut es requerido" tooShortError="Rut debe tener mínimo 3 caracteres" />
-			
+			<mx:StringValidator id="vsNombres" source="{txtNombres}" property="text" required="true" maxLength="32" requiredFieldError="El nombre es requerido"/>
+			<mx:StringValidator id="vsApellidos" source="{txtApellidos}" property="text" required="true" maxLength="32" requiredFieldError="El apellido es requerido" />
+			<mx:StringValidator id="vsTelefono" source="{txtTelefono}" property="text" required="true" maxLength="32" requiredFieldError="El telefono es requerido"/>
+			<mx:StringValidator id="vsUnidad" source="{txtUnidad}" property="text" required="true" maxLength="32" requiredFieldError="La unidad es requerida"/>
+			<s:NumberValidator id="nvSucursal" source="{cmbSucursal}" property="selectedIndex" allowNegative="false" negativeError="Debe seleccionar sucursal"/>
+			<mx:StringValidator id="nsDescripcion" source="{txtDetalle}" property="text" requiredFieldError="Detalle es requerido" maxLength="500"/>
 			
 			<!--<mx:StringValidator id="fNameVal" source="{cmbClasificacion.selectedItem}" property="idClasificacion" required="true" maxLength="64" />-->
 			<s:NumberValidator id="nvClasificacion" source="{cmbClasificacion}" property="selectedIndex" allowNegative="false" negativeError="Debe seleccionar clasificación"/>
@@ -308,13 +370,13 @@
 		<s:layout>
 			<s:VerticalLayout/>
 		</s:layout>
-		<components:CustomPanelSpark title="Cliente" width="100%" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">
+		<components:CustomPanelSpark title="Cliente" width="100%" height="{50 + formCliente.height}" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">
 			<s:Form id="formCliente" width="100%" bottom="10">
 				<s:layout>
 					<s:TileLayout requestedColumnCount="5"/>
 				</s:layout>
 				<!--<s:FormHeading label="headingLabel"/>-->
-				<s:FormItem label="Rut" width="100%" height="30">
+				<s:FormItem label="Rut" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
@@ -322,55 +384,55 @@
 					<!--<s:ComboBox id="txtRut" height="30" width="170"
 								dataProvider="{modelApp.arrComboClientes}" labelField="rut"/>-->
 				</s:FormItem>
-				<s:FormItem label="Nombres" width="100%" height="30">
+				<s:FormItem label="Nombres" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
 					<s:TextInput id="txtNombres" width="170" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Apellidos" width="100%" height="30">
+				<s:FormItem label="Apellidos" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
 					<s:TextInput id="txtApellidos" width="170" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Email" width="100%" height="30">
+				<s:FormItem label="Email" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
 					<s:TextInput id="txtEmail" width="170" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Sucursal" width="100%" height="30">
+				<s:FormItem label="Sucursal" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
 					<s:ComboBox id="cmbSucursal" color="#333333" dataProvider="{modelApp.arrSucursales}" labelField="sucursal" width="170" height="30"></s:ComboBox>
 				</s:FormItem>
-				<s:FormItem label="Teléfono" width="100%" height="30">
+				<s:FormItem label="Teléfono" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
 					<s:TextInput id="txtTelefono" width="170" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Anexo" width="100%" height="30">
+				<s:FormItem label="Anexo" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
 					<s:TextInput id="txtAnexo" width="170" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Unidad" width="100%" height="30">
+				<s:FormItem label="Unidad" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
 					<s:TextInput id="txtUnidad" width="170" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Rótulo" width="100%" height="30">
+				<s:FormItem label="Rótulo" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
 					<s:TextInput id="txtRotulo" width="170" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Dirección ip" width="100%" height="30">
+				<s:FormItem label="Dirección ip" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
@@ -389,7 +451,7 @@
 					<s:TextInput id="txtEmpresa" width="170" height="30"/>
 				</s:FormItem>-->
 				<s:FormItem label="" width="100%" height="50">
-					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{clienteVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarCliente(event)" width="100%" height="50" skinClass="assets.skins.ButtonSendLVSkin"/>
+					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{clienteVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarCliente(clienteVO.id == '' ? fnNuevoCliente : null)" width="170" height="30" skinClass="assets.skins.ButtonSendLVSkin"/>
 				</s:FormItem>
 				
 			</s:Form>	
@@ -463,7 +525,7 @@
 								  horizontalAlign="left" verticalAlign="top"/>
 				
 			</components:layout>
-			<s:TextArea id="txtDetalle" width="100%" height="100%" prompt="Prr favor sea elocuente al detallar el problema."/>
+			<s:TextArea id="txtDetalle" width="100%" height="100%" prompt="Por favor sea elocuente al detallar el problema."/>
 			<s:Button id="btnCreaTicket" label="Crear" width="170" click="btnCreaTicket_clickHandler(event)"/>
 		</components:CustomPanelSpark>
 		

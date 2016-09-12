@@ -4,7 +4,7 @@ package vo
 
 	[RemoteClass(alias="Weborb.cau.TicketVO")]
 	[Bindable] 
-	dynamic public class TicketVO
+	public class TicketVO
 	{
 		public var id:String = '';
 		public var tipo_solucion:String = '';

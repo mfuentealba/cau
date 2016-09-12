@@ -123,10 +123,18 @@ class TicketService {
 	 * 
 	 * @return stdClass
 	 */
-	public function createTickets($row) {
-		//return 0;
-
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO $this->tablename (id,  tipo_solucion,  problema,  sub_problema,  rotulo,  dir_ip,  cliente_rut,  fecha,  hora,  soporte,  estado,  descripcion,  hora_cierre,  fecha_cierre,  asignado_por,  comentario_cierre,  problema_e,  sub_problema_e,  solucion_dada_por,  idClasificacion,  idDescripcion,  tiempoSolucion,  administracionRemota,  tipoNivel,  reporteSolucionado,  fechaSolucion,  horaSolucion,  solucionadoPor,  clasificacionCierre,  categoriaCierre,  subcategoriaCierre,  descripcionCierre,  creadoPor) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+	public function createTicket($row) {
+		//return $row;
+		
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO num_reporte (id) VALUES (null)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$autoid = mysqli_stmt_insert_id($stmt);
+		
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO $this->tablename (id,  tipo_solucion,  problema,  sub_problema,  rotulo,  dir_ip,  cliente_rut,  fecha,  hora,  soporte,  estado,  descripcion,  hora_cierre,  fecha_cierre,  asignado_por,  comentario_cierre,  problema_e,  sub_problema_e,  solucion_dada_por,  idClasificacion,  idDescripcion,  tiempoSolucion,  administracionRemota,  tipoNivel,  reporteSolucionado,  fechaSolucion,  horaSolucion,  solucionadoPor,  clasificacionCierre,  categoriaCierre,  subcategoriaCierre,  descripcionCierre,  creadoPor) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -134,8 +142,8 @@ class TicketService {
 
 		/*$item->sucursal = 'hola';
 		$item->direccion = 'hola';*/
-		
-		mysqli_stmt_bind_param($stmt, 'ssssssss',  $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
+		$row->id = $autoid;
+		mysqli_stmt_bind_param($stmt, 'ssiisssisssssississiiiiiisssiiiis',  $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;

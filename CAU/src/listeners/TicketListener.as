@@ -37,7 +37,7 @@ package listeners
 					break;
 				case TicketEvent.CREAR:
 					//var s:String = com.adobe.serialization.json.JSON.encode(evento.userVO);
-					rmtObjTickets.createUsers(evento.ticketVO);
+					rmtObjTickets.createTicket(evento.ticketVO);
 					
 					break;
 				case TicketEvent.MODIFICAR:

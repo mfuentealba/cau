@@ -65,12 +65,16 @@ s|FormItem{
 */
 
 
-#formTicket s|FormItem{
+s|FormItem{
 	skinClass:ClassReference("spark.skins.spark.StackedFormItemSkin");
 }
 
 s|Form{
 	skinClass:ClassReference("spark.skins.spark.StackedFormSkin");
+}
+
+s|ComboBox{
+	skinClass:ClassReference("assets.skins.CustomComboBoxAutocompleteSkin");
 }
 
 
