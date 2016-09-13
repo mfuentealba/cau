@@ -31,6 +31,7 @@
 			import spark.events.TextOperationEvent;
 			
 			import vo.ClienteVO;
+			import vo.ComentarioVO;
 			import vo.TicketVO;
 			
 			[Bindable] public var clienteVO:ClienteVO = new ClienteVO();
@@ -41,53 +42,12 @@
 			[Bindable] private var dia:String;
 			[Bindable] private var hora:String;
 			
-			protected function fnOperarCliente(fn:Function = null):void
-			{
-				// TODO Auto-generated method stub
-				var clienteEvent:ClienteEvent;
-				if(btnEnviar.label == 'Crear'){
-					clienteVO.rut = txtRut.text;
-					clienteEvent = new ClienteEvent(ClienteEvent.CREAR, clienteVO, fn);						
-				} else {
-					clienteEvent = new ClienteEvent(ClienteEvent.MODIFICAR, clienteVO);
-				}
-				
-				
-					
-				
-				
-				Controller.getInstance().dispatchEvent(clienteEvent);
-			}	
 			
 			
-			protected function fnOperarTicket(evento:MouseEvent):void
-			{
-				// TODO Auto-generated method stub
-				var ticketEvent:TicketEvent;
-				switch(evento.target){
-					case btnEnviar:
-						if(btnEnviar.label == 'Crear'){
-							ticketVO.cliente_rut = txtRut.text;
-							ticketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO, fnNuevoTicket);						
-						} else {
-							ticketEvent = new TicketEvent(TicketEvent.MODIFICAR, ticketVO);
-						}
-						
-						break;
-					
-				}
-				
-				Controller.getInstance().dispatchEvent(ticketEvent);
-			}	
 			
-			protected function fnNuevoCliente(auxCliente:ClienteVO):void
-			{
-				// TODO Auto-generated method stub
-				//clienteVO = new ClienteVO();
-				fnCargaCliente(auxCliente);
-				btnEnviar.label = 'Actualizar';
-				
-			}
+			
+			
+			
 			
 			
 			protected function fnNuevoTicket(auxTicket:TicketVO):void
@@ -150,38 +110,6 @@
 				//cmbCategoria.dataProvider = cmbClasificacion.selectedItem ? cmbClasificacion.selectedItem['arrAsociadosIn'] : null;
 			}
 			
-			protected function cmbClasificacion_changeHandler(evento:IndexChangeEvent):void
-			{
-				// TODO Auto-generated method stub
-				trace('fnBuscarAsociados');
-				if(evento.newIndex > -1){
-					var manEvent:MantenedoresEvent;
-					switch(evento.currentTarget){
-						case cmbClasificacion:
-							manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_CATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: cmbClasificacion.selectedItem});
-							
-							Controller.getInstance().dispatchEvent(manEvent);		
-							break;
-						case cmbCategoria:
-							manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_SUBCATEGORIAS_ASOCIADAS, fnActualizaData, {idClas: cmbClasificacion.selectedItem.idClasificacion, idCategoria: cmbCategoria.selectedItem});
-							Controller.getInstance().dispatchEvent(manEvent);		
-							break;
-						case cmbSubcategoria:
-							manEvent = new MantenedoresEvent(MantenedoresEvent.BUSCA_PROBLEMAS_ASOCIADOS, fnActualizaData, {idClas: cmbClasificacion.selectedItem.idClasificacion, idCategoria: cmbCategoria.selectedItem.idCategoria, idSubCategoria: cmbSubcategoria.selectedItem});
-							Controller.getInstance().dispatchEvent(manEvent);		
-							break;
-						
-					}
-					
-					
-				}
-			}
-			
-			protected function fnTiempoSolucion(event:IndexChangeEvent):void
-			{
-				// TODO Auto-generated method stub
-				lblTiempoSolucion.text = modelApp.objTiempoSolucion[cmbDescripcion.selectedItem['idTiempoSolucion']]['descripcion'];
-			}
 			
 			protected function ini(event:FlexEvent):void
 			{
@@ -196,31 +124,7 @@
 			
 			
 			
-			private function fnRetornoTicket(auxCliente:ClienteVO):void{
-				fnNuevoCliente(auxCliente);
-				var fecha:Date = new Date();
-				formater.formatString = 'YYYYMMDD';
-				var ticketVO:TicketVO = new TicketVO();
-				ticketVO.cliente_rut = auxCliente.rut;
-				ticketVO.fecha = int(formater.format(fecha));
-				formater.formatString = 'J:NN';
-				ticketVO.hora = formater.format(fecha);
-				ticketVO.asignado_por = modelApp.usuarioActivo.username;
-				ticketVO.soporte = modelApp.usuarioActivo.username;
-				ticketVO.creadoPor = modelApp.usuarioActivo.username;
-				ticketVO.descripcion = txtDetalle.text;
-				ticketVO.estado = 'Asignado';
-				ticketVO.tipo_solucion = cmbCriticidad.selectedItem['label'];
-				ticketVO.problema = cmbCategoria.selectedItem['idCategoria'];
-				ticketVO.sub_problema = cmbSubcategoria.selectedItem['idSubCategoria'];
-				ticketVO.idClasificacion = cmbClasificacion.selectedItem['idClasificacion'];
-				ticketVO.idDescripcion = cmbDescripcion.selectedItem['idDescripcion'];
-				ticketVO.tiempoSolucion = cmbDescripcion.selectedItem['idTiempoSolucion'];
-				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.CREAR, ticketVO, fnNuevoTicket);
-				Controller.getInstance().dispatchEvent(ticketEvent);
-				
-				
-			}
+			
 			
 			private function fnOpciones(evento:MouseEvent):void{
 				var pop:CustomListadoClientes = new CustomListadoClientes();
@@ -285,6 +189,34 @@
 				}
 			}
 			
+			private function fnFechaHora(item:ComentarioVO, column:GridColumn):String{
+				if(item){
+					var str:String = item.fecha + '';
+					return str.substr(0, 4) + '/' + str.substr(4, 2) + '/' + str.substr(6, 2) + ' ' + item.hora;
+				} else {
+					return '';
+				}
+			}
+
+			
+			
+			protected function btnComentario_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				var comentarioVO:ComentarioVO = new ComentarioVO();
+				comentarioVO.comentarios = txtComentario.text;
+				comentarioVO.reporte = ticketVO.id;
+				comentarioVO.soporte = modelApp.usuarioActivo.username;
+				var fecha:Date = new Date();
+				formater.formatString = 'YYYYMMDD';
+				comentarioVO.fecha = int(formater.format(fecha));
+				formater.formatString = 'J:NN';
+				comentarioVO.hora = formater.format(fecha);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.GUARDAR_COMENTARIOS, modelApp.ticketSeleccionado, null, comentarioVO);
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
 		]]>
 	</fx:Script>
 	<!--<fx:Binding source="txtRut.selectedItem" destination="fnCargaCliente"/>-->
@@ -301,7 +233,7 @@
 		>
 		
 		<s:layout>
-			<s:VerticalLayout/>
+			<s:VerticalLayout paddingBottom="40"/>
 		</s:layout>
 		<components:CustomPanelSpark title="Cliente" width="100%" height="{50 + formCliente.height}" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">
 			<s:Form id="formCliente" width="100%" bottom="10">
@@ -314,7 +246,7 @@
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
 					<s:Label id="txtRut" text="{ticketVO.cliente_rut}" width="170" height="30"/>
-					<!--<s:ComboBox id="txtRut" height="30" width="170"
+					<!--<s:Label id="txtRut" height="30" width="170"
 								dataProvider="{modelApp.arrComboClientes}" labelField="rut"/>-->
 				</s:FormItem>
 				<s:FormItem label="Nombres" width="100%" height="50">
@@ -327,13 +259,13 @@
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtApellidos" text="{ticketVO.clienteVO.apellidos}" width="170" height="30"/>
+					<s:Label id="txtApellidos" text="{ticketVO.clienteVO.apellidos}" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Email" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtEmail" width="170" height="30" text="{ticketVO.clienteVO.email}"/>
+					<s:Label id="txtEmail" width="170" height="30" text="{ticketVO.clienteVO.email}"/>
 				</s:FormItem>
 				<s:FormItem label="Sucursal" width="100%" height="50">
 					<s:layout>
@@ -345,52 +277,49 @@
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtTelefono" text="{ticketVO.clienteVO.telefono}" width="170" height="30"/>
+					<s:Label id="txtTelefono" text="{ticketVO.clienteVO.telefono}" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Anexo" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtAnexo" text="{ticketVO.clienteVO.anexo}" width="170" height="30"/>
+					<s:Label id="txtAnexo" text="{ticketVO.clienteVO.anexo}" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Unidad" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtUnidad" text="{ticketVO.clienteVO.unidad}" width="170" height="30"/>
+					<s:Label id="txtUnidad" text="{ticketVO.clienteVO.unidad}" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Rótulo" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtRotulo" text="{ticketVO.clienteVO.rotulo}" width="170" height="30"/>
+					<s:Label id="txtRotulo" text="{ticketVO.clienteVO.rotulo}" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Dirección ip" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtIp" text="{ticketVO.clienteVO.dir_ip}" width="170" height="30"/>
+					<s:Label id="txtIp" text="{ticketVO.clienteVO.dir_ip}" width="170" height="30"/>
 				</s:FormItem>
 				<!--<s:FormItem label="Gerencia" width="100%" height="30">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtGerencia" width="170" height="30"/>
+					<s:Label id="txtGerencia" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Empresa" width="100%" height="30">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtEmpresa" width="170" height="30"/>
+					<s:Label id="txtEmpresa" width="170" height="30"/>
 				</s:FormItem>-->
-				<s:FormItem label="" width="100%" height="50">
-					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{clienteVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarCliente(clienteVO.id == '' ? fnNuevoCliente : null)" width="170" height="30" skinClass="assets.skins.ButtonSendLVSkin"/>
-				</s:FormItem>
 				
 			</s:Form>	
 		</components:CustomPanelSpark>
 		
-		<components:CustomPanelSpark title="Detalle Ticket" width="100%" color="#eeeeee" imgBl="true" height="300">
+		<components:CustomPanelSpark title="Detalle Ticket" width="100%" color="#eeeeee" imgBl="true" height="220">
 			<s:Form id="formTicket" width="100%">
 				<s:layout>
 					<s:TileLayout requestedColumnCount="4"/>
@@ -399,49 +328,49 @@
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtFecha" text="{dia}" editable="false" width="170" height="30"/>
+					<s:Label id="txtFecha" text="{ticketVO.fecha + ''}" width="170" height="30"/>
 				</s:FormItem>
 				<s:FormItem label="Hora" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:TextInput id="txtHora"  width="170" height="30" editable="false" text="{hora}"/>
+					<s:Label id="txtHora"  width="170" height="30" text="{ticketVO.hora}"/>
 				</s:FormItem>
 				<s:FormItem label="Clasificación" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:ComboBox id="cmbClasificacion" change="cmbClasificacion_changeHandler(event)"  width="170" height="30" dataProvider="{modelApp.arrClasificacion}" labelField="nombreClasificacion"/>
+					<s:Label id="cmbClasificacion" width="170" height="30" text="{modelApp.objClasificacion[ticketVO.idClasificacion]['nombreClasificacion']}"/>
 				</s:FormItem>
 				<s:FormItem label="Categoría" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:ComboBox id="cmbCategoria" change="cmbClasificacion_changeHandler(event)" enabled="{cmbClasificacion.selectedItem ? true : false}"  width="170" height="30" dataProvider="{cmbClasificacion.selectedItem ? cmbClasificacion.selectedItem['arrAsociadosIn'] : null}" labelField="nombreCategoria"/>
+					<s:Label id="cmbCategoria" width="170" height="30" text="{modelApp.objCategoria[ticketVO.problema]['nombreCategoria']}"/>
 				</s:FormItem>
 				<s:FormItem label="Subcategoría" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:ComboBox id="cmbSubcategoria" change="cmbClasificacion_changeHandler(event)" enabled="{cmbCategoria.selectedItem ? true : false}" color="#333333" dataProvider="{cmbCategoria.selectedItem ? cmbCategoria.selectedItem['arrAsociadosIn'] : null}"  width="170" height="30" labelField="nombreSubCategoria"></s:ComboBox>
+					<s:Label id="cmbSubcategoria" text="{modelApp.objSubCategoria[ticketVO.sub_problema]['nombreSubCategoria']}" color="#333333" width="170" height="30"></s:Label>
 				</s:FormItem>
 				<s:FormItem label="Descripción" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:ComboBox id="cmbDescripcion"  width="170" height="30" change="fnTiempoSolucion(event)" enabled="{cmbSubcategoria.selectedItem ? true : false}" labelField="nombreDescripcion" dataProvider="{cmbSubcategoria.selectedItem ? cmbSubcategoria.selectedItem['arrAsociadosIn'] : null}"/>
+					<s:Label id="cmbDescripcion"  width="170" height="30" text="{modelApp.objDescripcion[ticketVO.idDescripcion]['nombreDescripcion']}"/>
 				</s:FormItem>
 				<s:FormItem label="Tiempo de Solución" width="100%" height="50">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:Label id="lblTiempoSolucion"  width="170" height="30"/>
+					<s:Label id="lblTiempoSolucion"  width="170" height="30" text="{modelApp.objTiempoSolucion[modelApp.objDescripcion[ticketVO.idDescripcion]['idTiempoSolucion']]['descripcion']}"/>
 				</s:FormItem>
 				<s:FormItem label="Criticidad" width="100%" height="30">
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:ComboBox id="cmbCriticidad" width="170" height="30" dataProvider="{modelApp.arrCriticidad}"/>
+					<s:Label id="cmbCriticidad" width="170" height="30" text="{ticketVO.tipo_solucion}"/>
 				</s:FormItem>
 				<!--<s:FormItem width="100%" height="50">
 					<s:Button id="btnCreaTicket" label="Enviar" width="170" click="btnCreaTicket_clickHandler(event)"/>
@@ -452,14 +381,38 @@
 		
 		
 		
-		<components:CustomPanelSpark title="Descripción" width="100%" color="#eeeeee" imgBl="true" height="270">
+		<components:CustomPanelSpark title="Descripción" width="100%" color="#eeeeee" imgBl="true" height="180">
 			<components:layout>
 				<s:VerticalLayout paddingTop="5" paddingBottom="30" paddingLeft="10" paddingRight="10" gap="5" 
 								  horizontalAlign="left" verticalAlign="top"/>
 				
 			</components:layout>
-			<s:TextArea id="txtDetalle" width="100%" height="100%" prompt="Por favor sea elocuente al detallar el problema."/>
-			<s:Button id="btnCreaTicket" label="Crear" width="170"/>
+			<s:TextArea id="txtDetalle" editable="false" width="100%" height="100" text="{ticketVO.descripcion}"/>			
+		</components:CustomPanelSpark>
+		
+		
+		<components:CustomPanelSpark title="Comentarios" width="100%" color="#eeeeee" imgBl="true">
+			<components:layout>
+				
+				<s:VerticalLayout paddingTop="5" paddingBottom="30" paddingLeft="10" paddingRight="10" gap="5" 
+								  horizontalAlign="left" verticalAlign="top"/>
+				
+			</components:layout>
+			<s:TextArea id="txtComentario" width="100%" height="100" prompt="Favor ser preciso"/>
+			<s:Button id="btnComentario" label="Añadir" width="170" click="btnComentario_clickHandler(event)"/>
+			<s:DataGrid id="dgComentarios" width="100%"
+						
+						requestedRowCount="5" dataProvider="{ticketVO.arrComentarios}"
+						rowHeight="35" height="100%">
+				<s:columns>
+					<s:ArrayList> 	 	 	 	 	 	 	 	 	 	 	
+						<s:GridColumn dataField="soporte" headerText="Añadido por"></s:GridColumn>
+						<s:GridColumn dataField="comentarios" headerText="Comentario"></s:GridColumn>
+						<s:GridColumn labelFunction="fnFechaHora" headerText="Fecha/Hora"></s:GridColumn>
+					</s:ArrayList>
+				</s:columns>
+				
+			</s:DataGrid>
 		</components:CustomPanelSpark>
 		
 		

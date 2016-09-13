@@ -100,6 +100,8 @@ package controller
 			addEventListenerNew(TicketEvent.LISTAR, TicketListener);
 			addEventListenerNew(TicketEvent.TOTAL_PAGINAS, TicketListener);
 			addEventListenerNew(TicketEvent.LISTAR_PAGINA, TicketListener);
+			addEventListenerNew(TicketEvent.LISTAR_COMENTARIOS, TicketListener);
+			addEventListenerNew(TicketEvent.GUARDAR_COMENTARIOS, TicketListener);
 		}	
 	}
 }

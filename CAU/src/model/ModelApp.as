@@ -3,6 +3,7 @@ package model
 	import mx.collections.ArrayCollection;
 	import mx.rpc.remoting.RemoteObject;
 	
+	import vo.TicketVO;
 	import vo.UserVO;
 
 	[Bindable]
@@ -68,6 +69,8 @@ package model
 		public var arrPaginas:Array = [];
 		public var cantidadPagina:int = 5000;
 		public var paginaActual:int = 0;
+		
+		public var ticketSeleccionado:TicketVO;
 		
 		public static const CLASIFICACION:String = 'Clasificacion';
 		public static const CATEGORIA:String = 'Categoria';

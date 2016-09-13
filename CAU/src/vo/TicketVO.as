@@ -1,6 +1,8 @@
 package vo
 {
 	import model.ModelApp;
+	
+	import mx.collections.ArrayCollection;
 
 	[RemoteClass(alias="Weborb.cau.TicketVO")]
 	[Bindable] 
@@ -40,6 +42,7 @@ package vo
 		public var descripcionCierre:int = 0;
 		public var creadoPor:String = '';
 		public var clienteVO:ClienteVO;
+		public var arrComentarios:ArrayCollection;
 
 		public function get cliente_rut():String
 		{

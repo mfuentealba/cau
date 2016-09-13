@@ -20,6 +20,7 @@
  */
  
  require_once("TicketVO.php");
+ require_once("ComentarioVO.php");
  
 class TicketService {
 
@@ -332,6 +333,74 @@ class TicketService {
 	}
 	
 	
+	public function getAllComentarios($itemID) {
+		
+		$stmt = mysqli_prepare($this->connection, "SELECT id, soporte, reporte, comentarios, fecha, hora FROM reportes_grabados WHERE reporte = ? order by fecha, hora desc");		
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$rows = array();
+		$row = new ComentarioVO();
+		
+		mysqli_stmt_bind_result($stmt, $row->id, $row->soporte, $row->reporte, $row->comentarios, $row->fecha, $row->hora);
+		
+		//$data = $row->id;
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+	      $rows[] = $row;
+		  $row = new ComentarioVO();
+	      mysqli_stmt_bind_result($stmt, $row->id, $row->soporte, $row->reporte, $row->comentarios, $row->fecha, $row->hora);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		
+		return $rows;
+	}
+	
+	public function saveComentarios($row) {
+		//return $row;
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO reportes_grabados (id, soporte, reporte, comentarios, fecha, hora) VALUES (null, ?, ?, ?, ?, ?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		mysqli_stmt_bind_param($stmt, 'sisis',  $row->soporte, $row->reporte, $row->comentarios, $row->fecha, $row->hora);
+		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+//return $stmt;
+		$autoid = mysqli_stmt_insert_id($stmt);
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row->id = $autoid;
+		return $row;
+	}
+	
+	
 	/**
 	 * Utility function to throw an exception if an error occurs 
 	 * while running a mysql command.
@@ -349,6 +418,8 @@ class TicketService {
 			return '';
 		}		
 	}
+	
+	
 }
 
 ?>

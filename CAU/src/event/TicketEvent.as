@@ -12,19 +12,21 @@ package event
 		public static const ELIMINAR:String = 'deleteTickets';
 		public static const TOTAL_PAGINAS:String = 'count';
 		public static const LISTAR_PAGINA:String = 'getTickets_paged';
+		public static const LISTAR_COMENTARIOS:String = 'getAllComentarios';
+		public static const GUARDAR_COMENTARIOS:String = 'saveComentarios';
 		
 		
 		
 		public var ticketVO:TicketVO;
-		public var objCantidad:Object;
+		public var objAdicional:*;
 		
-		public function TicketEvent(type:String, _TicketVO:TicketVO = null, _callback:Function = null, _objCantidad:Object = null)
+		public function TicketEvent(type:String, _TicketVO:TicketVO = null, _callback:Function = null, _objAdicional:* = null)
 		{
 			super(type, bubbles, cancelable);
 			clase = "TicketsEvent";
 			ticketVO = _TicketVO;
 			callback = _callback;
-			objCantidad = _objCantidad;
+			objAdicional = _objAdicional;
 		}
 	}
 }

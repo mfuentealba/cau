@@ -17,6 +17,7 @@ package listeners
 	
 	import services.ServiceRO;
 	
+	import vo.ComentarioVO;
 	import vo.UserVO;
 	
 	public class TicketListener //implements IBaseListener
@@ -54,7 +55,17 @@ package listeners
 					
 					break;
 				case TicketEvent.LISTAR_PAGINA:
-					rmtObjTickets.getTickets_paged(evento.objCantidad['ini'], evento.objCantidad['fin']);
+					rmtObjTickets.getTickets_paged(evento.objAdicional['ini'], evento.objAdicional['fin']);
+					
+					break;
+				
+				case TicketEvent.LISTAR_COMENTARIOS:
+					rmtObjTickets.getAllComentarios(evento.ticketVO.id);
+					
+					break;
+				
+				case TicketEvent.GUARDAR_COMENTARIOS:
+					rmtObjTickets.saveComentarios(evento.objAdicional as ComentarioVO);
 					
 					break;
 					
@@ -107,6 +118,25 @@ package listeners
 					modelApp.arrTickets.removeAll();
 					modelApp.arrTickets = new ArrayCollection(data.result as Array);
 					modelApp.arrTickets.filterFunction = modelApp.fnTicketsFilter;
+					break;
+				
+				case TicketEvent.LISTAR_COMENTARIOS:
+					if(data.result as Array){
+						evento.callback.call(null, data.result);
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					break;
+				case TicketEvent.GUARDAR_COMENTARIOS:
+					if(data.result.hasOwnProperty('id')){
+						evento.ticketVO.arrComentarios.addItem(data.result);
+							
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					
+					
 					break;
 			}
 		}

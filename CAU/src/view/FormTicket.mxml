@@ -31,6 +31,7 @@
 			import spark.events.TextOperationEvent;
 			
 			import vo.ClienteVO;
+			import vo.SucursalVO;
 			import vo.TicketVO;
 			
 			[Bindable] public var clienteVO:ClienteVO = new ClienteVO();
@@ -316,11 +317,24 @@
 					
 			}
 			
-			private function set fnActualizaSucursal(item:*):void{
-				if(item){
-					clienteVO.sucursal = item.id;
+			private function fnActualizaSucursal(evento:IndexChangeEvent):void{
+				if(evento.newIndex > -1){
+					clienteVO.sucursal = cmbSucursal.selectedItem['id'];
 				}
 			}
+			
+			
+			/*private function set fnActualizaSucursal(item:int):void{
+				if(item > -1){
+					clienteVO.sucursal = cmbSucursal.selectedItem['id'];
+				}
+			}*/
+			private function set fnSucursal(item:SucursalVO):void{
+				if(item){
+					cmbSucursal.selectedItem = item;
+				}
+			}
+			
 			
 		]]>
 	</fx:Script>
@@ -330,8 +344,8 @@
 	<fx:Binding source="txtNombres.text" destination="clienteVO.nombres" twoWay="true"/>
 	<fx:Binding source="txtApellidos.text" destination="clienteVO.apellidos" twoWay="true"/>
 	<fx:Binding source="txtEmail.text" destination="clienteVO.email" twoWay="true"/>
-	<fx:Binding source="clienteVO.sucursalVO" destination="cmbSucursal.selectedItem"/>
-	<fx:Binding source="cmbSucursal.selectedItem" destination="fnActualizaSucursal"/>
+	<fx:Binding source="clienteVO.sucursalVO" destination="fnSucursal"/>
+	<!--<fx:Binding source="cmbSucursal.selectedIndex" destination="fnActualizaSucursal"/>-->
 	<fx:Binding source="txtTelefono.text" destination="clienteVO.telefono" twoWay="true"/>
 	<fx:Binding source="txtAnexo.text" destination="clienteVO.anexo" twoWay="true"/>
 	<fx:Binding source="txtUnidad.text" destination="clienteVO.unidad" twoWay="true"/>
@@ -405,7 +419,7 @@
 					<s:layout>
 						<s:HorizontalLayout horizontalAlign="right"/>
 					</s:layout>
-					<s:ComboBox id="cmbSucursal" color="#333333" dataProvider="{modelApp.arrSucursales}" labelField="sucursal" width="170" height="30"></s:ComboBox>
+					<s:ComboBox id="cmbSucursal" color="#333333" dataProvider="{modelApp.arrSucursales}" labelField="sucursal" width="170" height="30" change="fnActualizaSucursal(event)"></s:ComboBox>
 				</s:FormItem>
 				<s:FormItem label="Teléfono" width="100%" height="50">
 					<s:layout>

@@ -26,10 +26,12 @@
 			import mx.rpc.events.ResultEvent;
 			
 			import spark.effects.Resize;
+			import spark.events.GridEvent;
 			
 			import vo.ClienteVO;
 			import vo.GrupoResolutorVO;
 			import vo.SucursalVO;
+			import vo.TicketVO;
 			import vo.UserVO;
 			
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
@@ -118,8 +120,8 @@
 				var mantenedor2Event:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
 				Controller.getInstance().dispatchEvent(mantenedor2Event);*/
 				
-				
 			}
+			
 			
 			private function fnArmaPaginador():void{
 				var arr:Array = modelApp.arrPaginas; 
@@ -388,10 +390,10 @@
 										<view:FormTicket width="100%" height="100%"/>		
 									</s:NavigatorContent>
 									<s:NavigatorContent label="Listado Ticket">
-										<view:ListadoTickets width="100%" height="100%"/>		
+										<view:ListadoTickets id="listadoTicket" width="100%" height="100%"/>		
 									</s:NavigatorContent>
 									<s:NavigatorContent label="Información Ticket">
-										<view:DetalleTicket width="100%" height="100%"/>		
+										<view:DetalleTicket id="detalleTicket" ticketVO="{modelApp.ticketSeleccionado}" width="100%" height="100%"/>		
 									</s:NavigatorContent>
 									
 								</mx:ViewStack>	

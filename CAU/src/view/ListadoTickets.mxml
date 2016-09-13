@@ -15,7 +15,9 @@
 			
 			import model.ModelApp;
 			
+			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			import mx.formatters.DateFormatter;
 			import mx.validators.EmailValidator;
@@ -42,7 +44,7 @@
 				//sucursales = dgClientees.selectedItem as UserVO;
 				
 				if(evento.rowIndex > -1){
-					var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+					var auxUsuario:UserVO = dgTickets.selectedItem as UserVO;
 					usuarioVO.id = auxUsuario.id; 
 					usuarioVO.perfil = auxUsuario.perfil;
 					usuarioVO.username = auxUsuario.username;
@@ -57,7 +59,7 @@
 			}
 			
 			private function fnActualizaGrilla(item:UserVO):void{
-				var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+				var auxUsuario:UserVO = dgTickets.selectedItem as UserVO;
 				auxUsuario.id = item.id; 
 				auxUsuario.perfil = item.perfil;
 				auxUsuario.username = item.username;
@@ -212,6 +214,23 @@
 				Controller.getInstance().dispatchEvent(ticketEvent);
 			}
 			
+			protected function fnDetalleTicket(evento:GridEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(evento.rowIndex > -1){
+					CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 6;
+					CAU(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Creación', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(3)}];
+					modelApp.ticketSeleccionado = dgTickets.selectedItem as TicketVO;
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
+					Controller.getInstance().dispatchEvent(ticketEvent);
+				}
+			}
+			
+			
+			private function fnComentarios(arr:Array):void{
+				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -237,7 +256,8 @@
 						<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
 					</s:HGroup>
 				</s:Group>
-				<s:DataGrid id="dgUsuarios" width="100%" 
+				<s:DataGrid id="dgTickets" width="100%" 
+							gridClick="fnDetalleTicket(event)"
 							requestedRowCount="4" dataProvider="{modelApp.arrTickets}"
 							rowHeight="35" height="100%">
 					<s:columns>
