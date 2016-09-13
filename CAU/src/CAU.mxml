@@ -127,6 +127,7 @@
 				for(var i:int = 0; i < modelApp.totalPaginas; i++){
 					arr.push({ini: pag * i, fin: pag});
 				}
+				arr.push({ini: pag * i, fin: modelApp.totalRegistros});
 				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_PAGINA, null, null, arr[0]);				
 				Controller.getInstance().dispatchEvent(ticketEvent);
 			}
@@ -388,6 +389,9 @@
 									</s:NavigatorContent>
 									<s:NavigatorContent label="Listado Ticket">
 										<view:ListadoTickets width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Información Ticket">
+										<view:DetalleTicket width="100%" height="100%"/>		
 									</s:NavigatorContent>
 									
 								</mx:ViewStack>	

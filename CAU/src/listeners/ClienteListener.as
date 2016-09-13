@@ -63,7 +63,9 @@ package listeners
 					evento.callback.call(null, data.result);
 					break;
 				case ClienteEvent.MODIFICAR:
-					evento.callback.call(null, data.result);
+					if(evento.callback){
+						evento.callback.call(null, data.result);	
+					}					
 					modelApp.arrComboClientes.refresh();
 					break;
 				case ClienteEvent.ELIMINAR:

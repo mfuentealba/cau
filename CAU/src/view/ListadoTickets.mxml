@@ -262,7 +262,7 @@
 					<s:Label text="Mostrando"/>
 					<s:Label text="{(modelApp.paginaActual * modelApp.cantidadPagina) + 1}"/>
 					<s:Label text="hasta"/>
-					<s:Label text="{(modelApp.paginaActual + 1) * modelApp.cantidadPagina}"/>
+					<s:Label text="{(modelApp.paginaActual + 1) * modelApp.cantidadPagina }"/>
 					<s:Label text="de"/>
 					<s:Label text="{modelApp.totalRegistros}"/>
 					<mx:LinkButton label="Previa" enabled="{modelApp.paginaActual > 0 ? true : false}" click="fnNavegaPaginasHandler('Previa')"/>

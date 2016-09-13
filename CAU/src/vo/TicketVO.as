@@ -12,7 +12,7 @@ package vo
 		public var sub_problema:int = 0;
 		public var rotulo:String = '';
 		public var dir_ip:String = '';
-		public var cliente_rut:String = '';
+		private var _cliente_rut:String = '';
 		public var fecha:int = 0;
 		public var hora:String = '';
 		public var soporte:String = '';
@@ -39,6 +39,18 @@ package vo
 		public var subcategoriaCierre:int = 0;
 		public var descripcionCierre:int = 0;
 		public var creadoPor:String = '';
+		public var clienteVO:ClienteVO;
+
+		public function get cliente_rut():String
+		{
+			return _cliente_rut;
+		}
+
+		public function set cliente_rut(value:String):void
+		{
+			_cliente_rut = value;
+			clienteVO = ModelApp.getInstance().objClientesRut[value];
+		}
 
 	}
 }
