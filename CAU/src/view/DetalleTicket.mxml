@@ -229,12 +229,20 @@
 	</fx:Declarations>
 	
 	<s:Group 
-		width="100%" height="100%" xmlns:skins="assets.skins.*" xmlns:components="components.*"
-		>
+		width="100%" height="100%" xmlns:skins="assets.skins.*" xmlns:components="components.*">
 		
 		<s:layout>
 			<s:VerticalLayout paddingBottom="40"/>
 		</s:layout>
+		
+		<s:BorderContainer width="100%" borderColor="#cececf">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+			</s:layout>
+			<s:Label text="Ticket Nro: " fontWeight="bold" fontSize="16"/>
+			<s:Label text="{ticketVO.id}" fontWeight="bold" fontSize="16"/>
+			<mx:LinkButton label="Reasignar" fontSize="16"/>
+		</s:BorderContainer>
 		<components:CustomPanelSpark title="Cliente" width="100%" height="{50 + formCliente.height}" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">
 			<s:Form id="formCliente" width="100%" bottom="10">
 				<s:layout>
