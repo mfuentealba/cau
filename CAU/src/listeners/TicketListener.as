@@ -51,11 +51,11 @@ package listeners
 					break;
 				
 				case TicketEvent.TOTAL_PAGINAS:
-					rmtObjTickets.count();
+					rmtObjTickets.count(evento.objAdicional['idCla'], evento.objAdicional['propietario']);
 					
 					break;
 				case TicketEvent.LISTAR_PAGINA:
-					rmtObjTickets.getTickets_paged(evento.objAdicional['ini'], evento.objAdicional['fin']);
+					rmtObjTickets.getTickets_paged(evento.objAdicional['ini'], evento.objAdicional['fin'], evento.objAdicional['idCla'], evento.objAdicional['propietario']);
 					
 					break;
 				
@@ -69,7 +69,8 @@ package listeners
 					
 					break;
 				case TicketEvent.REASIGNAR_TICKET:
-					rmtObjTickets.reasignarTicket(evento.ticketVO);	
+					rmtObjTickets.reasignarTicket(evento.ticketVO.soporte, evento.ticketVO.id);	
+					break;
 			}
 		}
 		
@@ -83,7 +84,7 @@ package listeners
 				case TicketEvent.CREAR:
 					
 					if(data.result.hasOwnProperty('id')){
-						modelApp.arrTickets.addItem(data.result);
+						modelApp.arrTickets.addItemAt(data.result, 0);
 						evento.callback.call(null, data.result);	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	

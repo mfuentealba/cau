@@ -132,6 +132,12 @@
 					}
 					
 				} 
+				
+				if(objAux is ListaAcordeon){
+					obj.selected = 1;
+				} else {
+					objAux.selected = true;	
+				}
 				arrElementos.addItem(objAux);
 				
 				

@@ -185,6 +185,36 @@ class TicketService {
 		mysqli_stmt_free_result($stmt);		
 		mysqli_close($this->connection);
 		$row->id = $autoid;
+		
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO reportes_grabados (id, soporte, reporte, comentarios, fecha, hora) VALUES (null, ?, ?, ?, ?, ?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		$msg = "Ticket ssignado a " . $row->soporte;
+		mysqli_stmt_bind_param($stmt, 'sisis',  $row->soporte, $autoid, $msg, $row->fecha, $row->hora);
+		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+//return $stmt;
+		$autoid = mysqli_stmt_insert_id($stmt);
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		$row->id = $autoid;
+		return $row;
+		
+		
+		
+		
 		return $row;
 	}
 
@@ -222,15 +252,15 @@ class TicketService {
 		return $item;
 	}
 
-	public function reasignarTicket($item) {
+	public function reasignarTicket($soporte, $id) {
 	
-		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET perfil=?, username=?, email=?, password=?, nombre_completo=?, tema=?, tipoUsuario=?, idGrupoResolutor=? WHERE id=?");		
+		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET soporte=? WHERE id=?");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 		
-		mysqli_stmt_bind_param($stmt, 'ssssssssi', $item->perfil, $item->username, $item->email, $item->password, $item->nombre_completo, $item->tema, $item->tipoUsuario, $item->idGrupoResolutor, $item->id);		
+		mysqli_stmt_bind_param($stmt, 'ss', $soporte, $id);		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -242,10 +272,39 @@ class TicketService {
 			return $msg;
 		}
 		
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename WHERE id = " . $id);		
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$this->throwExceptionOnError();
+		
+		$row = new TicketVO();
+		
+		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_fetch($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
 		
 		mysqli_stmt_free_result($stmt);		
 		mysqli_close($this->connection);
-		return $item;
+		return $row;
 	}
 
 	
@@ -287,8 +346,12 @@ class TicketService {
 	 *
 	 * 
 	 */
-	public function count() {
-		$stmt = mysqli_prepare($this->connection, "SELECT COUNT(*) AS COUNT FROM $this->tablename");
+	public function count($idCla, $username) {
+		$opt = '';
+		if($username != ''){
+			$opt = "AND soporte = '" . $username . "'";
+		}
+		$stmt = mysqli_prepare($this->connection, "SELECT COUNT(*) AS COUNT FROM $this->tablename where idClasificacion = " . $idCla . " " . $opt);
 		$this->throwExceptionOnError();
 
 		mysqli_stmt_execute($stmt);
@@ -321,9 +384,13 @@ class TicketService {
 	 * 
 	 * @return array
 	 */
-	public function getTickets_paged($startIndex, $numItems) {
-		
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename order by fecha desc limit $startIndex, $numItems");		
+	public function getTickets_paged($startIndex, $numItems, $idCla, $username) {
+		$opt = '';
+		if($username != ''){
+			$opt = "AND soporte = '" . $username . "'";
+		}
+		//return "SELECT * FROM $this->tablename where idClasificacion = " . $idCla . " " . $opt . " order by fecha desc limit $startIndex, $numItems";
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename where idClasificacion = " . $idCla . " " . $opt . " order by fecha desc limit $startIndex, $numItems");		
 		$this->throwExceptionOnError();
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){

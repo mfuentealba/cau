@@ -4,7 +4,7 @@
 			xmlns:mx="library://ns.adobe.com/flex/mx"
 			xmlns:controllerbd="services.controllerbd.*"
 			xmlns:skins="assets.skins.*" 
-			xmlns:components="components.*" initialize="ini(event)">
+			xmlns:components="components.*" initialize="ini(event)" show="fnTraeData(event)" creationComplete="fnTraeData(event)">
 	<fx:Script>
 		<![CDATA[
 			import controller.Controller;
@@ -25,6 +25,7 @@
 			import spark.events.GridEvent;
 			import spark.events.IndexChangeEvent;
 			
+			import vo.ClasificacionVO;
 			import vo.ClienteVO;
 			import vo.TicketVO;
 			import vo.UserVO;
@@ -231,9 +232,31 @@
 				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
 			}
 			
+			protected function fnTraeData(event:*):void
+			{
+				// TODO Auto-generated method stub
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.TOTAL_PAGINAS, null, fnArmaPaginador, {idCla: ClasificacionVO(cmbTipo.selectedItem).idClasificacion, propietario: rbgAsignados.selection.label == 'Propios' ? modelApp.usuarioActivo.username : ''});				
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+			private function fnArmaPaginador():void{
+				modelApp.arrPaginas = [];
+				var arr:Array = modelApp.arrPaginas; 
+				var pag:int = modelApp.cantidadPagina;
+				var opt:String = rbgAsignados.selection.label == 'Propios' ? modelApp.usuarioActivo.username : '';
+				for(var i:int = 0; i < modelApp.totalPaginas; i++){
+					arr.push({ini: pag * i, fin: pag, idCla: cmbTipo.selectedItem.idClasificacion, propietario: opt});
+				}
+				arr.push({ini: pag * i, fin: modelApp.totalRegistros, idCla: cmbTipo.selectedItem.idClasificacion, propietario: opt});
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_PAGINA, null, null, arr[0]);				
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
 		]]>
 	</fx:Script>
-	
+	<fx:Declarations>
+		<s:RadioButtonGroup id="rbgAsignados" change="fnTraeData(event)"/>
+	</fx:Declarations>
 	<s:Group 
 		width="100%" height="100%"
 		>
@@ -256,6 +279,17 @@
 						<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
 					</s:HGroup>
 				</s:Group>
+				<s:BorderContainer width="100%" borderColor="#cececf" color="0x333333">
+					<s:layout>
+						<s:HorizontalLayout verticalAlign="middle" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+					</s:layout>
+					<s:Label text="Tipo" fontWeight="bold"/>
+					<s:ComboBox id="cmbTipo" dataProvider="{modelApp.arrClasificacion}" requireSelection="true" labelField="nombreClasificacion" change="fnTraeData(null)"/>
+					<s:Label text=" asignados: " fontWeight="bold"/>
+					<s:RadioButton label="Propios" groupName="rbgAsignados" selected="true"/>
+					<s:RadioButton label="Todos" groupName="rbgAsignados"/>
+					
+				</s:BorderContainer>
 				<s:DataGrid id="dgTickets" width="100%" 
 							gridClick="fnDetalleTicket(event)"
 							requestedRowCount="4" dataProvider="{modelApp.arrTickets}"

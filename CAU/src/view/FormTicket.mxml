@@ -20,6 +20,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
@@ -50,16 +51,25 @@
 					clienteVO.rut = txtRut.text;
 					clienteEvent = new ClienteEvent(ClienteEvent.CREAR, clienteVO, fn);						
 				} else {
-					clienteEvent = new ClienteEvent(ClienteEvent.MODIFICAR, clienteVO);
+					clienteEvent = new ClienteEvent(ClienteEvent.MODIFICAR, clienteVO, fnUpdateCliente);
 				}
-				
-				
-					
-				
 				
 				Controller.getInstance().dispatchEvent(clienteEvent);
 			}	
 			
+			
+			private function fnUpdateCliente(val:ClienteVO):void{
+				var index:int = modelApp.arrClientes.getItemIndex(modelApp.objClientes[val.rut]['obj']);
+				
+				if(index < 0 ){
+					
+					modelApp.arrClientes.source[modelApp.objClientes[val.rut]['pos']] = val;
+					modelApp.arrClientes.refresh();
+				} else {
+					modelApp.arrClientes.setItemAt(val, index);
+				}
+				modelApp.objClientes[val.rut]['obj'] = val;
+			}
 			
 			protected function fnOperarTicket(evento:MouseEvent):void
 			{
@@ -97,6 +107,8 @@
 				//clienteVO = new ClienteVO();
 				/*fnCargaCliente(auxCliente);
 				btnEnviar.label = 'Actualizar';*/
+				CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 5;
+				CAU(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Resultado', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(5)}];
 				
 				
 			}

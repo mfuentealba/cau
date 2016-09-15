@@ -156,10 +156,10 @@ class ClientesService {
 	 */
 	public function updateClientes($item) {
 	
-		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET telefono=?, anexo=?, email=?, sucursal=?, unidad=?, rotulo=?, dir_ip=?, gerencia=?, password=?, empresa=? WHERE id=?");		
+		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET nombres=?, apellidos=?, telefono=?, anexo=?, email=?, sucursal=?, unidad=?, rotulo=?, dir_ip=?, gerencia=?, password=?, empresa=? WHERE id=?");		
 		$this->throwExceptionOnError();
 		
-		mysqli_stmt_bind_param($stmt, 'ssssssssssi', $item->telefono, $item->anexo, $item->email, $item->sucursal, $item->unidad, $item->rotulo, $item->dir_ip, $item->gerencia, $item->password, $item->empresa, $item->id);		
+		mysqli_stmt_bind_param($stmt, 'ssssssssssssi', $item->nombres, $item->apellidos, $item->telefono, $item->anexo, $item->email, $item->sucursal, $item->unidad, $item->rotulo, $item->dir_ip, $item->gerencia, $item->password, $item->empresa, $item->id);		
 		$this->throwExceptionOnError();
 
 		mysqli_stmt_execute($stmt);		

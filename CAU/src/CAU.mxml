@@ -110,11 +110,7 @@
 				Controller.getInstance().dispatchEvent(mantenedorEvent);
 				
 				
-				/*var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR);				
-				Controller.getInstance().dispatchEvent(ticketEvent);*/
 				
-				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.TOTAL_PAGINAS, null, fnArmaPaginador);				
-				Controller.getInstance().dispatchEvent(ticketEvent);
 				
 				/*
 				var mantenedor2Event:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
@@ -123,16 +119,7 @@
 			}
 			
 			
-			private function fnArmaPaginador():void{
-				var arr:Array = modelApp.arrPaginas; 
-				var pag:int = modelApp.cantidadPagina;
-				for(var i:int = 0; i < modelApp.totalPaginas; i++){
-					arr.push({ini: pag * i, fin: pag});
-				}
-				arr.push({ini: pag * i, fin: modelApp.totalRegistros});
-				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_PAGINA, null, null, arr[0]);				
-				Controller.getInstance().dispatchEvent(ticketEvent);
-			}
+			
 			
 			private function fnListaClientes():void{
 				var clienteEvent:ClienteEvent = new ClienteEvent(ClienteEvent.LISTAR);
@@ -394,6 +381,9 @@
 									</s:NavigatorContent>
 									<s:NavigatorContent label="Información Ticket">
 										<view:DetalleTicket id="detalleTicket" ticketVO="{modelApp.ticketSeleccionado}" width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Información Ticket">
+										<view:ResultadoTransaccion id="resultadoTransaccion" width="100%" height="100%"/>		
 									</s:NavigatorContent>
 									
 								</mx:ViewStack>	

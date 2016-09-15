@@ -22,6 +22,7 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			import mx.formatters.DateFormatter;
 			import mx.managers.PopUpManager;
@@ -206,7 +207,12 @@
 			private function fnResultadoReasignacion(item:TicketVO):void{
 				if(!item){
 					ticketVO.soporte = str;
+					Alert.show('Ha ocurrido un error al grabar en la base de datos', "Error");
 				} else {
+					modelApp.tituloTrans = 'Ticket reasignado';
+					modelApp.contenidoTrans = 'La reasignación del ticket ' + ticketVO.id + ' ha sido exitosa. Ha sido traspasado de ' + str + ' a ' + ticketVO.soporte + '.';
+					CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 7;
+					CAU(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Resultado', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(5)}];
 					
 				}
 			}
@@ -233,7 +239,7 @@
 			<s:VerticalLayout paddingBottom="40"/>
 		</s:layout>
 		
-		<s:BorderContainer width="100%" borderColor="#cececf">
+		<s:BorderContainer width="100%" borderColor="#cececf" color="0x333333">
 			<s:layout>
 				<s:HorizontalLayout verticalAlign="middle" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
 			</s:layout>

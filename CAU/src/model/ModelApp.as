@@ -71,6 +71,8 @@ package model
 		public var paginaActual:int = 0;
 		
 		public var ticketSeleccionado:TicketVO;
+		public var tituloTrans:String = '';
+		public var contenidoTrans:String = '';
 		
 		public static const CLASIFICACION:String = 'Clasificacion';
 		public static const CATEGORIA:String = 'Categoria';

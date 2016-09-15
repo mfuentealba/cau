@@ -63,7 +63,7 @@ package listeners
 					evento.callback.call(null, data.result);
 					break;
 				case ClienteEvent.MODIFICAR:
-					if(evento.callback){
+					if(evento.callback != null && data.result is ClienteVO){
 						evento.callback.call(null, data.result);	
 					}					
 					modelApp.arrComboClientes.refresh();
@@ -78,7 +78,7 @@ package listeners
 		
 		
 		private static function fnDictCliente(item:ClienteVO, index:int, arr:Array):void{
-			modelApp.objClientesRut[item.rut + ''] = item;
+			modelApp.objClientesRut[item.rut + ''] = {pos: index, obj: item};
 		}
 		
 		
