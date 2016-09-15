@@ -9,6 +9,8 @@
 		<![CDATA[
 			import components.Callback;
 			import components.CustomListadoClientes;
+			import components.CustomListadoUsuarios;
+			import components.PopupCustomListadoUsuarios;
 			
 			import controller.Controller;
 			
@@ -33,6 +35,7 @@
 			import vo.ClienteVO;
 			import vo.ComentarioVO;
 			import vo.TicketVO;
+			import vo.UserVO;
 			
 			[Bindable] public var clienteVO:ClienteVO = new ClienteVO();
 			[Bindable] public var ticketVO:TicketVO = new TicketVO();
@@ -69,28 +72,7 @@
 			}*/
 			
 			
-			private function fnCargaCliente(val:*):void{
-				if(val is ClienteVO){
-					var auxCliente:ClienteVO = val;
-					clienteVO.id = auxCliente.id; 
-					clienteVO.nombres = auxCliente.nombres;
-					clienteVO.apellidos = auxCliente.apellidos;
-					clienteVO.rut = auxCliente.rut;
-					clienteVO.telefono = auxCliente.telefono;
-					clienteVO.anexo = auxCliente.anexo;
-					clienteVO.email = auxCliente.email;
-					clienteVO.sucursal = auxCliente.sucursal;
-					clienteVO.unidad = auxCliente.unidad;
-					clienteVO.rotulo = auxCliente.rotulo;
-					clienteVO.dir_ip = auxCliente.dir_ip;
-					clienteVO.gerencia = auxCliente.gerencia;
-					clienteVO.password = auxCliente.password;
-					clienteVO.empresa = auxCliente.empresa;	
-				} else {
-					clienteVO = new ClienteVO();
-				}
-				
-			}
+			
 			
 			
 			private function fnActualizaData(auxNuevoVO:*):void{				
@@ -142,15 +124,6 @@
 				pop.fnCallback = fnCerrarPopClentes;
 			}
 			
-			private function fnSeleccionUsuario(evento:MouseEvent, pop:CustomListadoClientes):void{				
-				fnCargaCliente(pop.dgClientes.selectedItem as ClienteVO);
-				PopUpManager.removePopUp(pop);
-			}
-			
-			
-			private function fnCerrarPopClentes(evento:MouseEvent):void{
-				PopUpManager.removePopUp(evento.target.parentDocument.parentDocument);
-			}
 			
 			
 			private function fnBuscaCl(item:ClienteVO, index:int, arr:Array):Boolean{
@@ -161,20 +134,6 @@
 			}
 			
 			
-			protected function fnBuscaCliente(event:TextOperationEvent):void
-			{
-				// TODO Auto-generated method stub
-				var arr:Array = modelApp.arrClientes.source.filter(fnBuscaCl);
-				
-				if(arr.length > 0){
-					fnCargaCliente(arr[0] as ClienteVO);
-				} else {
-					if(clienteVO.id != ''){
-						clienteVO = new ClienteVO();
-					}
-					
-				}
-			}
 			
 			private function set fnRut(val:String):void{
 				if(val != ''){
@@ -217,6 +176,45 @@
 				Controller.getInstance().dispatchEvent(ticketEvent);
 			}
 			
+			protected function fnReasignar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:CustomListadoUsuarios = new CustomListadoUsuarios();
+				PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+				PopUpManager.centerPopUp(pop);
+				pop.closePopBl = true;
+				pop.title = 'Buscador de Usuarios';
+				var btn:Button = new Button();
+				btn.label = 'Seleccionar';
+				btn.addEventListener(MouseEvent.CLICK, Callback.create(fnSeleccionUsuario, pop));
+				pop.controlBarContent = [btn];
+				
+				pop.controlBarVisible = true;
+				//pop.searchBl = true;
+				pop.fnCallback = fnCerrarPopClentes;
+			}
+			private var str:String;
+			private function fnSeleccionUsuario(evento:MouseEvent, pop:CustomListadoUsuarios):void{
+				str = ticketVO.soporte;
+				ticketVO.soporte = pop.dgUsuarios.selectedItem.username;
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.REASIGNAR_TICKET, ticketVO, fnResultadoReasignacion);
+				Controller.getInstance().dispatchEvent(ticketEvent);
+				PopUpManager.removePopUp(pop);
+			}
+			
+			
+			private function fnResultadoReasignacion(item:TicketVO):void{
+				if(!item){
+					ticketVO.soporte = str;
+				} else {
+					
+				}
+			}
+			
+			private function fnCerrarPopClentes(evento:MouseEvent):void{
+				PopUpManager.removePopUp(evento.target.parentDocument.parentDocument);
+			}
+			
 		]]>
 	</fx:Script>
 	<!--<fx:Binding source="txtRut.selectedItem" destination="fnCargaCliente"/>-->
@@ -241,7 +239,12 @@
 			</s:layout>
 			<s:Label text="Ticket Nro: " fontWeight="bold" fontSize="16"/>
 			<s:Label text="{ticketVO.id}" fontWeight="bold" fontSize="16"/>
-			<mx:LinkButton label="Reasignar" fontSize="16"/>
+			<s:Label text=" asignado a: " fontWeight="bold" fontSize="16"/>
+			<s:Label text="{ticketVO.soporte}" fontWeight="bold" fontSize="16"/>
+			
+			<mx:LinkButton label="Reasignar" fontSize="16" click="fnReasignar(event)"/>
+			<mx:LinkButton label="Cerrar" fontSize="16"/>
+			<mx:LinkButton label="Volver" fontSize="16"/>
 		</s:BorderContainer>
 		<components:CustomPanelSpark title="Cliente" width="100%" height="{50 + formCliente.height}" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">
 			<s:Form id="formCliente" width="100%" bottom="10">

@@ -68,7 +68,8 @@ package listeners
 					rmtObjTickets.saveComentarios(evento.objAdicional as ComentarioVO);
 					
 					break;
-					
+				case TicketEvent.REASIGNAR_TICKET:
+					rmtObjTickets.reasignarTicket(evento.ticketVO);	
 			}
 		}
 		
@@ -137,6 +138,13 @@ package listeners
 					}
 					
 					
+					break;
+				case TicketEvent.REASIGNAR_TICKET:
+					if(data.result.hasOwnProperty('id')){
+						evento.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
 					break;
 			}
 		}

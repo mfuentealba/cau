@@ -102,6 +102,7 @@ package controller
 			addEventListenerNew(TicketEvent.LISTAR_PAGINA, TicketListener);
 			addEventListenerNew(TicketEvent.LISTAR_COMENTARIOS, TicketListener);
 			addEventListenerNew(TicketEvent.GUARDAR_COMENTARIOS, TicketListener);
+			addEventListenerNew(TicketEvent.REASIGNAR_TICKET, TicketListener);
 		}	
 	}
 }

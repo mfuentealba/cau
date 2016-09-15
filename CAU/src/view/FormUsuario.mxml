@@ -4,7 +4,8 @@
 			xmlns:mx="library://ns.adobe.com/flex/mx"
 			xmlns:controllerbd="services.controllerbd.*"
 			xmlns:skins="assets.skins.*" 
-			xmlns:components="components.*">
+			xmlns:components="components.*"
+			creationComplete="ini()">
 	<fx:Script>
 		<![CDATA[
 			import controller.Controller;
@@ -15,6 +16,7 @@
 			import model.ModelApp;
 			
 			import mx.controls.Alert;
+			import mx.events.FlexEvent;
 			import mx.validators.EmailValidator;
 			
 			import spark.events.GridEvent;
@@ -80,7 +82,7 @@
 				cmbTipoUsuario.selectedItem = null;
 				cmbTipoUsuario.textInput.text = '';
 				usuarioVO = new UserVO();
-				dgUsuarios.selectedItem = null;
+				customUsuarios.dgUsuarios.selectedItem = null;
 				btnEnviar.label = 'Crear';
 			}
 			
@@ -90,7 +92,7 @@
 				//sucursales = dgClientees.selectedItem as UserVO;
 				
 				if(evento.rowIndex > -1){
-					var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+					var auxUsuario:UserVO = customUsuarios.dgUsuarios.selectedItem as UserVO;
 					usuarioVO.id = auxUsuario.id; 
 					usuarioVO.perfil = auxUsuario.perfil;
 					usuarioVO.username = auxUsuario.username;
@@ -105,7 +107,7 @@
 			}
 			
 			private function fnActualizaGrilla(item:UserVO):void{
-				var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+				var auxUsuario:UserVO = customUsuarios.dgUsuarios.selectedItem as UserVO;
 				auxUsuario.id = item.id; 
 				auxUsuario.perfil = item.perfil;
 				auxUsuario.username = item.username;
@@ -118,7 +120,7 @@
 			}
 			
 			private function fnRemueveGrilla(id:String):void{
-				var auxUsuario:UserVO = dgUsuarios.selectedItem as UserVO;
+				var auxUsuario:UserVO = customUsuarios.dgUsuarios.selectedItem as UserVO;
 				modelApp.arrUsuarios.removeItemAt(modelApp.arrUsuarios.getItemIndex(auxUsuario));
 				fnNuevoUsuario(null);
 			}
@@ -179,6 +181,12 @@
 			}
 			}*/
 			
+			protected function ini():void
+			{
+				// TODO Auto-generated method stub
+				customUsuarios.dgUsuarios.addEventListener(GridEvent.GRID_CLICK, fnSelectUsuario);
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Binding source="cmbPerfil.selectedItem.id" destination="usuarioVO.perfil" twoWay="true"/>
@@ -192,7 +200,7 @@
 	<fx:Binding source="usuarioVO.tipoUsuarioVO" destination="cmbTipoUsuario.selectedItem" twoWay="true"/>	
 	<fx:Binding source="usuarioVO.grupoResolutorVO" destination="cmbIdGrupoResolutor.selectedItem"/>
 	<fx:Binding source="cmbIdGrupoResolutor.selectedIndex" destination="fnCambioGruporesolutor"/>
-	<fx:Binding source="txtFiltro.text" destination="modelApp.usuarioFilter"/>
+	
 	<!--<fx:Binding source="cmbIdGrupoResolutor.selectedItem" destination="fnCambioGruporesolutor2"/>-->
 	
 	<!--<fx:Declarations>
@@ -214,7 +222,7 @@
 		<s:layout>
 			<s:HorizontalLayout paddingBottom="50"/>
 		</s:layout>
-		<components:CustomPanelSpark id="cpMant" title="{dgUsuarios.selectedIndex > -1 ? 'Actualizar id: ' + usuarioVO.id : 'Nuevo'}" width="400" height="600" color="#eeeeee" imgBl="true">
+		<components:CustomPanelSpark id="cpMant" title="{customUsuarios.dgUsuarios.selectedIndex > -1 ? 'Actualizar id: ' + usuarioVO.id : 'Nuevo'}" width="400" height="600" color="#eeeeee" imgBl="true">
 			<s:Form id="formMant" width="100%">
 				<s:FormItem label="perfil" width="100%" height="30">
 					<s:ComboBox id="cmbPerfil" color="#333333" skinClass="assets.skins.ComboBoxLVNoEditSkin" dataProvider="{modelApp.arrPerfiles}" labelField="perfil" width="100%"></s:ComboBox>
@@ -252,45 +260,15 @@
 					<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo Cliente" click="fnNuevoUsuario(event)" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
 				</s:FormItem>
 				<s:FormItem label="" width="100%" height="50">
-					<s:Button id="btnEliminar" color="white" fontWeight="bold" label="Eliminar" click="fnOperarUsuario(event)" enabled="{dgUsuarios.selectedItem != null ? true : false}" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
+					<s:Button id="btnEliminar" color="white" fontWeight="bold" label="Eliminar" click="fnOperarUsuario(event)" enabled="{customUsuarios.dgUsuarios.selectedItem != null ? true : false}" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
 				</s:FormItem>
 				
 			</s:Form>	
 		</components:CustomPanelSpark>
 		
-		<components:CustomPanelSpark title="Lista de usuarios generados" width="100%" height="{cpMant.height}">
-			<s:VGroup width="100%" height="100%" paddingLeft="10" paddingRight="10">
-				<s:Group width="100%">
-					<s:Rect width="100%" height="100%">
-						<s:fill>
-							<s:SolidColor color="#333333"/>
-						</s:fill>
-					</s:Rect>
-					<s:HGroup color="#fefefe" verticalAlign="middle" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
-						<s:Label text="Filtro" fontWeight="bold"/>
-						<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
-					</s:HGroup>
-				</s:Group>
-				<s:DataGrid id="dgUsuarios" width="100%" 
-							requestedRowCount="4" dataProvider="{modelApp.arrUsuarios}" gridClick="fnSelectUsuario(event)"
-							rowHeight="35" height="{formMant.height - 35}">
-					<s:columns>
-						<s:ArrayList>
-							<s:GridColumn dataField="id" headerText="Id"></s:GridColumn>
-							<s:GridColumn dataField="perfilVO.perfil" headerText="Perfil"></s:GridColumn>
-							<s:GridColumn dataField="username" headerText="Username"></s:GridColumn>
-							<s:GridColumn dataField="email" headerText="Email"></s:GridColumn>
-							<!--<s:GridColumn dataField="password" headerText="Password"></s:GridColumn>-->
-							<s:GridColumn dataField="nombre_completo" headerText="Nombre_completo"></s:GridColumn>
-							<s:GridColumn dataField="tema" headerText="Tema"></s:GridColumn>
-							<s:GridColumn dataField="tipoUsuarioVO.valor" headerText="Tipo Usuario"></s:GridColumn>
-							<s:GridColumn dataField="grupoResolutorVO.nombreGrupoResolutor" headerText="Grupo Resolutor"></s:GridColumn>
-						</s:ArrayList>
-					</s:columns>
-					
-				</s:DataGrid>
-			</s:VGroup>	
-		</components:CustomPanelSpark>
+		<components:CustomListadoUsuarios id="customUsuarios" title="Lista de Usuarios generados" width="100%" height="100%">
+			
+		</components:CustomListadoUsuarios>
 		
 		
 		
