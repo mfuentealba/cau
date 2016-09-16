@@ -96,7 +96,7 @@
 			}	
 			
 			
-			
+			[Bindable(event="activate")]
 			private function fnCliente(item:TicketVO, column:GridColumn):String{
 				try{
 					return modelApp.objClientesRut[item.cliente_rut]['obj']['nombres'] + ' ' + modelApp.objClientesRut[item.cliente_rut]['obj']['apellidos'];	
