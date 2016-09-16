@@ -51,11 +51,11 @@ package listeners
 					break;
 				
 				case TicketEvent.TOTAL_PAGINAS:
-					rmtObjTickets.count(evento.objAdicional['idCla'], evento.objAdicional['propietario']);
+					rmtObjTickets.count(evento.objAdicional['idCla'], evento.objAdicional['propietario'], evento.objAdicional['estado']);
 					
 					break;
 				case TicketEvent.LISTAR_PAGINA:
-					rmtObjTickets.getTickets_paged(evento.objAdicional['ini'], evento.objAdicional['fin'], evento.objAdicional['idCla'], evento.objAdicional['propietario']);
+					rmtObjTickets.getTickets_paged(evento.objAdicional['ini'], evento.objAdicional['fin'], evento.objAdicional['idCla'], evento.objAdicional['propietario'], evento.objAdicional['estado']);
 					
 					break;
 				

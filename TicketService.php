@@ -346,10 +346,14 @@ class TicketService {
 	 *
 	 * 
 	 */
-	public function count($idCla, $username) {
+	public function count($idCla, $username, $estado) {
 		$opt = '';
 		if($username != ''){
 			$opt = "AND soporte = '" . $username . "'";
+		}
+		
+		if($estado != 'Todos'){
+			$opt .= " AND estado = '" . $estado . "'";
 		}
 		$stmt = mysqli_prepare($this->connection, "SELECT COUNT(*) AS COUNT FROM $this->tablename where idClasificacion = " . $idCla . " " . $opt);
 		$this->throwExceptionOnError();
@@ -384,10 +388,14 @@ class TicketService {
 	 * 
 	 * @return array
 	 */
-	public function getTickets_paged($startIndex, $numItems, $idCla, $username) {
+	public function getTickets_paged($startIndex, $numItems, $idCla, $username, $estado) {
 		$opt = '';
 		if($username != ''){
 			$opt = "AND soporte = '" . $username . "'";
+		}
+		
+		if($estado != 'Todos'){
+			$opt .= " AND estado = '" . $estado . "'";
 		}
 		//return "SELECT * FROM $this->tablename where idClasificacion = " . $idCla . " " . $opt . " order by fecha desc limit $startIndex, $numItems";
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename where idClasificacion = " . $idCla . " " . $opt . " order by fecha desc limit $startIndex, $numItems");		

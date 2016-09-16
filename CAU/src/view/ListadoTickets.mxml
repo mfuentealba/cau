@@ -99,7 +99,7 @@
 			
 			private function fnCliente(item:TicketVO, column:GridColumn):String{
 				try{
-					return modelApp.objClientesRut[item.cliente_rut]['nombres'] + ' ' + modelApp.objClientesRut[item.cliente_rut]['apellidos'];	
+					return modelApp.objClientesRut[item.cliente_rut]['obj']['nombres'] + ' ' + modelApp.objClientesRut[item.cliente_rut]['obj']['apellidos'];	
 				} catch(e:*){
 					return '';
 				}
@@ -235,7 +235,7 @@
 			protected function fnTraeData(event:*):void
 			{
 				// TODO Auto-generated method stub
-				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.TOTAL_PAGINAS, null, fnArmaPaginador, {idCla: ClasificacionVO(cmbTipo.selectedItem).idClasificacion, propietario: rbgAsignados.selection.label == 'Propios' ? modelApp.usuarioActivo.username : ''});				
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.TOTAL_PAGINAS, null, fnArmaPaginador, {idCla: ClasificacionVO(cmbTipo.selectedItem).idClasificacion, propietario: (rbgAsignados.selection.label == 'Propios' ? modelApp.usuarioActivo.username : ''), estado: cmbEstados.selectedItem['label']});				
 				Controller.getInstance().dispatchEvent(ticketEvent);
 			}
 			
@@ -245,9 +245,9 @@
 				var pag:int = modelApp.cantidadPagina;
 				var opt:String = rbgAsignados.selection.label == 'Propios' ? modelApp.usuarioActivo.username : '';
 				for(var i:int = 0; i < modelApp.totalPaginas; i++){
-					arr.push({ini: pag * i, fin: pag, idCla: cmbTipo.selectedItem.idClasificacion, propietario: opt});
+					arr.push({ini: pag * i, fin: pag, idCla: cmbTipo.selectedItem.idClasificacion, propietario: opt, estado: cmbEstados.selectedItem.label});
 				}
-				arr.push({ini: pag * i, fin: modelApp.totalRegistros, idCla: cmbTipo.selectedItem.idClasificacion, propietario: opt});
+				arr.push({ini: pag * i, fin: modelApp.totalRegistros, idCla: cmbTipo.selectedItem.idClasificacion, propietario: opt, estado: cmbEstados.selectedItem.label});
 				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_PAGINA, null, null, arr[0]);				
 				Controller.getInstance().dispatchEvent(ticketEvent);
 			}
@@ -288,7 +288,8 @@
 					<s:Label text=" asignados: " fontWeight="bold"/>
 					<s:RadioButton label="Propios" groupName="rbgAsignados" selected="true"/>
 					<s:RadioButton label="Todos" groupName="rbgAsignados"/>
-					
+					<s:Label text=" Estado: " fontWeight="bold"/>
+					<s:ComboBox id="cmbEstados" dataProvider="{modelApp.arrEstados}" requireSelection="true" labelField="label" change="fnTraeData(null)"/>
 				</s:BorderContainer>
 				<s:DataGrid id="dgTickets" width="100%" 
 							gridClick="fnDetalleTicket(event)"
@@ -316,7 +317,7 @@
 					<s:Label text="Mostrando"/>
 					<s:Label text="{(modelApp.paginaActual * modelApp.cantidadPagina) + 1}"/>
 					<s:Label text="hasta"/>
-					<s:Label text="{(modelApp.paginaActual + 1) * modelApp.cantidadPagina }"/>
+					<s:Label text="{((modelApp.paginaActual + 1) * modelApp.cantidadPagina) > modelApp.totalRegistros ? modelApp.totalRegistros : ((modelApp.paginaActual + 1) * modelApp.cantidadPagina)}"/>
 					<s:Label text="de"/>
 					<s:Label text="{modelApp.totalRegistros}"/>
 					<mx:LinkButton label="Previa" enabled="{modelApp.paginaActual > 0 ? true : false}" click="fnNavegaPaginasHandler('Previa')"/>

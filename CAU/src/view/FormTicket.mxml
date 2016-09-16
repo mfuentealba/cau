@@ -59,16 +59,27 @@
 			
 			
 			private function fnUpdateCliente(val:ClienteVO):void{
-				var index:int = modelApp.arrClientes.getItemIndex(modelApp.objClientes[val.rut]['obj']);
+				var index:int = modelApp.arrClientes.getItemIndex(modelApp.objClientesRut[val.rut]['obj']);
 				
 				if(index < 0 ){
 					
-					modelApp.arrClientes.source[modelApp.objClientes[val.rut]['pos']] = val;
-					modelApp.arrClientes.refresh();
+					modelApp.arrClientes.source[modelApp.objClientesRut[val.rut]['pos']] = val;
+					//modelApp.arrClientes.refresh();
 				} else {
 					modelApp.arrClientes.setItemAt(val, index);
 				}
-				modelApp.objClientes[val.rut]['obj'] = val;
+				
+				index = modelApp.arrComboClientes.getItemIndex(modelApp.objClientesRut[val.rut]['obj']);
+				
+				if(index < 0 ){
+					
+					modelApp.arrComboClientes.source[modelApp.objClientesRut[val.rut]['pos']] = val;
+					//modelApp.arrClientes.refresh();
+				} else {
+					modelApp.arrComboClientes.setItemAt(val, index);
+				}
+				
+				modelApp.objClientesRut[val.rut]['obj'] = val;
 			}
 			
 			protected function fnOperarTicket(evento:MouseEvent):void

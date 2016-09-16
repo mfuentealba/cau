@@ -1,5 +1,7 @@
 package model
 {
+	import components.TrdProgressBar;
+	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.remoting.RemoteObject;
 	
@@ -37,7 +39,9 @@ package model
 		public var arrDescripcion:ArrayCollection;
 		
 		public var arrCriticidad:ArrayCollection = new ArrayCollection([{label: 'Baja', id: '1'}, {label: 'Media', id: '2'}, {label: 'Baja', id: '3'}]);
-		
+		public var arrEstados:ArrayCollection = new ArrayCollection([{label: 'Todos', id: '0'}, {label: 'Asignado', id: '1'}, {label: 'Cerrado', id: '2'}]);
+		public var popBl:TrdProgressBar;
+		public var cntrBl:int = 0;
 		
 		public var objTipoUsuario:Object = {};
 		public var objGrupoResolutor:Object = {};
