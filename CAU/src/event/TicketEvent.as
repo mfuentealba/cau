@@ -15,6 +15,7 @@ package event
 		public static const LISTAR_COMENTARIOS:String = 'getAllComentarios';
 		public static const GUARDAR_COMENTARIOS:String = 'saveComentarios';
 		public static const REASIGNAR_TICKET:String = 'reasignarTicket';
+		public static const CERRAR_TICKET:String = 'cerrarTicket';
 		
 		
 		

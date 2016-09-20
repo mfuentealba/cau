@@ -103,6 +103,7 @@ package controller
 			addEventListenerNew(TicketEvent.LISTAR_COMENTARIOS, TicketListener);
 			addEventListenerNew(TicketEvent.GUARDAR_COMENTARIOS, TicketListener);
 			addEventListenerNew(TicketEvent.REASIGNAR_TICKET, TicketListener);
+			addEventListenerNew(TicketEvent.CERRAR_TICKET, TicketListener);
 		}	
 	}
 }

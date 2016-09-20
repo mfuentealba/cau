@@ -69,7 +69,11 @@ package listeners
 					
 					break;
 				case TicketEvent.REASIGNAR_TICKET:
-					rmtObjTickets.reasignarTicket(evento.ticketVO.soporte, evento.ticketVO.id);	
+					rmtObjTickets.reasignarTicket(evento.ticketVO.soporte, evento.ticketVO.id, evento.objAdicional);	
+					break;
+				
+				case TicketEvent.CERRAR_TICKET:
+					rmtObjTickets.cerrarTicket(evento.ticketVO.id, evento.objAdicional);	
 					break;
 			}
 		}
@@ -141,6 +145,13 @@ package listeners
 					
 					break;
 				case TicketEvent.REASIGNAR_TICKET:
+					if(data.result.hasOwnProperty('id')){
+						evento.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					break;
+				case TicketEvent.CERRAR_TICKET:
 					if(data.result.hasOwnProperty('id')){
 						evento.callback.call(null, data.result);	
 					} else {

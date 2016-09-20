@@ -291,8 +291,9 @@
 					<s:Label text=" Estado: " fontWeight="bold"/>
 					<s:ComboBox id="cmbEstados" dataProvider="{modelApp.arrEstados}" requireSelection="true" labelField="label" change="fnTraeData(null)"/>
 				</s:BorderContainer>
-				<s:DataGrid id="dgTickets" width="100%" 
-							gridClick="fnDetalleTicket(event)"
+				<s:DataGrid id="dgTickets" width="100%"
+							doubleClickEnabled="true"
+							gridDoubleClick="fnDetalleTicket(event)"
 							requestedRowCount="4" dataProvider="{modelApp.arrTickets}"
 							rowHeight="35" height="100%">
 					<s:columns>

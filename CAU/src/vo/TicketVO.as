@@ -43,7 +43,8 @@ package vo
 		public var creadoPor:String = '';
 		public var clienteVO:ClienteVO;
 		public var arrComentarios:ArrayCollection;
-
+		private var modelApp:ModelApp = ModelApp.getInstance();
+		
 		public function get cliente_rut():String
 		{
 			return _cliente_rut;
@@ -52,7 +53,7 @@ package vo
 		public function set cliente_rut(value:String):void
 		{
 			_cliente_rut = value;
-			clienteVO = ModelApp.getInstance().objClientesRut[value];
+			clienteVO = modelApp.objClientesRut[value]['obj'];
 		}
 
 	}
