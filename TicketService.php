@@ -211,7 +211,23 @@ class TicketService {
 		mysqli_close($this->connection);
 		$row->id = $autoid;
 		
-		$this->fnCorreo('');
+		
+		$cuerpoMensaje = "====================================================== <br>";
+		$cuerpoMensaje.= "     Centro Atención de Usuarios - Notificacion de Nuevo Ticket     <br>";
+		$cuerpoMensaje.= "====================================================== <br>";
+		$cuerpoMensaje.= " <br>";
+		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br>";
+		$cuerpoMensaje.= " <br> <br>";
+		$cuerpoMensaje.= " Se ha generado un nuevo ticket en nuestro Sistema de Reportes.         <br>";
+		$cuerpoMensaje.= " Nº de Ticket : ".$autoid.".<br>";
+		$cuerpoMensaje.= " Para conocer a mas detalles acerca de este ticket, y su estado actual  <br>";
+		$cuerpoMensaje.= " de progreso, agradeceremos contactarse con nuestros operadores.      <br>";
+		$cuerpoMensaje.= " <br>";
+		$cuerpoMensaje.= " Atte: <br>";
+		$cuerpoMensaje.= " <br>";
+		
+		
+		$this->fnCorreo('', $cuerpoMensaje);
 		
 		return $row;
 		
@@ -307,6 +323,25 @@ class TicketService {
 			return $msg;
 		}
 		
+		$cuerpoMensaje = "============================================================ <br>";
+		$cuerpoMensaje.= "     Centro de Atencion Usuarios - Notificacion de Reasignacion de Ticket    <br>";
+		$cuerpoMensaje.= "============================================================ <br>";
+		$cuerpoMensaje.= " <br> <br>";
+		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br>";
+		$cuerpoMensaje.= " <br> <br>";
+		$cuerpoMensaje.= " Se ha reasignado este ticket a su agenda del Sistema de Reportes <br>";
+		$cuerpoMensaje.= " con los siguientes datos de identificacion :                   <br>";
+		$cuerpoMensaje.= " <br> ";
+		$cuerpoMensaje.= " Nº de Ticket : ".$id." <br><br>";
+		$cuerpoMensaje.= " Para conocer mas detalles del ticket antes mencionado, puede acceder<br>";
+		$cuerpoMensaje.= " a los comentarios en nuestro sistema.  <br>";
+		$cuerpoMensaje.= " <br> <br>";
+		$cuerpoMensaje.= " Atte:<br>";
+		$cuerpoMensaje.= " <br>";
+		
+		
+		$this->fnCorreo('', $cuerpoMensaje);
+		
 		mysqli_stmt_free_result($stmt);		
 		mysqli_close($this->connection);
 		return $row;
@@ -365,6 +400,26 @@ class TicketService {
 		if($msg != ''){
 			return $msg;
 		}
+		
+		
+		
+		$cuerpoMensaje = "========================================================== <br>";
+		$cuerpoMensaje.= "     Centro Atención de Usuarios - Notificacion de Cierre de Ticket     <br>";
+		$cuerpoMensaje.= "========================================================== <br>";
+		$cuerpoMensaje.= " <br> <br>";
+		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br>";
+		$cuerpoMensaje.= " <br> <br>";
+		$cuerpoMensaje.= " Se ha cerrado en nuestro Sistema de Reportes el <br>";
+		$cuerpoMensaje.= " Nº de Ticket : ".$id.".<br><br>";
+		$cuerpoMensaje.= " Si el problema persiste, favor llamar a nuestros operadores, <br>";
+		$cuerpoMensaje.= " indicando el Nº de ticket antes mencionado.  <br>";
+		$cuerpoMensaje.= " <br> <br>";
+		$cuerpoMensaje.= " Atte:<br>";
+		$cuerpoMensaje.= " <br>";
+		
+		
+		$this->fnCorreo('', $cuerpoMensaje);
+		
 		
 		mysqli_stmt_free_result($stmt);		
 		mysqli_close($this->connection);
@@ -573,7 +628,7 @@ class TicketService {
 	 * while running a mysql command.
 	 */
 	 
-	private function fnCorreo($correo){
+	private function fnCorreo($correo, $html){
 	
 		$smtp=new PHPMailer();
 		//return true;
@@ -585,10 +640,11 @@ class TicketService {
 
 		# autenticación contra nuestro servidor smtp
 		$smtp->SMTPAuth   = true;						// enable SMTP authentication
+		$smtp->SMTPSecure = "tls";
 		$smtp->Host       = "smtp.gmail.com";			// sets MAIL as the SMTP server
 		$smtp->Username   = "anti.demiurgo@gmail.com";	// MAIL username
 		$smtp->Password   = "dragonnegro";			// MAIL password
-
+		$smtp->Port       = 587;
 		# datos de quien realiza el envio
 		$smtp->From       = "soporte@yo.cl"; // from mail
 		$smtp->FromName   = "Test"; // from mail name
@@ -610,8 +666,8 @@ class TicketService {
 		$contenidoHTML="<head>";
 		$contenidoHTML.="<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">";
 		$contenidoHTML.="</head><body>";
-		$contenidoHTML.="<b>Contenido en formato HTML</b>";
-		$contenidoHTML.="<p><a href='http://www.lawebdelprogramador.com'>http://www.lawebdelprogramador.com</a></p>";
+		$contenidoHTML .= $html;
+		//$contenidoHTML.="<p><a href='http://www.lawebdelprogramador.com'>http://www.lawebdelprogramador.com</a></p>";
 		$contenidoHTML.="</body>\n";
 
 		# Definimos el contenido en formato Texto del correo

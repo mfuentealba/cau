@@ -182,6 +182,10 @@
 						vsGeneral.selectedIndex = 3;
 						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(3)}];
 						break;
+					case 'Informes':
+						vsGeneral.selectedIndex = 8;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Informes', data: vsGeneral.getElementAt(8)}];
+						break;
 				}
 				
 				if(arrElementos.getItemIndex(evento.target) > -1){
@@ -199,10 +203,19 @@
 					
 				} 
 				arrElementos.addItem(objAux);
+				if(objAux is ListaAcordeon){
+					objAux.selected = 1;
+					/*if(ListaAcordeon(objAux).arrElementos.length > 0){
+						objAux.arrElementos[objAux.defaultSelected].selected = 1;//dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+					}*/
+				} else {
+					objAux.selected = true;	
+				}
+				
 				
 			}
 			
-				protected function fnArr(evento:FlexEvent):void
+			protected function fnArr(evento:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
 				for(var i:int = 0; i < vgbotones.numElements; i++){
@@ -361,6 +374,7 @@
 								<components:ListaAcordeon id="laSucursales" label="Sucursales" img="assets/icons/sucursal.png"/>
 								<components:ListaAcordeon id="laClientes" label="Clientes" img="assets/icons/clientes.png"/>
 								<components:ListaAcordeon height="50" label="Tipificación" id="lst" img="assets/icons/tipificacion.png"/>
+								<components:ListaAcordeon height="50" label="Informes" img="assets/icons/analytics.png"/>
 								<!--<components:ListaAcordeon height="50" label="Tipificación" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}]}"/>-->
 							</s:VGroup>
 							
@@ -403,7 +417,9 @@
 									<s:NavigatorContent label="Información Ticket">
 										<view:ResultadoTransaccion id="resultadoTransaccion" width="100%" height="100%"/>		
 									</s:NavigatorContent>
-									
+									<s:NavigatorContent label="Informes">
+										<view:InformesView id="informes" width="100%" height="100%"/>		
+									</s:NavigatorContent>
 								</mx:ViewStack>	
 							</s:VGroup>	
 						</s:NavigatorContent>

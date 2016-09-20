@@ -19,6 +19,7 @@
 			[Bindable] public var label2:String;
 			[Bindable] public var selected:int;
 			[Bindable] public var arrElementos:ArrayCollection = new ArrayCollection();
+			[Bindable] public var defaultSelected:int = 0;
 			
 			protected function fnDespliegue():void
 			{
@@ -48,6 +49,9 @@
 							selected = 1;	
 						}	
 					}
+					
+					this.arrElementos[defaultSelected].selected = 1;//dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+					
 					
 					//rectCostado.height = vgContenedorTotal.height;
 				} else {
@@ -163,11 +167,18 @@
 			protected function btnDespliegue_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
+				btnDespliegue.selected = true;
 				if(btnDespliegue.selected){
-					selected = 1;
+					if(selected == 1){
+						DisplayObject(this.arrElementos[defaultSelected]).dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+					} else {
+						selected = 1;	
+					}
+					
 				} else {
 					selected = 2;
 				}
+				
 			}
 			
 			protected function fnDefineContenedor(evento:FlexEvent):void
