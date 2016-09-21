@@ -122,8 +122,10 @@
 				
 				/*evento.stopImmediatePropagation();
 				evento.stopPropagation();*/
+				
+				var index:int = arrElementos.getItemIndex(evento.target);
 				if(arrElementos.getItemIndex(evento.target) > -1){
-					var objAux:* = arrElementos.removeItemAt(arrElementos.getItemIndex(evento.target));
+					var objAux:* = arrElementos.removeItemAt(index);
 				} else {
 					objAux = arrElementos.removeItemAt(arrElementos.getItemIndex(evento.target.parentDocument));	
 				}
@@ -142,7 +144,7 @@
 				} else {
 					objAux.selected = true;	
 				}
-				arrElementos.addItem(objAux);
+				arrElementos.addItemAt(objAux, index);
 				
 				
 			}
@@ -168,16 +170,21 @@
 			{
 				// TODO Auto-generated method stub
 				btnDespliegue.selected = true;
-				if(btnDespliegue.selected){
+				this.arrElementos[defaultSelected].selected = 1;
+				DisplayObject(this.arrElementos[defaultSelected]).dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+				/*if(btnDespliegue.selected){
 					if(selected == 1){
-						DisplayObject(this.arrElementos[defaultSelected]).dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+						if(this.arrElementos[defaultSelected].selected == 0){
+							DisplayObject(this.arrElementos[defaultSelected]).dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+						}
+						
 					} else {
 						selected = 1;	
 					}
 					
 				} else {
 					selected = 2;
-				}
+				}*/
 				
 			}
 			
