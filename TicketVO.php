@@ -34,6 +34,9 @@ class TicketVO {
 	var $subcategoriaCierre;
 	var $descripcionCierre;
 	var $creadoPor;
-
+	var $diasTicket;
+	var $horasTicket;
+	var $diasTotalTicket;
+	var $horasTotalTicket;
 }
 

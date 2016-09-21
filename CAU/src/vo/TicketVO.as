@@ -43,6 +43,10 @@ package vo
 		public var creadoPor:String = '';
 		public var clienteVO:ClienteVO;
 		public var arrComentarios:ArrayCollection;
+		public var diasTicket:String;
+		public var horasTicket:String;
+		public var diasTotalTicket:String;
+		public var horasTotalTicket:String;
 		private var modelApp:ModelApp = ModelApp.getInstance();
 		
 		public function get cliente_rut():String
