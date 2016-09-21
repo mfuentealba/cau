@@ -147,8 +147,8 @@
 			private function fnNavegar(evento:MouseEvent):void{
 				switch(evento.target.label){
 					case 'Tickets':
-						vsGeneral.selectedIndex = 4;
-						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(4)}, {label: 'Creación', data: vsGeneral.getElementAt(3)}];
+						vsGeneral.selectedIndex = 5;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(5)}, {label: 'Listado', data: vsGeneral.getElementAt(3)}];
 						break;
 					case 'Usuarios':
 						vsGeneral.selectedIndex = 0;
@@ -369,7 +369,7 @@
 								</s:fill>
 							</s:Rect>
 							<s:VGroup id="vgbotones" click="fnNavegar(event)" width="100%" gap="0" creationComplete="fnArr(event)">
-								<components:ListaAcordeon id="laTicket" label="Tickets" img="assets/icons/issue.png" arrData="{[{icono: '', data: {label: 'Creación', accion: fnNavegar}}, {icono: '', data: {label: 'Listado', accion: fnNavegar}}]}"/>
+								<components:ListaAcordeon id="laTicket" label="Tickets" img="assets/icons/issue.png" arrData="{[{icono: '', data: {label: 'Creación', accion: fnNavegar}}, {icono: '', data: {label: 'Listado', accion: fnNavegar}}]}" defaultSelected="1"/>
 								<components:ListaAcordeon id="laUsuarios" label="Usuarios" img="assets/icons/usuarios.png"/>
 								<components:ListaAcordeon id="laSucursales" label="Sucursales" img="assets/icons/sucursal.png"/>
 								<components:ListaAcordeon id="laClientes" label="Clientes" img="assets/icons/clientes.png"/>
@@ -414,11 +414,14 @@
 									<s:NavigatorContent label="Información Ticket">
 										<view:DetalleTicket id="detalleTicket" ticketVO="{modelApp.ticketSeleccionado}" width="100%" height="100%"/>		
 									</s:NavigatorContent>
-									<s:NavigatorContent label="Información Ticket">
+									<s:NavigatorContent label="Resultado">
 										<view:ResultadoTransaccion id="resultadoTransaccion" width="100%" height="100%"/>		
 									</s:NavigatorContent>
 									<s:NavigatorContent label="Informes">
 										<view:InformesView id="informes" width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Volcado de datos">
+										<view:VolcadoView id="volcado" width="100%" height="100%"/>
 									</s:NavigatorContent>
 								</mx:ViewStack>	
 							</s:VGroup>	

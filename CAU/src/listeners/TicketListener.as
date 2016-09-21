@@ -75,6 +75,10 @@ package listeners
 				case TicketEvent.CERRAR_TICKET:
 					rmtObjTickets.cerrarTicket(evento.ticketVO.id, evento.objAdicional);	
 					break;
+				
+				case TicketEvent.CERRAR_TICKET:
+					rmtObjTickets.cerrarTicket(evento.ticketVO, evento.objAdicional);	
+					break;
 			}
 		}
 		
@@ -152,6 +156,14 @@ package listeners
 					}
 					break;
 				case TicketEvent.CERRAR_TICKET:
+					if(data.result.hasOwnProperty('id')){
+						evento.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					break;
+				
+				case TicketEvent.SOLICITUD_CERRAR_TICKET:
 					if(data.result.hasOwnProperty('id')){
 						evento.callback.call(null, data.result);	
 					} else {

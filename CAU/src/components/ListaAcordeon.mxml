@@ -170,8 +170,12 @@
 			{
 				// TODO Auto-generated method stub
 				btnDespliegue.selected = true;
-				this.arrElementos[defaultSelected].selected = 1;
-				DisplayObject(this.arrElementos[defaultSelected]).dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+				if(this.arrElementos.length > 0){
+					this.arrElementos[defaultSelected].selected = 1;	
+					DisplayObject(this.arrElementos[defaultSelected]).dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+				}
+				
+				
 				/*if(btnDespliegue.selected){
 					if(selected == 1){
 						if(this.arrElementos[defaultSelected].selected == 0){

@@ -1,5 +1,6 @@
 package services
 {
+	import mx.controls.Alert;
 	import mx.rpc.events.FaultEvent;
 	
 
@@ -42,7 +43,7 @@ package services
 		}
 		
 		public static function fnFault(ev:FaultEvent):void{
-			
+			Alert.show("Error en servicio de datos", 'ERROR');
 		}
 		
 	}

@@ -212,19 +212,19 @@ class TicketService {
 		$row->id = $autoid;
 		
 		
-		$cuerpoMensaje = "====================================================== <br>";
-		$cuerpoMensaje.= "     Centro Atención de Usuarios - Notificacion de Nuevo Ticket     <br>";
-		$cuerpoMensaje.= "====================================================== <br>";
-		$cuerpoMensaje.= " <br>";
-		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br>";
-		$cuerpoMensaje.= " <br> <br>";
-		$cuerpoMensaje.= " Se ha generado un nuevo ticket en nuestro Sistema de Reportes.         <br>";
-		$cuerpoMensaje.= " Nº de Ticket : ".$autoid.".<br>";
-		$cuerpoMensaje.= " Para conocer a mas detalles acerca de este ticket, y su estado actual  <br>";
-		$cuerpoMensaje.= " de progreso, agradeceremos contactarse con nuestros operadores.      <br>";
-		$cuerpoMensaje.= " <br>";
-		$cuerpoMensaje.= " Atte: <br>";
-		$cuerpoMensaje.= " <br>";
+		$cuerpoMensaje = "====================================================== <br />";
+		$cuerpoMensaje.= "     Centro Atención de Usuarios - Notificacion de Nuevo Ticket     <br />";
+		$cuerpoMensaje.= "====================================================== <br />";
+		$cuerpoMensaje.= " <br />";
+		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Se ha generado un nuevo ticket en nuestro Sistema de Reportes.         <br />";
+		$cuerpoMensaje.= " Nº de Ticket : ".$autoid.".<br />";
+		$cuerpoMensaje.= " Para conocer a mas detalles acerca de este ticket, y su estado actual  <br />";
+		$cuerpoMensaje.= " de progreso, agradeceremos contactarse con nuestros operadores.      <br />";
+		$cuerpoMensaje.= " <br />";
+		$cuerpoMensaje.= " Atte: <br />";
+		$cuerpoMensaje.= " <br />";
 		
 		
 		$this->fnCorreo('', $cuerpoMensaje);
@@ -323,21 +323,21 @@ class TicketService {
 			return $msg;
 		}
 		
-		$cuerpoMensaje = "============================================================ <br>";
-		$cuerpoMensaje.= "     Centro de Atencion Usuarios - Notificacion de Reasignacion de Ticket    <br>";
-		$cuerpoMensaje.= "============================================================ <br>";
-		$cuerpoMensaje.= " <br> <br>";
-		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br>";
-		$cuerpoMensaje.= " <br> <br>";
-		$cuerpoMensaje.= " Se ha reasignado este ticket a su agenda del Sistema de Reportes <br>";
-		$cuerpoMensaje.= " con los siguientes datos de identificacion :                   <br>";
-		$cuerpoMensaje.= " <br> ";
-		$cuerpoMensaje.= " Nº de Ticket : ".$id." <br><br>";
-		$cuerpoMensaje.= " Para conocer mas detalles del ticket antes mencionado, puede acceder<br>";
-		$cuerpoMensaje.= " a los comentarios en nuestro sistema.  <br>";
-		$cuerpoMensaje.= " <br> <br>";
-		$cuerpoMensaje.= " Atte:<br>";
-		$cuerpoMensaje.= " <br>";
+		$cuerpoMensaje = "============================================================ <br />";
+		$cuerpoMensaje.= "     Centro de Atencion Usuarios - Notificacion de Reasignacion de Ticket    <br />";
+		$cuerpoMensaje.= "============================================================ <br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Se ha reasignado este ticket a su agenda del Sistema de Reportes <br />";
+		$cuerpoMensaje.= " con los siguientes datos de identificacion :                   <br />";
+		$cuerpoMensaje.= " <br /> ";
+		$cuerpoMensaje.= " Nº de Ticket : ".$id." <br /><br />";
+		$cuerpoMensaje.= " Para conocer mas detalles del ticket antes mencionado, puede acceder<br />";
+		$cuerpoMensaje.= " a los comentarios en nuestro sistema.  <br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Atte:<br />";
+		$cuerpoMensaje.= " <br />";
 		
 		
 		$this->fnCorreo('', $cuerpoMensaje);
@@ -351,13 +351,13 @@ class TicketService {
 	
 	public function cerrarTicket($id, $comentario) {
 	
-		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET estado='cerrado' WHERE id=?");		
+		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET estado='cerrado', fecha_cierre=?, hora_cierre=? WHERE id=?");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 		
-		mysqli_stmt_bind_param($stmt, 's', $id);		
+		mysqli_stmt_bind_param($stmt, 'iss', $comentario->fecha, $comentario->hora, $id);		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -403,19 +403,19 @@ class TicketService {
 		
 		
 		
-		$cuerpoMensaje = "========================================================== <br>";
-		$cuerpoMensaje.= "     Centro Atención de Usuarios - Notificacion de Cierre de Ticket     <br>";
-		$cuerpoMensaje.= "========================================================== <br>";
-		$cuerpoMensaje.= " <br> <br>";
-		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br>";
-		$cuerpoMensaje.= " <br> <br>";
-		$cuerpoMensaje.= " Se ha cerrado en nuestro Sistema de Reportes el <br>";
-		$cuerpoMensaje.= " Nº de Ticket : ".$id.".<br><br>";
-		$cuerpoMensaje.= " Si el problema persiste, favor llamar a nuestros operadores, <br>";
-		$cuerpoMensaje.= " indicando el Nº de ticket antes mencionado.  <br>";
-		$cuerpoMensaje.= " <br> <br>";
-		$cuerpoMensaje.= " Atte:<br>";
-		$cuerpoMensaje.= " <br>";
+		$cuerpoMensaje = "========================================================== <br />";
+		$cuerpoMensaje.= "     Centro Atención de Usuarios - Notificacion de Cierre de Ticket     <br />";
+		$cuerpoMensaje.= "========================================================== <br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Se ha cerrado en nuestro Sistema de Reportes el <br />";
+		$cuerpoMensaje.= " Nº de Ticket : ".$id.".<br /><br />";
+		$cuerpoMensaje.= " Si el problema persiste, favor llamar a nuestros operadores, <br />";
+		$cuerpoMensaje.= " indicando el Nº de ticket antes mencionado.  <br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Atte:<br />";
+		$cuerpoMensaje.= " <br />";
 		
 		
 		$this->fnCorreo('', $cuerpoMensaje);
@@ -426,6 +426,86 @@ class TicketService {
 		return $row;
 	}
 
+	
+	
+	public function solicitudCerrarTicket($ticket, $comentario) {
+	
+		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET estado='Pendiente de Cierre', solucion_dada_por=?, fecha_solucion=?, hora_solucion=?, soporte=? WHERE id=?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 'sisss', $ticket->solucion_dada_por, $comentario->fecha, $comentario->hora, $ticket->soporte, $ticket->id);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$this->saveComentarios($comentario);
+		
+		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename WHERE id = " . $id);		
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$this->throwExceptionOnError();
+		
+		$row = new TicketVO();
+		
+		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_fetch($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		
+		
+		$cuerpoMensaje = "========================================================== <br />";
+		$cuerpoMensaje.= "     Centro Atención de Usuarios - Notificacion de Solicitud de Cierre de Ticket     <br />";
+		$cuerpoMensaje.= "========================================================== <br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Se ha reasignado ticket para cerrar en nuestro Sistema de Reportes el <br />";
+		$cuerpoMensaje.= " Nº de Ticket : ".$id.".<br /><br />";
+		$cuerpoMensaje.= " <br />";
+		$cuerpoMensaje.= "<br />";
+		$cuerpoMensaje.= " <br /> <br />";
+		$cuerpoMensaje.= " Atte:<br />";
+		$cuerpoMensaje.= " <br />";
+		
+		
+		$this->fnCorreo('', $cuerpoMensaje);
+		
+		
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		return $row;
+	}
+	
+	
 	
 	
 	/**
@@ -563,7 +643,7 @@ class TicketService {
 		if($msg != ''){
 			return $msg;
 		}
-		mysqli_stmt_bind_param($stmt, 'i', $itemID);
+		mysqli_stmt_bind_param($stmt, 's', $itemID);
 		mysqli_stmt_execute($stmt);
 		$this->throwExceptionOnError();
 		$msg = $this->throwExceptionOnError();
@@ -697,14 +777,308 @@ class TicketService {
 
 		    if(!$smtp->Send())
 		    {
-		        echo "<br>Error (".$mail."): ".$smtp->ErrorInfo;
+		        echo "<br />Error (".$mail."): ".$smtp->ErrorInfo;
 		    }else{
-		        echo "<br>Envio realizado a ".$name." (".$mail.")";
+		        echo "<br />Envio realizado a ".$name." (".$mail.")";
 		    }
 		}
 	
 	
 	} 
+	
+	public function fnVolcado($fechaInicio, $fechaTermino){
+		
+		$stmt = mysqli_prepare($this->connection, "select 
+											r.*
+										from reportes r 
+										inner join clasificacion cla on cla.idClasificacion = r.idClasificacion
+										inner join categoria c on c.idCategoria = r.problema
+										inner join subcategoria s on s.idSubCategoria = r.sub_problema
+										inner join descripcion d on d.idDescripcion = r.idDescripcion 
+										inner join clientes cl on cl.rut = r.cliente_rut	
+										inner join users u on u.username = r.soporte
+										inner join gruporesolutor g on g.idGrupoResolutor = u.idGrupoResolutor
+										where fecha >= '".$fechaInicio."' and fecha <= '".$fechaTermino."'
+										order by r.id desc");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		$rows = array();
+		$row = new TicketVO();
+		
+		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$arr = explode("|", calculaDias($row));
+		$row->diasTicket = $arr[0];
+		$row->horasTicket = $arr[1];
+		$row->diasTotalTicket = $arr[2];
+		$row->horasTotalTicket = $arr[3];
+		
+		//$data = $row->id;
+		
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+			$rows[] = $row;
+			$row = new TicketVO();
+
+
+			mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor);
+			$arr = explode("|", calculaDias($row));
+			$row->diasTicket = $arr[0];
+			$row->horasTicket = $arr[1];
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		
+		return $rows;
+		
+		
+	}
+	
+	
+	private function dia($fecha_recepcion)
+	{
+	  $fecha_separada = str_split($fecha_recepcion,4);
+	  $dia_mes = $fecha_separada[1];
+	  $fecha_separada = str_split($dia_mes,2);
+	  $dia = $fecha_separada[1];
+	  return $dia;
+	}
+
+	private function mes($fecha_recepcion)
+	{
+	  $fecha_separada = str_split($fecha_recepcion,4);
+	  $dia_mes = $fecha_separada[1];
+	  $fecha_separada = str_split($dia_mes,2);
+	  $mes = $fecha_separada[0];
+	  
+	  return $mes;
+	}
+
+	private function anio($fecha_recepcion)
+	{
+	  $fecha_separada = str_split($fecha_recepcion,4);
+	  $ano = $fecha_separada[0];
+	  return $ano;
+	}
+
+
+
+	private function hora($hora_recepcion)
+	{
+	 $hora_separada = str_split($hora_recepcion,2);
+	  $hora = $hora_separada[0];
+	  $minuto = $hora_separada[1];
+	  $hora_con_puntos = $hora.":".$minuto;
+	  return $hora;
+	}	
+
+	private function minutos($hora_recepcion)
+	{
+	   $hora_separada = str_split($hora_recepcion,2);
+	  $hora = $hora_separada[0];
+	  $minuto = $hora_separada[1];
+	  $hora_con_puntos = $hora.":".$minuto;
+	  return $minuto;
+	}
+
+
+	private function separa_fecha($fecha_recepcion)
+	{
+	  $fecha_separada = str_split($fecha_recepcion,4);
+	  $ano = $fecha_separada[0];
+	  $dia_mes = $fecha_separada[1];
+	  $fecha_separada = str_split($dia_mes,2);
+	  $mes = $fecha_separada[0];
+	  $dia = $fecha_separada[1];
+	  $fecha_con_guiones = $dia."-".$mes."-".$ano;
+	  return $fecha_con_guiones;
+	}
+	private function separa_hora($hora_recepcion)
+	{
+	  $hora_separada = explode(':', $hora_recepcion);
+	  $hora = $hora_separada[0];
+	  $minuto = $hora_separada[1];
+	  $hora_con_puntos = $hora.":".$minuto;
+	  return $hora_con_puntos;
+	}
+	
+	
+	
+	
+	private function calculaDias($row){
+		
+		$cantidadTotal = 0;
+		$fecha1 = "";
+		$diaIni = "";
+		$fecha2 = "";
+		$diferencia = "";
+		$diff = Array();	
+		$diffSolucion = Array();	
+		$nivel = "";
+		$diferenciaSolucion = "";
+		$fechaSolucion="";
+		$totalHoras=0;
+		$totalHorasSolucion=0;
+			
+			
+		
+		$fecha1 = mktime(0,0,0,$this->mes($row->fecha),$this->dia($row->fecha),$this->anio($row->fecha));		
+		$diaIniCalcFeriado = $this->anio($row->fecha) . '-' . $this->mes($row->fecha) . '-' . $this->dia($row->fecha);
+		$diaIni = mktime(0,0,0,$this->mes($row->fecha),$this->dia($row->fecha),$this->anio($row->fecha));		
+		
+		
+		if ($row->fecha_cierre != 0){
+			//$diaFin = mktime(hora($row->hora_cierre),minutos($row->hora_cierre),0,mes($row->fecha_cierre),dia($row->fecha_cierre),anio($row->fecha_cierre));
+			$diaFin = mktime(23,59,0,$this->mes($row->fecha_cierre),$this->dia($row->fecha_cierre),$this->anio($row->fecha_cierre));
+			
+			$fecha2 = mktime(0, 0, 0, $this->mes($row->fecha_cierre),$this->dia($row->fecha_cierre),$this->anio($row->fecha_cierre));
+			$diaFinCalcFeriado = $this->anio($row->fecha_cierre) . '-' . $this->mes($row->fecha_cierre) . '-' . $this->dia($row->fecha_cierre);
+		}else{
+			$diaFin = mktime($this->hora($hora),$this->minutos($hora),0,$this->mes($fecha),$this->dia($fecha),$this->anio($fecha));
+			$fecha2 = mktime(0, 0, 0, $this->mes($fecha), $this->dia($fecha), $this->anio($fecha));
+			$diaFinCalcFeriado = $this->anio($fecha) . '-' . $this->mes($fecha) . '-' . $this->dia($fecha);
+		}
+		$diasMenos = fn_calculaDiasNoHabiles($fecha1, $fecha2);
+		$sql = "select
+								count(*) cantidad
+							from feriados 
+				where fecha between '" . $diaIniCalcFeriado ."' and '".$diaFinCalcFeriado."'";//
+				
+		$stmt = mysqli_prepare($this->connection, $sql);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_result($stmt, $diasFeriados);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_fetch($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		
+		$horasMenos = $diasMenos * 86400;
+		$diaResult = round((($diaFin - $diaIni) / 60/ 60/ 24)  - 2 - $diasMenos - $diasFeriados, 0); // El -2 es porque el dia inicial y el final se consideran en otra parte
+		if($diaResult < 0){
+			$diaResult = 0;
+		}	
+		$inicioJornadaMinutos = 8.5 * 60;
+		$finJornadaMinutos = 21 * 60;
+		$horasTrabajadas = $diaResult * ($finJornadaMinutos - $inicioJornadaMinutos)/60;
+		if($diaFinCalcFeriado == $diaIniCalcFeriado){
+			$horaInicial = $this->hora($row->hora) * 60 + $this->minutos($row->hora);
+			$horasTrabajadasInicial = $horaInicial/60;
+			
+			if ($row->fecha_cierre != 0){
+				$horaFinal = $this->hora($row->hora_cierre) * 60 + $this->minutos($row->hora_cierre);
+			}else{
+				$horaFinal = $this->hora($hora) * 60 + $this->minutos($hora);
+			}
+			$horasTrabajadasFinal = $horaFinal/60;
+			$horasTrabajadas += ($horasTrabajadasFinal - $horasTrabajadasInicial);
+			
+		} else {
+			$horaInicial = $this->hora($row->hora) * 60 + $this->minutos($row->hora);
+			$horasTrabajadasInicial = ($finJornadaMinutos - $horaInicial) / 60;
+			
+			if ($row->fecha_cierre != 0){
+				$horaFinal = $this->hora($row->hora_cierre) * 60 + $this->minutos($row->hora_cierre);
+			}else{
+				$horaFinal = $this->hora($hora) * 60 + $this->minutos($hora);
+			}
+			$horasTrabajadasFinal = ($horaFinal - $inicioJornadaMinutos) / 60;
+			$horasTrabajadas += $horasTrabajadasInicial + $horasTrabajadasFinal;
+		}
+				
+		if ($row->fecha_cierre != 0){
+			$fecha2 = mktime($this->hora($row->hora_cierre),$this->minutos($row->hora_cierre),0,$this->mes($row->fecha_cierre),$this->dia($row->fecha_cierre),$this->anio($row->fecha_cierre));
+		}else{
+			$fecha2 = mktime($this->hora($hora),$this->minutos($hora),0,$this->mes($fecha),$this->dia($fecha),$this->anio($fecha));
+		}
+			$diferencia = $fecha2-$fecha1;
+			$diff['horas'] = $diferencia/60/60;
+			$diff['minutos'] = $diferencia / 60;
+			$diff['dias'] = $diff['horas']/24;
+			$totalHoras = number_format($diff['horas'],0 , "," ,".");
+		if ($row->fechaSolucion != ''){
+			$fechaSolucion = mktime($this->hora($row->horaSolucion),$this->minutos($row->horaSolucion),0,$this->mes($row->fechaSolucion),$this->dia($row->fechaSolucion),$this->anio($row->fechaSolucion));
+		}else{
+		
+			$fechaSolucion = mktime($this->hora($hora),$this->minutos($hora),0,$this->mes($fecha),$this->dia($fecha),$this->anio($fecha));
+		}
+		$diferenciaSolucion = $fechaSolucion-$fecha1;
+		$diffSolucion['horas'] = ($diferenciaSolucion/60/60);
+		$diffSolucion['minutos'] = $diferenciaSolucion / 60;
+		$diffSolucion['dias'] = $diffSolucion['horas']/24;
+		$totalHorasSolucion = $horasTrabajadas;// . ":" . $min;
+		
+		
+		
+		if ($totalHorasSolucion > 0){
+			$horas = round($totalHorasSolucion, 2);
+			$arr = explode(".", "" . $horas);
+			$aj = '';
+			$hor = ($totalHorasSolucion * 60);
+			$hoFin = 0;
+			while($hor - 60 > 0){
+				$hor = $hor - 60;							
+				$hoFin++;
+			}
+			$mi = $hor;
+			if($mi < 10){
+				$mi = '0' . $mi;
+			}
+			$arr[1] = '0' . $arr[1];
+			$aj = 'CON';
+			$min = $arr[1] * 60 / 100;
+			$hor = $hoFin . ':' . $mi;
+		} else { 
+				
+			$horas = number_format($diffSolucion['minutos']/60,2 , "," ,".");
+			$arr = explode(".", "" . $horas);
+			if($arr[1] < 10){
+				$arr[1] = $arr[1] * 10;
+			}
+			$min = $arr[1] * 60 / 100;
+			$hor = $arr[0] . ":" . (int)$min;
+		
+		}
+		$ds = number_format($diff['horas']/24,2 , "," ,".");
+		if ($totalHoras > 0){
+			$rs = number_format($diff['horas'],2 , "," ,".");
+		} else { 
+			$rs = number_format($diff['minutos']/60,2 , "," ,".");
+		}
+		
+		return number_format($diffSolucion['horas']/24,2 , "," ,".") . '|' . $hor . '|' . $ds . '|' . $rs;
+		
+	}
+	
+	
 	 
 	private function throwExceptionOnError($link = null) {
 		if($link == null) {

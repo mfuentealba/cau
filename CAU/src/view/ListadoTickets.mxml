@@ -109,7 +109,7 @@
 			
 			private function fnSucursal(item:TicketVO, column:GridColumn):String{
 				try{
-					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]).sucursalVO.sucursal;	
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]['obj']).sucursalVO.sucursal;	
 				} catch(e:*){
 					return '';
 				}
@@ -120,7 +120,7 @@
 			
 			private function fnUnidad(item:TicketVO, column:GridColumn):String{
 				try{
-					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]).unidad;	
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]['obj']).unidad;	
 				} catch(e:*){
 					return '';
 				}
@@ -309,6 +309,7 @@
 							<s:GridColumn labelFunction="{fnIP}" headerText="Dir IP"></s:GridColumn>
 							<s:GridColumn labelFunction="{fnFecha}" headerText="Fecha"></s:GridColumn>
 							<s:GridColumn dataField="hora" headerText="Hora"></s:GridColumn>
+							<s:GridColumn dataField="estado" headerText="Estado"></s:GridColumn>
 							<s:GridColumn dataField="soporte" headerText="Soporte"></s:GridColumn>
 						</s:ArrayList>
 					</s:columns>

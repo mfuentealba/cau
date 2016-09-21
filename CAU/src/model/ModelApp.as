@@ -63,6 +63,9 @@ package model
 		public var usuarioActivo:UserVO;
 		//public var grupoResolutorFilter:String;
 		
+		public var arrVolcado:ArrayCollection;
+		
+		
 		public var arrFormaAtencion:ArrayCollection;
 		public var arrTiempoSolucion:ArrayCollection;
 		public var objFormaAtencion:Object = {};
@@ -82,6 +85,8 @@ package model
 		public static const CATEGORIA:String = 'Categoria';
 		public static const SUBCATEGORIA:String = 'SubCategoria';
 		public static const PROBLEMA:String = 'Problema';
+		
+		
 		
 		public static function getInstance():ModelApp
 		{

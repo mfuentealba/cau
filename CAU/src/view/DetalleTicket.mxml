@@ -236,7 +236,7 @@
 				ta.percentHeight = 100;
 				BindingUtils.bindSetter(Callback.create(fnHabAsig, btn, pop.dgUsuarios, ta), ta, "text");
 				BindingUtils.bindSetter(Callback.create(fnHabAsig, btn, pop.dgUsuarios, ta), pop.dgUsuarios, "selectedItem");
-				ta.prompt = 'Ingrese solución dada';
+				ta.prompt = 'Ingrese comentario solución';
 				vg.addElement(ta);
 				btn.addEventListener(MouseEvent.CLICK, Callback.create(fnSeleccionUsuarioCierre, pop, ta));
 				pop.addElementAt(vg, 0);
@@ -245,8 +245,51 @@
 				pop.fnCallback = fnCerrarPopClentes;
 			}
 			
+			
+			protected function fnSolicitudCerrarTicket(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:CustomPanelSpark = new CustomPanelSpark();
+				PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
+				PopUpManager.centerPopUp(pop);
+				pop.layout = new VerticalLayout();
+				pop.closePopBl = true;
+				pop.title = 'Solicitud Cierre Ticket';
+				var btn:Button = new Button();
+				btn.label = 'Seleccionar';
+				
+				pop.controlBarContent = [btn];
+				var vg:VGroup = new VGroup();
+				vg.percentWidth = 100;
+				vg.height = 100;
+				vg.paddingLeft = 10;
+				vg.paddingRight = 10;
+				vg.horizontalAlign = 'center';
+				var ta:TextArea = new TextArea();
+				ta.percentWidth = 100;
+				ta.percentHeight = 100;
+				BindingUtils.bindSetter(Callback.create(fnHabBtn, btn, ta), ta, "text");
+				
+				ta.prompt = 'Ingrese solución dada';
+				vg.addElement(ta);
+				btn.addEventListener(MouseEvent.CLICK, Callback.create(fnSeleccionUsuarioSolicitudCierre, pop, ta));
+				pop.addElementAt(vg, 0);
+				pop.controlBarVisible = true;
+				//pop.searchBl = true;
+				pop.fnCallback = fnCerrarPopClentes;
+			}
+			
+			
 			private function fnHabAsig(val:*, btn:Button, dg:DataGrid, ta:TextArea):void{
 				if(ta.text == '' || !dg.selectedItem){
+					btn.enabled = false;
+				} else {
+					btn.enabled = true;
+				}
+			}
+			
+			private function fnHabBtn(val:*, btn:Button, ta:TextArea):void{
+				if(ta.text == ''){
 					btn.enabled = false;
 				} else {
 					btn.enabled = true;
@@ -266,6 +309,25 @@
 				formater.formatString = 'J:NN';
 				comentarioVO.hora = formater.format(fecha);
 				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.CERRAR_TICKET, ticketVO, fnResultadoCierre, comentarioVO);
+				Controller.getInstance().dispatchEvent(ticketEvent);
+				PopUpManager.removePopUp(pop);
+			}
+			
+			
+			
+			private function fnSeleccionUsuarioSolicitudCierre(evento:MouseEvent, pop:CustomListadoUsuarios, ta:TextArea):void{
+				str = ticketVO.soporte;
+				ticketVO.solucion_dada_por = ticketVO.soporte;
+				ticketVO.soporte = ticketVO.creadoPor;
+				var comentarioVO:ComentarioVO = new ComentarioVO();
+				comentarioVO.comentarios = 'Ha sido asignado el ticket a ' + ticketVO.creadoPor + ' para evaluar solución dada por ' + ticketVO.soporte;
+				comentarioVO.reporte = ticketVO.id;				
+				var fecha:Date = new Date();
+				formater.formatString = 'YYYYMMDD';
+				comentarioVO.fecha = int(formater.format(fecha));
+				formater.formatString = 'J:NN';
+				comentarioVO.hora = formater.format(fecha);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.SOLICITUD_CERRAR_TICKET, ticketVO, fnResultadoSolicitudCierre, comentarioVO);
 				Controller.getInstance().dispatchEvent(ticketEvent);
 				PopUpManager.removePopUp(pop);
 			}
@@ -318,6 +380,21 @@
 				}
 			}
 			
+			
+			private function fnResultadoSolicitudCierre(item:TicketVO):void{
+				if(!item){
+					ticketVO.soporte = ticketVO.solucion_dada_por;
+					
+					Alert.show('Ha ocurrido un error al grabar en la base de datos', "Error");
+				} else {
+					modelApp.tituloTrans = 'Ticket Reasignado para cierre';
+					modelApp.contenidoTrans = 'El ticket ' + ticketVO.id + ' ha sido reasignado exitosamente.';
+					CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 7;
+					CAU(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Resultado', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(5)}];
+					
+				}
+			}
+			
 			private function fnCerrarPopClentes(evento:MouseEvent):void{
 				PopUpManager.removePopUp(evento.target.parentDocument.parentDocument);
 			}
@@ -348,10 +425,16 @@
 			<s:Label text="{ticketVO.id}" fontWeight="bold" fontSize="16"/>
 			<s:Label text=" asignado a: " fontWeight="bold" fontSize="16"/>
 			<s:Label text="{ticketVO.soporte}" fontWeight="bold" fontSize="16"/>
+			<s:HGroup height="100%" visible="{ticketVO.estado == 'Cerrado' ? false : true}" includeInLayout="{ticketVO.estado == 'Cerrado' ? false : true}">
+				<mx:LinkButton label="Reasignar" fontSize="16" click="fnReasignar(event)"/>
+				<s:Label text="|"/>
+				<mx:LinkButton label="Solicitud de cierre" fontSize="16" click="fnSolicitudCerrarTicket(event)"/>
+				<s:Label text="|"/>
+				<mx:LinkButton label="Cerrar" fontSize="16" click="fnCerrarTicket(event)"/>
+				<s:Label text="|"/>
+				<mx:LinkButton label="Volver" fontSize="16" click="{CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 5;}"/>	
+			</s:HGroup>
 			
-			<mx:LinkButton label="Reasignar" fontSize="16" click="fnReasignar(event)"/>
-			<mx:LinkButton label="Cerrar" fontSize="16" click="fnCerrarTicket(event)"/>
-			<mx:LinkButton label="Volver" fontSize="16" click="{CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 5;}"/>
 		</s:BorderContainer>
 		<components:CustomPanelSpark title="Cliente" width="100%" height="{50 + formCliente.height}" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">
 			<s:Form id="formCliente" width="100%" bottom="10">

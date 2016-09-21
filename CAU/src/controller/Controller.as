@@ -104,6 +104,7 @@ package controller
 			addEventListenerNew(TicketEvent.GUARDAR_COMENTARIOS, TicketListener);
 			addEventListenerNew(TicketEvent.REASIGNAR_TICKET, TicketListener);
 			addEventListenerNew(TicketEvent.CERRAR_TICKET, TicketListener);
+			addEventListenerNew(TicketEvent.SOLICITUD_CERRAR_TICKET, TicketListener);
 		}	
 	}
 }
