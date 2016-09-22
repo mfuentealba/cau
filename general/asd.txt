@@ -1,0 +1,31 @@
+Este Sitio Web está optimizado para:
+
+•Una configuración de pantalla de 1024x768 píxeles.
+
+•Firefox 1.5 o superior.
+
+•Otros browser probados(funcional): IE 5.5 o superior, Mozilla, Opera, Kameleon, Konqueror.
+
+
+Para usuarios del SO MS Windows.
+
+Cambio de resolución de pantalla:
+
+•Debemos Abrir la ventana "Propiedades de Pantalla"
+ Tiene dos maneras de acceder a la misma:
+    * Pulsando la opción "Propiedades" del menú contextual (botón derecho del ratón sobre el escritorio).
+    * Seleccionando en el menú de "Inicio" la opción "Configuración"=>" Panel de Control" =>"Pantalla".
+
+Una vez en esta ventana, nos paramos en la pestaña "Configuracion":
+
+Área de escritorio: Determina la resolución de la pantalla (número de píxeles o puntos de que se compone la pantalla).
+Usted podrá, arrastrando el rectangulo horizontal, seleccionar la resolución deseada.
+Si su resolución es menor o igual a 800 x 600 píxeles,
+arrastre el rectangulo hacia la derecha hasta que el indicador quede sobre 1024 x 768 píxeles.
+
+Una vez seleccionada la configuración de la pantalla deseada, deberá pulsar el botón "Aceptar";
+aparecerá un cuadro de diálogo en le que tendrá dos opciones:
+"¿Reiniciar su PC con la nueva configuración?"
+"¿Aplicar la configuración sin reiniciar?"
+Basta con seleccionar la segunda opcion.
+Si todo va bien, ya podra ver correctamente este sitio Web.

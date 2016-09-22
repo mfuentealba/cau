@@ -6,7 +6,15 @@
 			xmlns:controllerbd="services.controllerbd.*">
 	<fx:Script>
 		<![CDATA[
+			import controller.Controller;
+			
+			import event.TicketEvent;
+			
+			import flash.net.navigateToURL;
+			
 			import model.ModelApp;
+			
+			import mx.controls.Alert;
 			
 			import vo.ClienteVO;
 			import vo.TicketVO;
@@ -123,6 +131,66 @@
 				
 			}
 			
+			protected function fnMostrarVolcado(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.REPORTE_VOLCADO_MOSTRAR, null, null, {fecIni: fecIni.text.split('-').join(''), fecFin: fecFin.text.split('-').join('')});
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+			protected function btnExcel_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var variables:URLVariables = new URLVariables();
+				variables.fecha = fecIni.text.split('-').join('');
+				variables.fecha_fin = fecFin.text.split('-').join('');
+				
+				
+				/*URL Request*/
+				var request:URLRequest = new URLRequest('http://localhost:8080/weborb/Services/Weborb/cau/informeTrece.php');//model.ConfigUrlCargoAbono);
+				request.method = URLRequestMethod.POST;
+				request.contentType = "text/xml";
+				request.data = variables;
+				
+				/*urlLoader*/
+				
+				navigateToURL(request);
+				/*var urlLoader:URLLoader = new URLLoader();
+				urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
+				urlLoader.addEventListener(Event.COMPLETE,loaderComplete);
+				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, loaderError);	
+				urlLoader.load(request);*/
+			}
+			
+			
+			private function loaderError(e:IOErrorEvent):void
+			{
+				Alert.show("Error en la conección "+ e.text.toString(),"loaderError");
+			}
+			
+			private function loaderComplete(evento:Event):void
+			{
+				trace(evento.target.data);
+			/*	var xmlResponse:XMLList = XML(event.currentTarget.data)..row;
+				if(xmlResponse.length() > 0)
+				{
+					var strResponse:String = xmlResponse.@XML;
+					var xmlTmp:String = XML(XML(strResponse)..SolicitudImpresion).@pdf417;
+					var numSec:String = xmlResponse.@folioBolsa;
+					var evtPdf:Pdf_GenerarEvent;
+					for each (var itmFac:FacturaVO in arrFacturas)
+					{
+						if(itmFac.FAC_SecMovFX.toString() == numSec)
+						{
+							itmFac.codBarraImg = xmlTmp;
+							evtPdf = new Pdf_GenerarEvent(xmlTmp);
+							evtPdf.dispatch();
+						}
+					}
+					
+				}*/
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -139,8 +207,8 @@
 				<mx:DateField id="fecIni" formatString="YYYY-MM-DD"/>
 				<mx:DateField id="fecFin" formatString="YYYY-MM-DD"/>
 				<s:HGroup>
-					<s:Button id="btnMostrar" label="Detalle del informe"/>
-					<s:Button id="btnExcel" label="Exportar a Excel"/>
+					<s:Button id="btnMostrar" label="Detalle del informe" click="fnMostrarVolcado(event)"/>
+					<s:Button id="btnExcel" label="Exportar a Excel" click="btnExcel_clickHandler(event)"/>
 				</s:HGroup>	
 			</s:VGroup>
 			

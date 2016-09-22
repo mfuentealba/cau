@@ -15,7 +15,7 @@
                         label="{resourceManager.getString('resources','general.data.progressBar')}" color="#6A6464" themeColor="#CC0000" x="10"
                         y="13.75"/>-->
 		<mx:ProgressBar id="progressBar" width="209" indeterminate="true" direction="right"
-						label="Esperando respuesta T24" color="#6A6464" x="10"
+						label="Esperando respuesta" color="#6A6464" x="10"
 						y="13.75"/>
     </s:BorderContainer>
 </s:Group>

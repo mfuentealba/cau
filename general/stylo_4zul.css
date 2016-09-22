@@ -1,0 +1,98 @@
+a:link {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #990000;
+	text-decoration: none;
+}
+a:hover {
+	font-size: 11px;
+	color: #FF3300;
+	text-decoration: none;
+}
+a:visited {
+	font-size: 11px;
+	color: #0000CC;
+	text-decoration: none;
+}
+a:active {
+	font-size: 11px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+.titulo {
+	font-size: 10px;
+	color: #FFFFFF;
+	font-family: Verdana;
+	font-weight: bold;
+	left: inherit;
+	background: #225486;
+}
+.columna {
+	font-size: 11px;
+	color: #000000;
+	font-family: Verdana;
+	font-weight: normal;
+	left: inherit;
+	background-color: #74A8DC;
+}
+
+.columnab {
+	font-size: 11px;
+	color: #000000;
+	font-family: Verdana;
+	font-weight: normal;
+	left: inherit;
+	background-color: #3380CB;
+}
+
+.destacado {
+	font-size: 11px;
+	font-weight: bold;
+	text-decoration: none;
+}
+.campoLogin {
+	font-size: 11px;
+	text-decoration: none;
+	height: 16px;
+	width: 120px;
+}
+.estandar {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #333333;
+}
+.icon {
+    margin: 0;
+}
+input {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	background-color: #BAD3ED;
+	color: #000000;
+}
+select {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	background-color: #FFFFFF;
+	color: #000000;
+}
+.boton {
+	border-top-color: #000000;
+	border-right-color: #000000;
+	border-bottom-color: #000000;
+	border-left-color: #000000;
+}
+table {
+	border-top-color: #000000;
+	border-right-color: #000000;
+	border-bottom-color: #000000;
+	border-left-color: #000000;
+	border: 1px solid black;
+}
+.error {
+	font-size: 11px;
+	color: #000000;
+	font-family: Verdana;
+	font-weight: normal;
+	left: inherit;
+	background-color: #BAD3ED;

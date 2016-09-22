@@ -77,7 +77,11 @@ package listeners
 					break;
 				
 				case TicketEvent.SOLICITUD_CERRAR_TICKET:
+					evento.ticketVO.arrComentarios = null;
 					rmtObjTickets.solicitudCerrarTicket(evento.ticketVO, evento.objAdicional);	
+					break;
+				case TicketEvent.REPORTE_VOLCADO_MOSTRAR:
+					rmtObjTickets.fnVolcado(evento.objAdicional['fecIni'], evento.objAdicional['fecFin']);	
 					break;
 			}
 		}
@@ -169,6 +173,10 @@ package listeners
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}
+					break;
+				case TicketEvent.REPORTE_VOLCADO_MOSTRAR:
+					modelApp.arrVolcado = new ArrayCollection(data.result as Array);
+					//modelApp.arrTickets.filterFunction = modelApp.fnTicketsFilter;
 					break;
 			}
 		}

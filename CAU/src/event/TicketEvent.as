@@ -17,6 +17,7 @@ package event
 		public static const REASIGNAR_TICKET:String = 'reasignarTicket';
 		public static const CERRAR_TICKET:String = 'cerrarTicket';
 		public static const SOLICITUD_CERRAR_TICKET:String = 'solicitudCerrarTicket';
+		public static const REPORTE_VOLCADO_MOSTRAR:String = 'fnVolcado';
 		
 		
 		

@@ -47,7 +47,7 @@ package vo
 		public var horasTicket:String;
 		public var diasTotalTicket:String;
 		public var horasTotalTicket:String;
-		private var modelApp:ModelApp = ModelApp.getInstance();
+		//private var modelApp:ModelApp = ModelApp.getInstance();
 		
 		public function get cliente_rut():String
 		{
@@ -57,7 +57,7 @@ package vo
 		public function set cliente_rut(value:String):void
 		{
 			_cliente_rut = value;
-			clienteVO = modelApp.objClientesRut[value]['obj'];
+			clienteVO = ModelApp.getInstance().objClientesRut[value]['obj'];
 		}
 
 	}

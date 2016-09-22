@@ -64,11 +64,11 @@ s|FormItem{
 }
 */
 
-
+/*
 s|FormItem{
 	skinClass:ClassReference("spark.skins.spark.StackedFormItemSkin");
 }
-
+*/
 s|Form{
 	skinClass:ClassReference("spark.skins.spark.StackedFormSkin");
 }

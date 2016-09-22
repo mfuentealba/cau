@@ -105,6 +105,7 @@ package controller
 			addEventListenerNew(TicketEvent.REASIGNAR_TICKET, TicketListener);
 			addEventListenerNew(TicketEvent.CERRAR_TICKET, TicketListener);
 			addEventListenerNew(TicketEvent.SOLICITUD_CERRAR_TICKET, TicketListener);
+			addEventListenerNew(TicketEvent.REPORTE_VOLCADO_MOSTRAR, TicketListener);
 		}	
 	}
 }
