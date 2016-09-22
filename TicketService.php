@@ -429,8 +429,8 @@ class TicketService {
 	
 	
 	public function solicitudCerrarTicket($ticket, $comentario) {
-	
-		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET estado='Pendiente de Cierre', solucion_dada_por=?, fecha_solucion=?, hora_solucion=?, soporte=? WHERE id=?");		
+		return $ticket;
+		/*$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET estado='Pendiente de Cierre', solucion_dada_por=?, fecha_solucion=?, hora_solucion=?, soporte=? WHERE id=?");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -502,7 +502,7 @@ class TicketService {
 		
 		mysqli_stmt_free_result($stmt);		
 		mysqli_close($this->connection);
-		return $row;
+		return $row;*/
 	}
 	
 	

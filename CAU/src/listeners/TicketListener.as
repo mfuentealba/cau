@@ -76,8 +76,8 @@ package listeners
 					rmtObjTickets.cerrarTicket(evento.ticketVO.id, evento.objAdicional);	
 					break;
 				
-				case TicketEvent.CERRAR_TICKET:
-					rmtObjTickets.cerrarTicket(evento.ticketVO, evento.objAdicional);	
+				case TicketEvent.SOLICITUD_CERRAR_TICKET:
+					rmtObjTickets.solicitudCerrarTicket(evento.ticketVO, evento.objAdicional);	
 					break;
 			}
 		}

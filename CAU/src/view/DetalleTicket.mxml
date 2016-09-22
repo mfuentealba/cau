@@ -255,10 +255,12 @@
 				pop.layout = new VerticalLayout();
 				pop.closePopBl = true;
 				pop.title = 'Solicitud Cierre Ticket';
+				pop.closePopBl = false;
 				var btn:Button = new Button();
-				btn.label = 'Seleccionar';
-				
-				pop.controlBarContent = [btn];
+				var btn2:Button = new Button();
+				btn.label = 'Aceptar';
+				btn2.label = 'Cancelar';
+				pop.controlBarContent = [btn, btn2];
 				var vg:VGroup = new VGroup();
 				vg.percentWidth = 100;
 				vg.height = 100;
@@ -273,6 +275,7 @@
 				ta.prompt = 'Ingrese solución dada';
 				vg.addElement(ta);
 				btn.addEventListener(MouseEvent.CLICK, Callback.create(fnSeleccionUsuarioSolicitudCierre, pop, ta));
+				btn2.addEventListener(MouseEvent.CLICK, Callback.create(fnCerrarPop, pop));
 				pop.addElementAt(vg, 0);
 				pop.controlBarVisible = true;
 				//pop.searchBl = true;
@@ -315,7 +318,7 @@
 			
 			
 			
-			private function fnSeleccionUsuarioSolicitudCierre(evento:MouseEvent, pop:CustomListadoUsuarios, ta:TextArea):void{
+			private function fnSeleccionUsuarioSolicitudCierre(evento:MouseEvent, pop:CustomPanelSpark, ta:TextArea):void{
 				str = ticketVO.soporte;
 				ticketVO.solucion_dada_por = ticketVO.soporte;
 				ticketVO.soporte = ticketVO.creadoPor;
@@ -332,7 +335,9 @@
 				PopUpManager.removePopUp(pop);
 			}
 			
-			
+			private function fnCerrarPop(evento:MouseEvent, pop:CustomPanelSpark):void{
+				PopUpManager.removePopUp(pop);
+			}
 			
 			private var str:String;
 			private function fnSeleccionUsuario(evento:MouseEvent, pop:CustomListadoUsuarios, ta:TextArea):void{
