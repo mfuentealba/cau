@@ -611,42 +611,51 @@ $reportes = mysql_query("select
 					
 					
 					echo '<td ' . $class . ' align="left">' . number_format($diffSolucion['horas']/24,2 , "," ,".") . '</td>';  
-					if ($totalHorasSolucion > 0){
-						echo '<td ' . $class . '>';
-					
-						$horas = round($totalHorasSolucion, 2);
-						$arr = explode(".", "" . $horas);
-						print_r($arr);
-						$aj = '';
-						$hor = ($totalHorasSolucion * 60);
-						$hoFin = 0;
-						while($hor - 60 > 0){
-							$hor = $hor - 60;							
-							$hoFin++;
+					if($row['estado'] == 'cerrado'){
+						if ($totalHorasSolucion > 0){
+							echo '<td ' . $class . '>';
+							//echo $totalHorasSolucion . '<br />';
+							$horas = round($totalHorasSolucion, 2);
+							$arr = explode(".", "" . $horas);
+							//print_r($arr);
+							$aj = '';
+							$hor = ($totalHorasSolucion * 60);
+							$hoFin = 0;
+							while($hor - 60 > 0){
+								$hor = $hor - 60;							
+								$hoFin++;
+							}
+							$mi = $hor;
+							if($mi < 10){
+								$mi = '0' . $mi;
+							}
+							$arr[1] = '0' . $arr[1];
+							$aj = 'CON';
+							$min = $arr[1] * 60 / 100;
+							echo $hoFin . ':' . $mi;//$arr[0] . ":" . (int)$min;
+							
+							echo '&nbsp;Horas</td>';
+						} else {
+							echo '<td ' . $class . '>';
+							//echo $totalHorasSolucion . '<br />';
+							$horas = round($totalHorasSolucion, 2);
+							//$horas = number_format($diffSolucion['minutos']/60,2 , "," ,".");
+							$arr = explode(".", "" . $horas);
+							//print_r($arr);
+							if($arr[1] < 10){
+								$arr[1] = $arr[1] * 10;
+							}
+							$min = $arr[1] * 60 / 100;
+							echo $arr[0] . ":" . (int)$min;
+							
+							echo '</td>';
 						}
-						$mi = $hor;
-						if($mi < 10){
-							$mi = '0' . $mi;
-						}
-						$arr[1] = '0' . $arr[1];
-						$aj = 'CON';
-						$min = $arr[1] * 60 / 100;
-						echo $hoFin . ':' . $mi;//$arr[0] . ":" . (int)$min;
-						
-						echo '&nbsp;Horas</td>';
 					} else {
 						echo '<td ' . $class . '>';
-						$horas = round($totalHorasSolucion, 2);
-						//$horas = number_format($diffSolucion['minutos']/60,2 , "," ,".");
-						$arr = explode(".", "" . $horas);
-						if($arr[1] < 10){
-							$arr[1] = $arr[1] * 10;
-						}
-						$min = $arr[1] * 60 / 100;
-						echo $arr[0] . ":" . (int)$min;
-						
-						echo '</td>';
+							echo "No Aplica";
+							echo '</td>';
 					}
+					
 					
 					
 					
