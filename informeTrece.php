@@ -611,17 +611,20 @@ $reportes = mysql_query("select
 					
 					
 					echo '<td ' . $class . ' align="left">' . number_format($diffSolucion['horas']/24,2 , "," ,".") . '</td>';  
-					if($row['estado'] == 'cerrado'){
+					if(strtoupper($row['estado']) == 'CERRADO'){
 						if ($totalHorasSolucion > 0){
 							echo '<td ' . $class . '>';
 							//echo $totalHorasSolucion . '<br />';
 							$horas = round($totalHorasSolucion, 2);
 							$arr = explode(".", "" . $horas);
 							//print_r($arr);
+							if(count($arr) == 1){
+								$arr[1] = 0;
+							}
 							$aj = '';
 							$hor = ($totalHorasSolucion * 60);
 							$hoFin = 0;
-							while($hor - 60 > 0){
+							while($hor - 60 >= 0){
 								$hor = $hor - 60;							
 								$hoFin++;
 							}

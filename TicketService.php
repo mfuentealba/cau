@@ -1079,7 +1079,7 @@ class TicketService {
 			$aj = '';
 			$hor = ($totalHorasSolucion * 60);
 			$hoFin = 0;
-			while($hor - 60 > 0){
+			while($hor - 60 >= 0){
 				$hor = $hor - 60;							
 				$hoFin++;
 			}

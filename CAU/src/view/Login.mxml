@@ -25,6 +25,13 @@
 			private function fnIngresaSistema():void{
 				CAU(this.parentApplication)['vsVistas'].selectedIndex = 1;
 			}
+			
+			protected function btnRegistrar_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				CAU(this.parentApplication)['vsVistas'].selectedIndex = 2;
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -54,7 +61,7 @@
 		<s:Label text="No tiene cuenta de usuario"/>	
 	</s:VGroup>
 	
-	<s:Button id="btnRegistrar" label="Registrarse" skinClass="assets.skins.ButtonCleanLVSkin" width="{txtUser.width}"/>
+	<s:Button id="btnRegistrar" label="Registrarse" skinClass="assets.skins.ButtonCleanLVSkin" width="{txtUser.width}" click="btnRegistrar_clickHandler(event)"/>
 	
 	<!--<s:Panel width="357" title="Login" horizontalCenter="0" verticalCenter="0" color="#444444">
 		<s:layout>
