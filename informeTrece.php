@@ -645,6 +645,9 @@ $reportes = mysql_query("select
 							//$horas = number_format($diffSolucion['minutos']/60,2 , "," ,".");
 							$arr = explode(".", "" . $horas);
 							//print_r($arr);
+							if(count($arr) == 1){
+								$arr[1] = 0;
+							}
 							if($arr[1] < 10){
 								$arr[1] = $arr[1] * 10;
 							}

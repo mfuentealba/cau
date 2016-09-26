@@ -16,6 +16,7 @@
 			import spark.events.GridEvent;
 			
 			import vo.ClienteVO;
+			import vo.SucursalVO;
 			
 			[Bindable] public var clienteVO:ClienteVO = new ClienteVO();
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
@@ -114,6 +115,21 @@
 				var patronEmail:RegExp = /(^[0-9a-zA-Z]+(?:[._][0-9a-zA-Z]+)*)@([0-9a-zA-Z]+(?:[._-][0-9a-zA-Z]+)*.[0-9a-zA-Z]{2,3})$/;
 			}
 			
+			
+			private function set fnSucursal(item:SucursalVO):void{
+				if(item){
+					clienteVO.sucursal = int(item.id);
+				}
+			}
+			
+			private function set fnSucursalCombo(item:SucursalVO):void{
+				if(item){
+					cmbSucursal.selectedItem = item;
+				} else {
+					cmbSucursal.selectedIndex = -1
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Binding source="idLbl.text" destination="clienteVO.id" twoWay="true"/>
@@ -121,7 +137,9 @@
 	<fx:Binding source="txtNombres.text" destination="clienteVO.nombres" twoWay="true"/>
 	<fx:Binding source="txtApellidos.text" destination="clienteVO.apellidos" twoWay="true"/>
 	<fx:Binding source="txtEmail.text" destination="clienteVO.email" twoWay="true"/>
-	<fx:Binding source="cmbSucursal.selectedItem" destination="clienteVO.sucursalVO" twoWay="true"/>
+	<!--<fx:Binding source="cmbSucursal.selectedItem" destination="clienteVO.sucursalVO"/>-->
+	<fx:Binding source="clienteVO.sucursalVO" destination="fnSucursalCombo"/>
+	<fx:Binding source="cmbSucursal.selectedItem" destination="fnSucursal"/>
 	<fx:Binding source="txtTelefono.text" destination="clienteVO.telefono" twoWay="true"/>
 	<fx:Binding source="txtAnexo.text" destination="clienteVO.anexo" twoWay="true"/>
 	<fx:Binding source="txtUnidad.text" destination="clienteVO.unidad" twoWay="true"/>

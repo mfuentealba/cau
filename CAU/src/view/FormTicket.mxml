@@ -407,7 +407,7 @@
 			<s:VerticalLayout/>
 		</s:layout>
 		<components:CustomPanelSpark title="Cliente" width="100%" height="{50 + formCliente.height}" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">
-			<s:Form id="formCliente" width="100%" bottom="10" skinClass="spark.skins.spark.StackedFormItemSkin">
+			<s:Form id="formCliente" width="100%" bottom="10" skinClass="spark.skins.spark.StackedFormSkin">
 				<s:layout>
 					<s:TileLayout requestedColumnCount="5"/>
 				</s:layout>

@@ -58,7 +58,10 @@
 			
 			
 			private function fnConfirmacion(obj:*):void{
-				
+				if(obj is UserVO){
+					CAU(this.parentApplication)['vsVistas'].selectedIndex = 0;
+					Alert.show('Se ha registrado usuario ' + UserVO(obj).username + ', comuniquese con el administrador para autorizar ingreso', 'Info');
+				}
 			}
 			
 			
@@ -179,7 +182,7 @@
 				</s:FormItem>
 				
 				<s:FormItem label="" width="100%" height="50">
-					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{usuarioVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnValidaUsuario(event)" height="50" skinClass="assets.skins.CustomButtonEnviar" width="100%"/>
+					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="Crear" click="fnValidaUsuario(event)" height="50" skinClass="assets.skins.CustomButtonEnviar" width="100%"/>
 				</s:FormItem>
 				<s:FormItem label="" width="100%" height="50">
 					<s:Button id="btnVolver" color="white" fontWeight="bold" label="Volver" click="btnVolver_clickHandler(event)" height="50" skinClass="assets.skins.CustomButtonTransparenteSkin" width="100%"/>

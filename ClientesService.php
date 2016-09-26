@@ -23,11 +23,11 @@
  
 class ClientesService {
 
-	var $username = "cau2";
+	var $username = "cau3";
 	var $password = "cau";
 	var $server = "localhost";
 	var $port = "3306";
-	var $databasename = "cau";
+	var $databasename = "cau2";
 	var $tablename = "Clientes";
 
 	var $connection;

@@ -24,11 +24,11 @@
  require_once("phpmailer.php");
 class TicketService {
 
-	var $username = "cau2";
+	var $username = "cau3";
 	var $password = "cau";
 	var $server = "localhost";
 	var $port = "3306";
-	var $databasename = "cau";
+	var $databasename = "cau2";
 	var $tablename = "Reportes";
 
 	var $connection;
@@ -1076,6 +1076,9 @@ class TicketService {
 		if ($totalHorasSolucion > 0){
 			$horas = round($totalHorasSolucion, 2);
 			$arr = explode(".", "" . $horas);
+			if(count($arr) == 1){
+				$arr[1] = 0;
+			}
 			$aj = '';
 			$hor = ($totalHorasSolucion * 60);
 			$hoFin = 0;
@@ -1095,6 +1098,9 @@ class TicketService {
 				
 			$horas = number_format($diffSolucion['minutos']/60,2 , "," ,".");
 			$arr = explode(".", "" . $horas);
+			if(count($arr) == 1){
+				$arr[1] = 0;
+			}
 			if($arr[1] < 10){
 				$arr[1] = $arr[1] * 10;
 			}
