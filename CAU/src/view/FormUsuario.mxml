@@ -102,13 +102,17 @@
 					usuarioVO.tema = auxUsuario.tema;
 					usuarioVO.tipoUsuario = auxUsuario.tipoUsuario;
 					usuarioVO.idGrupoResolutor = auxUsuario.idGrupoResolutor;
+					usuarioVO.estado = auxUsuario.estado;
 				}
 				
 			}
 			
 			private function fnActualizaGrilla(item:UserVO):void{
 				var auxUsuario:UserVO = customUsuarios.dgUsuarios.selectedItem as UserVO;
-				auxUsuario.id = item.id; 
+				
+				modelApp.arrUsuarios.setItemAt(item, modelApp.arrUsuarios.getItemIndex(customUsuarios.dgUsuarios.selectedItem));
+				
+				/*auxUsuario.id = item.id; 
 				auxUsuario.perfil = item.perfil;
 				auxUsuario.username = item.username;
 				auxUsuario.email = item.email;
@@ -117,6 +121,7 @@
 				auxUsuario.tema = item.tema;
 				auxUsuario.tipoUsuario = item.tipoUsuario;
 				auxUsuario.idGrupoResolutor = item.idGrupoResolutor;
+				auxUsuario.estado = item.estado;*/
 			}
 			
 			private function fnRemueveGrilla(id:String):void{
@@ -187,6 +192,15 @@
 				customUsuarios.dgUsuarios.addEventListener(GridEvent.GRID_CLICK, fnSelectUsuario);
 			}
 			
+			protected function btnAutorizar_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var usuarioEvent:UsuarioEvent;
+				usuarioVO.estado = usuarioVO.estado == 'Pendiente' ? 'Autorizado' : (usuarioVO.estado == 'Autorizado' ? 'Bloqueado' : 'Autorizado')
+				usuarioEvent = new UsuarioEvent(UsuarioEvent.MODIFICAR, usuarioVO, fnActualizaGrilla);
+				Controller.getInstance().dispatchEvent(usuarioEvent);
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Binding source="cmbPerfil.selectedItem.id" destination="usuarioVO.perfil" twoWay="true"/>
@@ -199,6 +213,7 @@
 	<fx:Binding source="cmbTipoUsuario.selectedItem.id" destination="usuarioVO.tipoUsuario" twoWay="true"/>
 	<fx:Binding source="usuarioVO.tipoUsuarioVO" destination="cmbTipoUsuario.selectedItem" twoWay="true"/>	
 	<fx:Binding source="usuarioVO.grupoResolutorVO" destination="cmbIdGrupoResolutor.selectedItem"/>
+	<fx:Binding source="usuarioVO.estado" destination="lblEstado.text"/>
 	<fx:Binding source="cmbIdGrupoResolutor.selectedIndex" destination="fnCambioGruporesolutor"/>
 	
 	<!--<fx:Binding source="cmbIdGrupoResolutor.selectedItem" destination="fnCambioGruporesolutor2"/>-->
@@ -230,9 +245,12 @@
 				<s:FormItem label="username" width="100%" height="30">
 					<s:TextInput id="txtUsername" height="30" width="100%"/>
 				</s:FormItem>
-				<s:FormItem label="username" width="100%" height="30">
-					<s:Label id="lblEstado"/>
-					<s:Button id="btnAutorizar" label="{usuarioVO.estado == 'Pendiente' ? 'Autorizar' : (usuarioVO.estado == 'Vigente' ? 'Bloquear' : 'Habilitar')}"/>					
+				<s:FormItem label="Estado" width="100%" height="30">
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label id="lblEstado"/>
+						<s:Button id="btnAutorizar" label="{usuarioVO.estado == 'Pendiente' ? 'Autorizar' : (usuarioVO.estado == 'Autorizado' ? 'Bloquear' : 'Habilitar')}" click="btnAutorizar_clickHandler(event)"/>	
+					</s:HGroup>
+										
 				</s:FormItem>
 				<s:FormItem label="email" width="100%" height="30">
 					<s:TextInput id="txtEmail" height="30" width="100%"/>

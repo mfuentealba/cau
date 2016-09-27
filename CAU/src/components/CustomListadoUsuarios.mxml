@@ -44,6 +44,7 @@
 					<s:GridColumn dataField="tema" headerText="Tema"></s:GridColumn>
 					<s:GridColumn dataField="tipoUsuarioVO.valor" headerText="Tipo Usuario"></s:GridColumn>
 					<s:GridColumn dataField="grupoResolutorVO.nombreGrupoResolutor" headerText="Grupo Resolutor"></s:GridColumn>
+					<s:GridColumn dataField="estado" headerText="Estado"></s:GridColumn>
 				</s:ArrayList>
 			</s:columns>
 			

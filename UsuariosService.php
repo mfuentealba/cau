@@ -67,14 +67,14 @@ class UsuariosService {
 		$rows = array();
 		$row = new UserVO();
 		
-		mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
+		mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor, $row->estado);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 			//$row->password = 
 			$rows[] = $row;
 			//$row = new stdClass();
 			$row = new UserVO();
-			mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
+			mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor, $row->estado);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -166,13 +166,13 @@ class UsuariosService {
 	 */
 	public function updateUsers($item) {
 	
-		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET perfil=?, username=?, email=?, password=?, nombre_completo=?, tema=?, tipoUsuario=?, idGrupoResolutor=? WHERE id=?");		
+		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET perfil=?, username=?, email=?, password=?, nombre_completo=?, tema=?, tipoUsuario=?, idGrupoResolutor=?, estado=? WHERE id=?");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 		
-		mysqli_stmt_bind_param($stmt, 'ssssssssi', $item->perfil, $item->username, $item->email, $item->password, $item->nombre_completo, $item->tema, $item->tipoUsuario, $item->idGrupoResolutor, $item->id);		
+		mysqli_stmt_bind_param($stmt, 'sssssssssi', $item->perfil, $item->username, $item->email, $item->password, $item->nombre_completo, $item->tema, $item->tipoUsuario, $item->idGrupoResolutor, $item->estado, $item->id);		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
