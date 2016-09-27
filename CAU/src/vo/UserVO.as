@@ -20,6 +20,7 @@ package vo
 		public var tipoUsuarioVO:Object;
 		private var _idGrupoResolutor:String;
 		public var grupoResolutorVO:GrupoResolutorVO;
+		public var estado:String;
 		
 		
 		private var modelApp:ModelApp = ModelApp.getInstance();

@@ -9,5 +9,5 @@ class UserVO{
 	var $tema;
 	var $tipoUsuario;
 	var $idGrupoResolutor;
-	
+	var $estado;
 }

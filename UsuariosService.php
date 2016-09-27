@@ -70,10 +70,11 @@ class UsuariosService {
 		mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
-	      $rows[] = $row;
-	      //$row = new stdClass();
-		  $row = new UserVO();
-	      mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
+			//$row->password = 
+			$rows[] = $row;
+			//$row = new stdClass();
+			$row = new UserVO();
+			mysqli_stmt_bind_result($stmt, $row->id, $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -135,7 +136,7 @@ class UsuariosService {
 		/*$item->sucursal = 'hola';
 		$item->direccion = 'hola';*/
 		
-		mysqli_stmt_bind_param($stmt, 'ssssssss',  $row->perfil, $row->username, $row->email, $row->password, $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
+		mysqli_stmt_bind_param($stmt, 'ssssssss',  $row->perfil, $row->username, $row->email, md5($row->password), $row->nombre_completo, $row->tema, $row->tipoUsuario, $row->idGrupoResolutor);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
