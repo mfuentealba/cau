@@ -238,6 +238,12 @@ class TicketService {
 		
 		$this->fnCorreo('', $cuerpoMensaje);
 		
+		
+		$socket=socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		socket_connect($socket , "localhost", 9003 );
+		var_dump(socket_write($socket, 'NUEVO_TICKET' . '|' + json_encode($row)));
+		
+		
 		return $row;
 		
 		
