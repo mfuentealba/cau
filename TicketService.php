@@ -241,8 +241,8 @@ class TicketService {
 		
 		$socket=socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		socket_connect($socket , "localhost", 9003 );
-		var_dump(socket_write($socket, 'NUEVO_TICKET' . '|' + json_encode($row)));
-		
+		//socket_write($socket, 'NUEVO_TICKET' . '|kkkkkkk|');// + json_encode($row));
+		socket_write($socket, 'NUEVO_TICKET' . '|' . json_encode($row) . '|');
 		
 		return $row;
 		

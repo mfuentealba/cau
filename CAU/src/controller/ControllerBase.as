@@ -32,10 +32,15 @@ package controller
 			/*var gen:ClassFactory = new ClassFactory();
 			gen.generator = objAsoc[evento.type];
 			var listener:IBaseListener = gen.newInstance();*/
-			addEventListener(evento.type, objAsoc[evento.type].exec);
-			var res:Boolean = super.dispatchEvent(evento);
-			evento = null;
-			return res;
+			try{
+				addEventListener(evento.type, objAsoc[evento.type].exec);
+				var res:Boolean = super.dispatchEvent(evento);
+				evento = null;
+				return res;	
+			} catch(e:*){
+				super.dispatchEvent(evento);
+			}
+			return false;
 		}
 		
 		

@@ -113,7 +113,7 @@
 				Controller.getInstance().dispatchEvent(mantenedorEvent);
 				
 				
-				
+				config.send();
 				
 				/*
 				var mantenedor2Event:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
@@ -313,6 +313,16 @@
 				}
 			}
 			
+			
+			protected function config_resultHandler(evento:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.conexion.server = evento.result.config.server.ip;
+				modelApp.conexion.port = evento.result.config.server.port;
+				modelApp.conexion.ini();				
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Style source="./assets/css/style.css"/>
@@ -321,6 +331,7 @@
 									 updateURL="http://172.16.240.79:8080/cauUpdate/assets/config/configUpdate.xml"
 									 initialized="updater_initializedHandler(event)"
 									 error="updater_errorHandler(event)" updateError="updater_updateErrorHandler(event)"/>
+		<s:HTTPService id="config" url="config.xml" result="config_resultHandler(event)"/>
 		
 	</fx:Declarations>
 	<fx:Binding source="modelApp.cntrBl" destination="fnBloqueo"/>

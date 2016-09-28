@@ -8,6 +8,8 @@
 			
 			import event.UsuarioEvent;
 			
+			import model.ModelApp;
+			
 			import vo.UserVO;
 			protected function fnIngresar(event:MouseEvent):void
 			{
@@ -23,6 +25,8 @@
 			
 			private function fnIngresaSistema():void{
 				CAU(this.parentApplication)['vsVistas'].selectedIndex = 1;
+				var usuarioEvent:UsuarioEvent = new UsuarioEvent(UsuarioEvent.CONN, ModelApp.getInstance().usuarioActivo);
+				Controller.getInstance().dispatchEvent(usuarioEvent);
 			}
 			
 			protected function btnRegistrar_clickHandler(event:MouseEvent):void

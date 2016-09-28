@@ -1,11 +1,14 @@
 package controller
 {
+	import com.adobe.serialization.json.JSON;
+	
 	import event.ClienteEvent;
 	import event.MantenedoresEvent;
 	import event.SucursalEvent;
 	import event.TicketEvent;
 	import event.UsuarioEvent;
 	
+	import flash.events.DataEvent;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	
@@ -17,10 +20,17 @@ package controller
 	
 	import model.ModelApp;
 	
+	import mx.controls.Alert;
+	
+	import services.DelegadoNode;
+	
+	import vo.TicketVO;
+	
 	public class Controller extends ControllerBase
 	{
 		public static var controladorGeneral:Controller;
 		[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+		[Bindable] private var dlNode:DelegadoNode = DelegadoNode.getInstance();
 		
 		/*private var sucursalListener:SucursalListener = new SucursalListener();
 		private var clienteListener:ClienteListener = new ClienteListener();
@@ -106,6 +116,57 @@ package controller
 			addEventListenerNew(TicketEvent.CERRAR_TICKET, TicketListener);
 			addEventListenerNew(TicketEvent.SOLICITUD_CERRAR_TICKET, TicketListener);
 			addEventListenerNew(TicketEvent.REPORTE_VOLCADO_MOSTRAR, TicketListener);
+			
+			
+			dlNode.callbackRecep = callbackRecep;
+			addEventListener(UsuarioEvent.CONN, despachar);
 		}	
+		
+		private function despachar(evento:*):void{
+			switch(evento.clase){
+				case 'UsuarioEvent':
+					//var sesionEvent:SesionEvent = event as SesionEvent;
+					switch(evento.type){
+						case UsuarioEvent.CONN:
+							DelegadoNode.getInstance().fnIdentificarUsuario(sesionResponse);
+							break;
+						//DelegadoSQLite.getInstance().fnDelegado(fn del controller que actualiza vista, fn callback del evento para alguna otra actualizacion mas visual)
+					}
+					break;
+				
+			}
+		}	
+		
+		
+		/***************NODEJS**************************************/
+		
+		private function callbackRecep(result:DataEvent):void{
+			var arrParam:Array = String(result.data).split('|');
+			switch(arrParam[1]){			
+				case 'MSG':
+					if(arrParam[2] == 'OK'){
+						
+						Alert.show(arrParam[3], 'INFO');
+					}
+					
+					break;
+				case 'NUEVO_TICKET':
+					var ticketVO:TicketVO = TicketVO(com.adobe.serialization.json.JSON.decode(arrParam[3]));
+					modelApp.arrTickets.addItem(ticketVO);
+					break;
+				
+			}
+		}
+		
+		
+		private function sesionResponse(aEvent : DataEvent):void{
+			var arrSesion:Array = String(aEvent.data).split('|');
+			/*modelApp.sesion = new SesionVO();
+			modelApp.sesion.id = arrSesion[0];
+			modelApp.sesion.user = arrSesion[1];*/
+			
+			
+		}
+		
 	}
 }

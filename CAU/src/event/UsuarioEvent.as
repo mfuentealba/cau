@@ -11,6 +11,7 @@ package event
 		public static const MODIFICAR:String = 'updateUsers';
 		public static const ELIMINAR:String = 'deleteUsers';
 		public static const LOGIN:String = 'login';
+		public static const CONN:String = 'conexion';
 		
 		
 		 
@@ -19,7 +20,7 @@ package event
 		public function UsuarioEvent(type:String, _userVO:UserVO = null, _callback:Function = null)
 		{
 			super(type, bubbles, cancelable);
-			clase = "ClientesEvent";
+			clase = "UsuarioEvent";
 			userVO = _userVO;
 			callback = _callback;
 		}

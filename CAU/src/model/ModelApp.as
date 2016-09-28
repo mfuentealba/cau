@@ -5,6 +5,8 @@ package model
 	import mx.collections.ArrayCollection;
 	import mx.rpc.remoting.RemoteObject;
 	
+	import services.ConexionSocket;
+	
 	import vo.TicketVO;
 	import vo.UserVO;
 
@@ -16,7 +18,7 @@ package model
 		public var rmtObjClientes:RemoteObject;
 		public var rmtObjUsuarios:RemoteObject;*/
 		//public var rmtObjMant:RemoteObject;
-		
+		public var conexion:ConexionSocket = new ConexionSocket();
 		public var arrSucursales:ArrayCollection;
 		public var objSucursales:Object = {};
 		public var arrSucursalesTodas:ArrayCollection;
