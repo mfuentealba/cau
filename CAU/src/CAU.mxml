@@ -331,6 +331,7 @@
 			private function fnClick(evento:* = null):void{
 				btnOpciones.selected = false;
 				PopUpManager.removePopUp(bcElementos);
+				//vgList.removeElement(bcElementos);
 				bcElementos = null;
 			}
 			
@@ -348,14 +349,20 @@
 					bcElementos.addEventListener(MouseEvent.CLICK, fnClick);
 					PopUpManager.addPopUp(bcElementos, evento.target as DisplayObject);
 					PopUpManager.centerPopUp(bcElementos);
+					//vgList.addElement(bcElementos);
 					bcElementos.dataProvider = modelApp.arrNotificaciones;
 					bcElementos.width = 100;
 					
-					bcElementos.y = evento.target.height;	
+					bcElementos.y = 100;
+					//bcElementos.top = evento.target.height;
 					bcElementos.x -= bcElementos.width - evento.target.width;
+					//bcElementos.includeInLayout = false;
+					/*bcElementos.horizontalCenter = 0;	
+					bcElementos.verticalCenter = evento.target.height;*/
 					//bcElementos.x = event.target.x + event.target.parent.x;
 				} else {
 					PopUpManager.removePopUp(bcElementos);
+					//vgList.removeElement(bcElementos);
 					/*if(hostComponent.fnCallback != null){
 						hostComponent.fnCallback.call(this, evento);	
 					}*/
@@ -441,7 +448,10 @@
 							<s:VGroup width="100%" height="100%">
 								<s:Group width="100%" height="50">
 									<s:HGroup height="100%" verticalAlign="middle" verticalCenter="0" right="10">
-										<s:ToggleButton id="btnOpciones" label="{modelApp.arrNotificaciones.length == 0 ? '' : modelApp.arrNotificaciones.length + ''}" skinClass="assets.skins.CustomToggleButtonAlertSkin"/>
+										<s:VGroup horizontalAlign="right" id="vgList" height="30">
+											<s:ToggleButton id="btnOpciones" label="{modelApp.strNot}" skinClass="assets.skins.CustomToggleButtonAlertSkin" click="btnOpciones_clickHandler(event)"/>	
+										</s:VGroup>
+										
 										<s:Button skinClass="assets.skins.CustomButtonLogout" click="fnLogout(event)"/>		
 									</s:HGroup>
 									

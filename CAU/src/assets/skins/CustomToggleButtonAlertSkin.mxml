@@ -35,6 +35,11 @@
         [HostComponent("spark.components.ToggleButton")]
     ]]>
     </fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import model.ModelApp;
+		]]>
+	</fx:Script>
     
     <!-- states -->
     <s:states>
@@ -183,7 +188,7 @@
              textAlign="center"
              verticalAlign="middle"
              maxDisplayedLines="1"
-			 visible="{labelDisplay.text == '' ? false : true}"
+			 visible="{ModelApp.getInstance().strNot == '' ? false : true}"
 			 color="#dddddd"
 			 backgroundColor="#1ab394"
 			 top="0"

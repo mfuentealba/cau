@@ -40,7 +40,9 @@ package model
 		public var arrSubCategoria:ArrayCollection;
 		public var arrDescripcion:ArrayCollection;
 		
-		public var arrNotificaciones:ArrayCollection = new ArrayCollection();
+		public var arrNotificaciones:ArrayCollection = new ArrayCollection([{label: 'Se ha asignado el ticket N° ', img: '', creacion: ' '}]);
+		
+		public var strNot:String = '1';
 		
 		public var arrCriticidad:ArrayCollection = new ArrayCollection([{label: 'Baja', id: '1'}, {label: 'Media', id: '2'}, {label: 'Baja', id: '3'}]);
 		public var arrEstados:ArrayCollection = new ArrayCollection([{label: 'Todos', id: '0'}, {label: 'Asignado', id: '1'}, {label: 'Cerrado', id: '2'}]);

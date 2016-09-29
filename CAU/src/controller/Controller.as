@@ -156,6 +156,7 @@ package controller
 					if(ticketVO.soporte == modelApp.usuarioActivo.username){
 						var obj:Object = {label: 'Se ha asignado el ticket N° ' + ticketVO.id, img: '', creacion: ticketVO.fecha + ' ' + ticketVO.hora};
 						modelApp.arrNotificaciones.addItem(obj);
+						modelApp.strNot = modelApp.arrNotificaciones.length == 0 ? '' : modelApp.arrNotificaciones.length + '';
 					}
 					break;
 				
