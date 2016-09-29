@@ -36,8 +36,10 @@ in accordance with the terms of the license agreement accompanying it.
 		<![CDATA[
 			import components.RenderList;
 			
-			import mx.controls.List;
+			import spark.components.List;
 			import mx.managers.PopUpManager;
+			
+			import spark.components.List;
 			private var bcElementos:List = new List();
 			
 			private function fnClick(evento:* = null):void{
@@ -68,7 +70,10 @@ in accordance with the terms of the license agreement accompanying it.
 					//bcElementos.x = event.target.x + event.target.parent.x;
 				} else {
 					PopUpManager.removePopUp(bcElementos);
-					hostComponent.fnCallback.call(this, evento);
+					if(hostComponent.fnCallback != null){
+						hostComponent.fnCallback.call(this, evento);	
+					}
+					
 					bcElementos = null;
 				}
 			}

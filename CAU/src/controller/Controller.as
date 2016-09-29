@@ -151,8 +151,12 @@ package controller
 					
 					break;
 				case 'NUEVO_TICKET':
-					var ticketVO:TicketVO = TicketVO(com.adobe.serialization.json.JSON.decode(arrParam[3]));
+					var ticketVO:TicketVO = new TicketVO(com.adobe.serialization.json.JSON.decode(arrParam[2]));
 					modelApp.arrTickets.addItem(ticketVO);
+					if(ticketVO.soporte == modelApp.usuarioActivo.username){
+						var obj:Object = {label: 'Se ha asignado el ticket N° ' + ticketVO.id, img: '', creacion: ticketVO.fecha + ' ' + ticketVO.hora};
+						modelApp.arrNotificaciones.addItem(obj);
+					}
 					break;
 				
 			}

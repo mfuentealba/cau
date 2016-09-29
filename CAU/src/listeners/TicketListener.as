@@ -95,9 +95,9 @@ package listeners
 					break;
 				case TicketEvent.CREAR:
 					
-					if(data.result.hasOwnProperty('id')){
-						modelApp.arrTickets.addItemAt(data.result, 0);
-						evento.callback.call(null, data.result);	
+					if(data.result.hasOwnProperty('id')){						
+						/*modelApp.arrTickets.addItemAt(data.result, 0);
+						evento.callback.call(null, data.result);*/	
 					} else {
 						Alert.show(data.result + "", 'Atencion');	
 					}

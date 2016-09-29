@@ -3,6 +3,7 @@ package vo
 	import model.ModelApp;
 	
 	import mx.collections.ArrayCollection;
+	import mx.formatters.DateFormatter;
 
 	[RemoteClass(alias="Weborb.cau.TicketVO")]
 	[Bindable] 
@@ -48,6 +49,17 @@ package vo
 		public var diasTotalTicket:String;
 		public var horasTotalTicket:String;
 		//private var modelApp:ModelApp = ModelApp.getInstance();
+		
+		
+		public function TicketVO(obj:Object = null){
+			if(obj){
+				for(var str:String in obj){
+					this[str] = obj[str];
+				}
+			}
+		}
+		
+		
 		
 		public function get cliente_rut():String
 		{

@@ -42,7 +42,7 @@ function newSocket(socket) {
 	socket.on('data', function(data) {
 		receiveData(socket, data);
 	})
-/*	socket.on('end', function() {
+	socket.on('end', function() {
 		closeSocket(socket);
 	})
 	socket.on("close", function(){
@@ -50,7 +50,7 @@ function newSocket(socket) {
 	});
 	socket.on('error', function(err) {
 		console.log('[ERROR DE SOCKET]');
-	})*/
+	})
 	
 	socket.on('disconnect', function(err) {
 		console.log('[ERROR DE SOCKET FINAL....DESCONEXION]');
@@ -64,6 +64,26 @@ function newSocket(socket) {
 	
 	//arrSocket['U' + (++usuario)] = socket;
 
+}
+
+
+function closeSocket(socket) {
+	console.log('***************************************');
+	console.log('ingresando en closeSocket');//53820010
+		
+	
+	
+}
+
+function onClose(socket)
+{
+	console.log("ingresando en onClose");
+	
+}
+
+function onError()
+{
+    console.log("SE DESCONECTO");
 }
 
 
