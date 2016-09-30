@@ -48,7 +48,8 @@ package vo
 		public var horasTicket:String;
 		public var diasTotalTicket:String;
 		public var horasTotalTicket:String;
-		private var _notificacion:String;
+		//private var _notificacion:String;
+		public var notificacion:String;
 		//private var modelApp:ModelApp = ModelApp.getInstance();
 		
 		
@@ -62,7 +63,7 @@ package vo
 		
 		
 		
-		public function get notificacion():String
+		/*public function get notificacion():String
 		{
 			return _notificacion;
 		}
@@ -77,7 +78,7 @@ package vo
 				modelApp.dictNotificaciones[this] = {pos: modelApp.arrNotificaciones.source.length - 1, obj: obj};
 				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
 			}
-		}
+		}*/
 
 		public function get cliente_rut():String
 		{

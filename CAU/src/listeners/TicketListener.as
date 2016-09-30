@@ -134,6 +134,7 @@ package listeners
 					break;
 				case TicketEvent.LISTAR_PAGINA:
 					modelApp.arrTickets.removeAll();
+					
 					modelApp.arrTickets = new ArrayCollection(data.result as Array);
 					modelApp.arrTickets.filterFunction = modelApp.fnTicketsFilter;
 					break;

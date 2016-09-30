@@ -196,11 +196,15 @@ is defined by the ComboBoxTextInputSkin class.
 			protected function textInput_keyUpHandler(event:KeyboardEvent):void
 			{
 				// TODO Auto-generated method stub
-				if(hostComponent.dataProvider.length == 0){
+				if(hostComponent.dataProvider.length == 0 || event.charCode == 8){
 					trace('test');
 					ArrayCollection(hostComponent.dataProvider).filterFunction = null;
 					ArrayCollection(hostComponent.dataProvider).refresh();
+					if(event.charCode == 8){
+						textInput.text = '';
+					}
 				}
+				
 				
 			}
 			

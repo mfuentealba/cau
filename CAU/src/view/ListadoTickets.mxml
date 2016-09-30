@@ -207,13 +207,13 @@
 			private function fnNotificacion(item:TicketVO):void{
 				var auxTicket:TicketVO = dgTickets.selectedItem as TicketVO;
 				
-				var o:* = modelApp.arrNotificaciones.removeItemAt(modelApp.arrNotificaciones.getItemIndex(modelApp.dictNotificaciones[auxTicket]['obj']));
+				/*var o:* = modelApp.arrNotificaciones.removeItemAt(modelApp.arrNotificaciones.getItemIndex(modelApp.dictNotificaciones[auxTicket]['obj']));
 				if(!o){
 					delete modelApp.arrNotificaciones.source[modelApp.dictNotificaciones[auxTicket]['pos']];
 				}
 				
 				
-				delete modelApp.dictNotificaciones[dgTickets.selectedItem];				
+				delete modelApp.dictNotificaciones[dgTickets.selectedItem];*/				
 				modelApp.arrTickets.setItemAt(item, modelApp.arrTickets.getItemIndex(dgTickets.selectedItem));
 				
 				

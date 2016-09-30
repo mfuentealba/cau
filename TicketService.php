@@ -894,6 +894,7 @@ class TicketService {
 		
 		
 	    while (mysqli_stmt_fetch($stmt)) {
+			$row->notificacion = 'S';
 			$rows[] = $row;
 			$arr = explode("|", $this->calculaDias($row));
 			$row->diasTicket = $arr[0];
