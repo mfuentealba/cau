@@ -83,6 +83,10 @@ package listeners
 				case TicketEvent.REPORTE_VOLCADO_MOSTRAR:
 					rmtObjTickets.fnVolcado(evento.objAdicional['fecIni'], evento.objAdicional['fecFin']);	
 					break;
+				case TicketEvent.LEER_TICKET:
+					rmtObjTickets.leerTicket(evento.ticketVO.id);	
+					break;
+				
 			}
 		}
 		
@@ -177,6 +181,13 @@ package listeners
 				case TicketEvent.REPORTE_VOLCADO_MOSTRAR:
 					modelApp.arrVolcado = new ArrayCollection(data.result as Array);
 					//modelApp.arrTickets.filterFunction = modelApp.fnTicketsFilter;
+					break;
+				case TicketEvent.LEER_TICKET:
+					if(data.result.hasOwnProperty('id')){
+						evento.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
 					break;
 			}
 		}

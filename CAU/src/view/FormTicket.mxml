@@ -310,6 +310,9 @@
 			}
 			
 			
+			
+			
+			
 			private function fnBuscaCl(item:ClienteVO, index:int, arr:Array):Boolean{
 				if(txtRut.text == item.rut){
 					return true;

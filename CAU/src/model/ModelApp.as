@@ -2,6 +2,8 @@ package model
 {
 	import components.TrdProgressBar;
 	
+	import flash.utils.Dictionary;
+	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.remoting.RemoteObject;
 	
@@ -41,6 +43,7 @@ package model
 		public var arrDescripcion:ArrayCollection;
 		
 		public var arrNotificaciones:ArrayCollection = new ArrayCollection([{label: 'Se ha asignado el ticket N° ', img: '', creacion: ' '}]);
+		public var dictNotificaciones:Dictionary = new Dictionary();
 		
 		public var strNot:String = '1';
 		

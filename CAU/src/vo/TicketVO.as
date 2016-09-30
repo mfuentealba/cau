@@ -48,6 +48,7 @@ package vo
 		public var horasTicket:String;
 		public var diasTotalTicket:String;
 		public var horasTotalTicket:String;
+		private var _notificacion:String;
 		//private var modelApp:ModelApp = ModelApp.getInstance();
 		
 		
@@ -61,6 +62,23 @@ package vo
 		
 		
 		
+		public function get notificacion():String
+		{
+			return _notificacion;
+		}
+
+		public function set notificacion(value:String):void
+		{
+			var modelApp:ModelApp = ModelApp.getInstance();
+			_notificacion = value;
+			if(value == 'N' && this.soporte == modelApp.usuarioActivo.username){
+				var obj:Object = {label: 'Se ha asignado el ticket N° ' + this.id, img: '', creacion: this.fecha + ' ' + this.hora};
+				modelApp.arrNotificaciones.addItem(obj);
+				modelApp.dictNotificaciones[this] = {pos: modelApp.arrNotificaciones.source.length - 1, obj: obj};
+				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+			}
+		}
+
 		public function get cliente_rut():String
 		{
 			return _cliente_rut;

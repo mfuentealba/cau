@@ -116,6 +116,7 @@ package controller
 			addEventListenerNew(TicketEvent.CERRAR_TICKET, TicketListener);
 			addEventListenerNew(TicketEvent.SOLICITUD_CERRAR_TICKET, TicketListener);
 			addEventListenerNew(TicketEvent.REPORTE_VOLCADO_MOSTRAR, TicketListener);
+			addEventListenerNew(TicketEvent.LEER_TICKET, TicketListener);
 			
 			
 			dlNode.callbackRecep = callbackRecep;
@@ -156,7 +157,8 @@ package controller
 					if(ticketVO.soporte == modelApp.usuarioActivo.username){
 						var obj:Object = {label: 'Se ha asignado el ticket N° ' + ticketVO.id, img: '', creacion: ticketVO.fecha + ' ' + ticketVO.hora};
 						modelApp.arrNotificaciones.addItem(obj);
-						modelApp.strNot = modelApp.arrNotificaciones.length == 0 ? '' : modelApp.arrNotificaciones.length + '';
+						modelApp.dictNotificaciones[ticketVO] = {pos: modelApp.arrNotificaciones.source.length - 1, obj: obj};
+						modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
 					}
 					break;
 				

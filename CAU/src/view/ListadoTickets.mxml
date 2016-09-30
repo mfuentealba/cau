@@ -37,41 +37,6 @@
 			
 			
 			
-			
-						
-			protected function fnSelectUsuario(evento:GridEvent):void
-			{
-				// TODO Auto-generated method stub
-				//sucursales = dgClientees.selectedItem as UserVO;
-				
-				if(evento.rowIndex > -1){
-					var auxUsuario:UserVO = dgTickets.selectedItem as UserVO;
-					usuarioVO.id = auxUsuario.id; 
-					usuarioVO.perfil = auxUsuario.perfil;
-					usuarioVO.username = auxUsuario.username;
-					usuarioVO.email = auxUsuario.email;
-					usuarioVO.password = auxUsuario.password;
-					usuarioVO.nombre_completo = auxUsuario.nombre_completo;
-					usuarioVO.tema = auxUsuario.tema;
-					usuarioVO.tipoUsuario = auxUsuario.tipoUsuario;
-					usuarioVO.idGrupoResolutor = auxUsuario.idGrupoResolutor;
-				}
-				
-			}
-			
-			private function fnActualizaGrilla(item:UserVO):void{
-				var auxUsuario:UserVO = dgTickets.selectedItem as UserVO;
-				auxUsuario.id = item.id; 
-				auxUsuario.perfil = item.perfil;
-				auxUsuario.username = item.username;
-				auxUsuario.email = item.email;
-				auxUsuario.password = item.password;
-				auxUsuario.nombre_completo = item.nombre_completo;
-				auxUsuario.tema = item.tema;
-				auxUsuario.tipoUsuario = item.tipoUsuario;
-				auxUsuario.idGrupoResolutor = item.idGrupoResolutor;
-			}
-			
 			protected function fnFiltrarCliente(event:*):void
 			{
 				// TODO Auto-generated method stub
@@ -219,8 +184,6 @@
 			{
 				// TODO Auto-generated method stub
 				if(evento.rowIndex > -1){
-					CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 6;
-					CAU(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Creación', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(3)}];
 					modelApp.ticketSeleccionado = dgTickets.selectedItem as TicketVO;
 					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
 					Controller.getInstance().dispatchEvent(ticketEvent);
@@ -230,7 +193,36 @@
 			
 			private function fnComentarios(arr:Array):void{
 				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
+				if(dgTickets.selectedItem.notificacion == 'N'){
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, TicketVO(dgTickets.selectedItem), fnNotificacion);				
+					Controller.getInstance().dispatchEvent(ticketEvent);		
+					
+				} else {
+					CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 6;
+					CAU(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Creación', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(3)}];
+					
+				}
 			}
+			
+			private function fnNotificacion(item:TicketVO):void{
+				var auxTicket:TicketVO = dgTickets.selectedItem as TicketVO;
+				
+				var o:* = modelApp.arrNotificaciones.removeItemAt(modelApp.arrNotificaciones.getItemIndex(modelApp.dictNotificaciones[auxTicket]['obj']));
+				if(!o){
+					delete modelApp.arrNotificaciones.source[modelApp.dictNotificaciones[auxTicket]['pos']];
+				}
+				
+				
+				delete modelApp.dictNotificaciones[dgTickets.selectedItem];				
+				modelApp.arrTickets.setItemAt(item, modelApp.arrTickets.getItemIndex(dgTickets.selectedItem));
+				
+				
+				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+				CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 6;
+				CAU(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Creación', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(3)}];
+				
+			}
+			
 			
 			protected function fnTraeData(event:*):void
 			{

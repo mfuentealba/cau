@@ -39,5 +39,6 @@ class TicketVO {
 	var $diasTotalTicket;
 	var $horasTotalTicket;
 	var $arrComentarios = array();
+	var $notificacion;
 }
 
