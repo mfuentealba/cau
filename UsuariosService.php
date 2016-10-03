@@ -20,6 +20,7 @@
  */
  
  require_once("UserVO.php");
+ require_once("NotificacionVO.php"); 
  
 class UsuariosService {
 
@@ -96,6 +97,52 @@ class UsuariosService {
 	 * 
 	 * @return stdClass
 	 */
+	 
+	public function getAllNotificaciones($soporte) {
+		
+		$stmt = mysqli_prepare($this->connection, "SELECT id, fecha, hora FROM reportes WHERE soporte=? AND estado <> 'Cerrado' AND notificacion = 'N'  order by fecha desc, hora desc");		
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		mysqli_stmt_bind_param($stmt, 's', $soporte);
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$rows = array();
+		$row = new stdclass();
+		
+		mysqli_stmt_bind_result($stmt, $row->id, $row->fecha, $row->hora);
+		
+		//$data = $row->id;
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+		  $not = new NotificacionVO();
+		  $not->id = 'TicketVO|' . $row->id;
+		  $not->tipo = 'TicketVO';
+		  $not->mensaje = 'Se ha asignado el ticket N° ' . $not->id;
+		  $not->fecha = $row->fecha . ' ' . $row->hora;
+	      $rows[] = $not;
+		  $row = new stdclass();
+	      mysqli_stmt_bind_result($stmt, $row->id, $row->fecha, $row->hora);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+	    mysqli_close($this->connection);
+		
+		return $rows;
+	}	 
+	
+	
 	public function getUsersByID($itemID) {
 		
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename where id=?");

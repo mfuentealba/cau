@@ -17,6 +17,7 @@ package listeners
 	
 	import services.ServiceRO;
 	
+	import vo.NotificacionVO;
 	import vo.UserVO;
 	
 	public class UsuarioListener //implements IBaseListener
@@ -52,6 +53,11 @@ package listeners
 					rmtObjUsuarios.login(UsuarioEvent(param['evento']).userVO.username, UsuarioEvent(param['evento']).userVO.password);
 					
 					break;
+				
+				case UsuarioEvent.BUSCAR_NOTIFICACIONES:
+					rmtObjUsuarios.getAllNotificaciones(UsuarioEvent(param['evento']).userVO.username);	
+					break;
+				
 				
 			}
 		}
@@ -98,7 +104,17 @@ package listeners
 					}
 					
 					break;
+				
+				case UsuarioEvent.BUSCAR_NOTIFICACIONES:
+					modelApp.arrNotificaciones = new ArrayCollection(data.result as Array);
+					modelApp.arrNotificaciones.source.forEach(fnNot);
+					modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+					break;
 			}
+		}
+		
+		public static function fnNot(item:NotificacionVO, index:int, arr:Array):void{
+			modelApp.objNotificaciones[item.id] = item;
 		}
 		
 		public static function fault(info:Object):void

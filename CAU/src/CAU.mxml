@@ -37,6 +37,7 @@
 			
 			import vo.ClienteVO;
 			import vo.GrupoResolutorVO;
+			import vo.NotificacionVO;
 			import vo.SucursalVO;
 			import vo.TicketVO;
 			import vo.UserVO;
@@ -50,6 +51,11 @@
 				
 			}
 			
+			
+			private function fn(item:Object):Boolean{
+				return item.valor == "Nivel 2" ? false : true;
+			}
+			
 			protected function iniciaRO(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
@@ -58,8 +64,22 @@
 				var obj2:Object = {id: 2, valor: "Nivel 2"};
 				var obj3:Object = {id: 3, valor: "Nivel 3"};
 				
+				var arr:Array = [obj1, obj2, obj3];
+				modelApp.arrTipoUsuario = new ArrayCollection(arr);
 				
-				modelApp.arrTipoUsuario = new ArrayCollection([obj1, obj2, obj3]);
+				/*modelApp.arrTipoUsuario.filterFunction = fn;
+				modelApp.arrTipoUsuario.refresh();
+				var i:int = modelApp.arrTipoUsuario.getItemIndex(obj2);
+				if(i > -1){
+					modelApp.arrTipoUsuario.removeItemAt(i);	
+				} else {
+					i = modelApp.arrTipoUsuario.list.getItemIndex(obj2);
+					if(i > -1){
+						modelApp.arrTipoUsuario.list.removeItemAt(i);
+					}
+				}
+				*/
+				
 				
 				modelApp.objTipoUsuario = {'1': obj1, '2': obj2, '3': obj3};
 				
@@ -330,9 +350,73 @@
 			
 			private function fnClick(evento:* = null):void{
 				btnOpciones.selected = false;
+				var not:NotificacionVO = NotificacionVO(bcElementos.selectedItem);
+				switch(not.tipo){
+					case "TicketVO":
+						if(modelApp.objTicket.hasOwnProperty(not.id.split('|')[1])){
+							var i:int = modelApp.arrNotificaciones.getItemIndex(not);
+							if(i > -1){
+								modelApp.arrNotificaciones.removeItemAt(i);
+							} else {
+								i = modelApp.arrNotificaciones.list.getItemIndex(not);
+								if(i > -1){
+									modelApp.arrNotificaciones.list.removeItemAt(i);
+								}
+							}
+							delete modelApp.objNotificaciones[not.id];
+							modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+							modelApp.ticketSeleccionado = modelApp.objTicket[not.id.split('|')[1]] as TicketVO;
+							var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
+							Controller.getInstance().dispatchEvent(ticketEvent);
+						} else {
+							
+						}
+						break;
+				}
 				PopUpManager.removePopUp(bcElementos);
 				//vgList.removeElement(bcElementos);
+				
 				bcElementos = null;
+			}
+			
+			private function fnComentarios(arr:Array):void{
+				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
+				if(modelApp.ticketSeleccionado.notificacion == 'N'){
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, modelApp.ticketSeleccionado, fnNotificacion);				
+					Controller.getInstance().dispatchEvent(ticketEvent);		
+					
+				} else {
+					this.vsGeneral.selectedIndex = 6;
+					this.titulos.strBreadcrumb = [{label: 'Home', data: this.vsGeneral.getElementAt(0)}, {label: 'Tickets', data: this.vsGeneral.getElementAt(4)}, {label: 'Creación', data: this.vsGeneral.getElementAt(3)}];
+					
+				}
+			}
+			
+			private function fnNotificacion(item:TicketVO):void{
+				var auxTicket:TicketVO = modelApp.ticketSeleccionado as TicketVO;
+				
+				/*var o:* = modelApp.arrNotificaciones.removeItemAt(modelApp.arrNotificaciones.getItemIndex(modelApp.dictNotificaciones[auxTicket]['obj']));
+				if(!o){
+				delete modelApp.arrNotificaciones.source[modelApp.dictNotificaciones[auxTicket]['pos']];
+				delete modelApp.dictNotificaciones[modelApp.ticketSeleccionado];*/
+				
+				var i:int = modelApp.arrNotificaciones.getItemIndex(modelApp.objNotificaciones["TicketVO|" + item.id]);
+				if(i > -1){
+					modelApp.arrNotificaciones.removeItemAt(i);
+				} else {
+					i = modelApp.arrNotificaciones.list.getItemIndex(modelApp.objNotificaciones["TicketVO|" + item.id]);
+					if(i > -1){
+						modelApp.arrNotificaciones.list.removeItemAt(i);
+					}
+				}
+				delete modelApp.objNotificaciones["TicketVO|" + item.id];
+				modelApp.arrTickets.setItemAt(item, modelApp.arrTickets.getItemIndex(modelApp.ticketSeleccionado));
+				
+				
+				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+				this.vsGeneral.selectedIndex = 6;
+				this.titulos.strBreadcrumb = [{label: 'Home', data: this.vsGeneral.getElementAt(0)}, {label: 'Tickets', data: this.vsGeneral.getElementAt(4)}, {label: 'Creación', data: this.vsGeneral.getElementAt(3)}];
+				
 			}
 			
 			

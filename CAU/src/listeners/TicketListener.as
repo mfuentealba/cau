@@ -18,6 +18,7 @@ package listeners
 	import services.ServiceRO;
 	
 	import vo.ComentarioVO;
+	import vo.TicketVO;
 	import vo.UserVO;
 	
 	public class TicketListener //implements IBaseListener
@@ -137,6 +138,7 @@ package listeners
 					
 					modelApp.arrTickets = new ArrayCollection(data.result as Array);
 					modelApp.arrTickets.filterFunction = modelApp.fnTicketsFilter;
+					modelApp.arrTickets.source.forEach(fnDict);
 					break;
 				
 				case TicketEvent.LISTAR_COMENTARIOS:
@@ -191,6 +193,10 @@ package listeners
 					}
 					break;
 			}
+		}
+		
+		public static function fnDict(item:TicketVO, index:int, arr:Array):void{
+			modelApp.objTicket[item.id] = item;
 		}
 		
 		public static function fault(info:Object):void

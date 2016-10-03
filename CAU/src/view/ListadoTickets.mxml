@@ -193,8 +193,8 @@
 			
 			private function fnComentarios(arr:Array):void{
 				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
-				if(dgTickets.selectedItem.notificacion == 'N'){
-					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, TicketVO(dgTickets.selectedItem), fnNotificacion);				
+				if(modelApp.ticketSeleccionado.notificacion == 'N'){
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, modelApp.ticketSeleccionado, fnNotificacion);				
 					Controller.getInstance().dispatchEvent(ticketEvent);		
 					
 				} else {
@@ -210,10 +210,18 @@
 				/*var o:* = modelApp.arrNotificaciones.removeItemAt(modelApp.arrNotificaciones.getItemIndex(modelApp.dictNotificaciones[auxTicket]['obj']));
 				if(!o){
 					delete modelApp.arrNotificaciones.source[modelApp.dictNotificaciones[auxTicket]['pos']];
+				delete modelApp.dictNotificaciones[dgTickets.selectedItem];*/
+				
+				var i:int = modelApp.arrNotificaciones.getItemIndex(modelApp.objNotificaciones["TicketVO|" + item.id]);
+				if(i > -1){
+					modelApp.arrNotificaciones.removeItemAt(i);
+				} else {
+					i = modelApp.arrNotificaciones.list.getItemIndex(modelApp.objNotificaciones["TicketVO|" + item.id]);
+					if(i > -1){
+						modelApp.arrNotificaciones.list.removeItemAt(i);
+					}
 				}
-				
-				
-				delete modelApp.dictNotificaciones[dgTickets.selectedItem];*/				
+				delete modelApp.objNotificaciones["TicketVO|" + item.id];
 				modelApp.arrTickets.setItemAt(item, modelApp.arrTickets.getItemIndex(dgTickets.selectedItem));
 				
 				

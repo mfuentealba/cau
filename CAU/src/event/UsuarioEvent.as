@@ -12,6 +12,7 @@ package event
 		public static const ELIMINAR:String = 'deleteUsers';
 		public static const LOGIN:String = 'login';
 		public static const CONN:String = 'conexion';
+		public static const BUSCAR_NOTIFICACIONES:String = 'getAllNotificaciones';
 		
 		
 		 

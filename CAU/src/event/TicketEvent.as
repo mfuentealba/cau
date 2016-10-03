@@ -22,6 +22,7 @@ package event
 		
 		
 		
+		
 		public var ticketVO:TicketVO;
 		public var objAdicional:*;
 		

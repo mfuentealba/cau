@@ -24,6 +24,7 @@ package controller
 	
 	import services.DelegadoNode;
 	
+	import vo.NotificacionVO;
 	import vo.TicketVO;
 	
 	public class Controller extends ControllerBase
@@ -71,6 +72,7 @@ package controller
 			addEventListenerNew(UsuarioEvent.MODIFICAR, UsuarioListener);
 			addEventListenerNew(UsuarioEvent.ELIMINAR, UsuarioListener);
 			addEventListenerNew(UsuarioEvent.LOGIN, UsuarioListener);
+			addEventListenerNew(UsuarioEvent.BUSCAR_NOTIFICACIONES, UsuarioListener);
 			
 			addEventListenerNew(MantenedoresEvent.LISTAR_PERFILES, MantenedorListener);
 			addEventListenerNew(MantenedoresEvent.LISTAR_GRUPORESOLUTOR, MantenedorListener);
@@ -119,6 +121,7 @@ package controller
 			addEventListenerNew(TicketEvent.LEER_TICKET, TicketListener);
 			
 			
+			
 			dlNode.callbackRecep = callbackRecep;
 			addEventListener(UsuarioEvent.CONN, despachar);
 		}	
@@ -154,12 +157,16 @@ package controller
 				case 'NUEVO_TICKET':
 					var ticketVO:TicketVO = new TicketVO(com.adobe.serialization.json.JSON.decode(arrParam[2]));
 					modelApp.arrTickets.addItem(ticketVO);
-					/*if(ticketVO.soporte == modelApp.usuarioActivo.username){
-						var obj:Object = {label: 'Se ha asignado el ticket N° ' + ticketVO.id, img: '', creacion: ticketVO.fecha + ' ' + ticketVO.hora};
+					if(ticketVO.soporte == modelApp.usuarioActivo.username){
+						var obj:NotificacionVO = new NotificacionVO();
+						obj.mensaje = 'Se ha asignado el ticket N° ' + ticketVO.id;
+						obj.fecha = ticketVO.fecha + ' ' + ticketVO.hora;
+						obj.tipo = 'TicketVO';
+						obj.id = 'TicketVO|' + ticketVO.id;
 						modelApp.arrNotificaciones.addItem(obj);
-						modelApp.dictNotificaciones[ticketVO] = {pos: modelApp.arrNotificaciones.source.length - 1, obj: obj};
+						//modelApp.dictNotificaciones[ticketVO] = {pos: modelApp.arrNotificaciones.source.length - 1, obj: obj};
 						modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
-					}*/
+					}
 					break;
 				
 			}

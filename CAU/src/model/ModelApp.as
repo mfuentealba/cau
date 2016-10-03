@@ -44,7 +44,7 @@ package model
 		
 		public var arrNotificaciones:ArrayCollection = new ArrayCollection([{label: 'Se ha asignado el ticket N° ', img: '', creacion: ' '}]);
 		//public var dictNotificaciones:Dictionary = new Dictionary();
-		
+		public var objNotificaciones:Object = {};
 		public var strNot:String = '';
 		
 		public var arrCriticidad:ArrayCollection = new ArrayCollection([{label: 'Baja', id: '1'}, {label: 'Media', id: '2'}, {label: 'Baja', id: '3'}]);

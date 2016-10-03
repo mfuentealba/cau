@@ -20,6 +20,7 @@
  */
  
  require_once("TicketVO.php");
+ require_once("NotificacionVO.php");
  require_once("ComentarioVO.php");
  require_once("phpmailer.php");
 class TicketService {
