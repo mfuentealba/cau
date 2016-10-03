@@ -130,6 +130,17 @@ function receiveData(socket, d) {
 				
 				var json = '';
 			break;
+			
+			case "REASIGNACION_TICKET":
+				/*ticket = JSON.parse(arrOpt[1]);
+				console.log(ticket);
+				console.log('REASIGNACION_TICKET N° ' + ticket.id);*/
+				finStream = arrOpt[arrOpt.length - 1];
+				socket.id = user.username;
+				enviaMasivo(arrSocket, arrOpt[1], finStream, 'REASIGNACION_TICKET', false);
+				
+				var json = '';
+			break;
 
 		}
 	}

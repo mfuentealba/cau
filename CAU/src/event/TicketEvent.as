@@ -19,7 +19,7 @@ package event
 		public static const SOLICITUD_CERRAR_TICKET:String = 'solicitudCerrarTicket';
 		public static const REPORTE_VOLCADO_MOSTRAR:String = 'fnVolcado';
 		public static const LEER_TICKET:String = 'leerTicket';
-		
+		public static const BUSCAR_TICKET:String = 'getTicketByID';
 		
 		
 		

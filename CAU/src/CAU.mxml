@@ -11,6 +11,7 @@
 			import assets.skins.CustomListSkin;
 			
 			import components.RenderList;
+			import components.RenderListNotificacion;
 			import components.TrdProgressBar;
 			
 			import controller.Controller;
@@ -355,7 +356,7 @@
 					case "TicketVO":
 						if(modelApp.objTicket.hasOwnProperty(not.id.split('|')[1])){
 							var i:int = modelApp.arrNotificaciones.getItemIndex(not);
-							if(i > -1){
+							/*if(i > -1){
 								modelApp.arrNotificaciones.removeItemAt(i);
 							} else {
 								i = modelApp.arrNotificaciones.list.getItemIndex(not);
@@ -364,12 +365,28 @@
 								}
 							}
 							delete modelApp.objNotificaciones[not.id];
-							modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+							modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';*/
 							modelApp.ticketSeleccionado = modelApp.objTicket[not.id.split('|')[1]] as TicketVO;
 							var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
 							Controller.getInstance().dispatchEvent(ticketEvent);
 						} else {
-							
+							var ticketVO:TicketVO = new TicketVO();
+							ticketVO.id = not.id.split('|')[1];
+							ticketEvent = new TicketEvent(TicketEvent.BUSCAR_TICKET, ticketVO, fnTicketEncontrado);
+							Controller.getInstance().dispatchEvent(ticketEvent);
+						}
+						break;
+					case "Reasignacion":
+						if(modelApp.objTicket.hasOwnProperty(not.id.split('|')[1])){
+							i = modelApp.arrNotificaciones.getItemIndex(not);
+							modelApp.ticketSeleccionado = modelApp.objTicket[not.id.split('|')[1]] as TicketVO;
+							ticketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnReasignacionComentarios);
+							Controller.getInstance().dispatchEvent(ticketEvent);
+						} else {
+							ticketVO = new TicketVO();
+							ticketVO.id = not.id.split('|')[1];
+							ticketEvent = new TicketEvent(TicketEvent.BUSCAR_TICKET, ticketVO, fnTicketEncontradoReasignacion);
+							Controller.getInstance().dispatchEvent(ticketEvent);
 						}
 						break;
 				}
@@ -379,7 +396,26 @@
 				bcElementos = null;
 			}
 			
-			private function fnComentarios(arr:Array):void{
+			
+			public function fnTicketEncontrado(ticketVO:TicketVO):void{
+				if(ticketVO){
+					modelApp.ticketSeleccionado = ticketVO;
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnReasignacionComentarios);
+					Controller.getInstance().dispatchEvent(ticketEvent);	
+				}
+				
+			}
+			
+			public function fnTicketEncontradoReasignacion(ticketVO:TicketVO):void{
+				if(ticketVO){
+					modelApp.ticketSeleccionado = ticketVO;
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
+					Controller.getInstance().dispatchEvent(ticketEvent);	
+				}
+				
+			}
+			
+			public function fnComentarios(arr:Array):void{
 				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
 				if(modelApp.ticketSeleccionado.notificacion == 'N'){
 					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, modelApp.ticketSeleccionado, fnNotificacion);				
@@ -390,6 +426,26 @@
 					this.titulos.strBreadcrumb = [{label: 'Home', data: this.vsGeneral.getElementAt(0)}, {label: 'Tickets', data: this.vsGeneral.getElementAt(4)}, {label: 'Creación', data: this.vsGeneral.getElementAt(3)}];
 					
 				}
+			}
+			
+			
+			public function fnReasignacionComentarios(arr:Array):void{
+				var i:int = modelApp.arrNotificaciones.getItemIndex(modelApp.objNotificaciones["Reasignacion|" + modelApp.ticketSeleccionado.id]);
+				if(i > -1){
+					modelApp.arrNotificaciones.removeItemAt(i);
+				} else {
+					i = modelApp.arrNotificaciones.list.getItemIndex(modelApp.objNotificaciones["Reasignacion|" + modelApp.ticketSeleccionado.id]);
+					if(i > -1){
+						modelApp.arrNotificaciones.list.removeItemAt(i);
+					}
+				}
+				delete modelApp.objNotificaciones["Reasignacion|" + modelApp.ticketSeleccionado.id];
+				modelApp.arrTickets.setItemAt(modelApp.ticketSeleccionado, modelApp.arrTickets.getItemIndex(modelApp.ticketSeleccionado));
+				
+				
+				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+				this.vsGeneral.selectedIndex = 6;
+				this.titulos.strBreadcrumb = [{label: 'Home', data: this.vsGeneral.getElementAt(0)}, {label: 'Tickets', data: this.vsGeneral.getElementAt(4)}, {label: 'Creación', data: this.vsGeneral.getElementAt(3)}];
 			}
 			
 			private function fnNotificacion(item:TicketVO):void{
@@ -410,7 +466,16 @@
 					}
 				}
 				delete modelApp.objNotificaciones["TicketVO|" + item.id];
-				modelApp.arrTickets.setItemAt(item, modelApp.arrTickets.getItemIndex(modelApp.ticketSeleccionado));
+				i = modelApp.arrTickets.getItemIndex(modelApp.ticketSeleccionado);
+				if(i > -1){
+					modelApp.arrTickets.setItemAt(item, i);
+				} else {
+					i = modelApp.arrTickets.list.getItemIndex(modelApp.ticketSeleccionado);
+					if(i > -1){
+						modelApp.arrTickets.list.setItemAt(item, i);
+					}
+				}
+				
 				
 				
 				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
@@ -428,14 +493,14 @@
 					bcElementos.minHeight = 0;
 					bcElementos.labelField = 'label';
 					bcElementos.setStyle("skinClass", CustomListSkin);
-					var f:ClassFactory = new ClassFactory(RenderList);
+					var f:ClassFactory = new ClassFactory(RenderListNotificacion);
 					bcElementos.itemRenderer = f; 
 					bcElementos.addEventListener(MouseEvent.CLICK, fnClick);
 					PopUpManager.addPopUp(bcElementos, evento.target as DisplayObject);
 					PopUpManager.centerPopUp(bcElementos);
 					//vgList.addElement(bcElementos);
 					bcElementos.dataProvider = modelApp.arrNotificaciones;
-					bcElementos.width = 100;
+					bcElementos.width = 400;
 					
 					bcElementos.y = 100;
 					//bcElementos.top = evento.target.height;
@@ -467,6 +532,7 @@
 	</fx:Declarations>
 	<fx:Binding source="modelApp.cntrBl" destination="fnBloqueo"/>
 	<s:Scroller id="sc">
+		
 		<s:VGroup id="vgPrincipal" gap="0">
 			<s:Group width="100%" height="50">
 				<s:Rect width="100%" height="100%">
@@ -512,11 +578,11 @@
 							</s:Rect>
 							<s:VGroup id="vgbotones" click="fnNavegar(event)" width="100%" gap="0" creationComplete="fnArr(event)">
 								<components:ListaAcordeon id="laTicket" label="Tickets" img="assets/icons/issue.png" arrData="{[{icono: '', data: {label: 'Creación', accion: fnNavegar}}, {icono: '', data: {label: 'Listado', accion: fnNavegar}}]}" defaultSelected="1"/>
-								<components:ListaAcordeon id="laUsuarios" label="Usuarios" img="assets/icons/usuarios.png"/>
-								<components:ListaAcordeon id="laSucursales" label="Sucursales" img="assets/icons/sucursal.png"/>
+								<components:ListaAcordeon id="laUsuarios" label="Usuarios" img="assets/icons/usuarios.png" visible="{modelApp.usuarioActivo.perfil == 3 ? false : true}" includeInLayout="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
+								<components:ListaAcordeon id="laSucursales" label="Sucursales" img="assets/icons/sucursal.png" visible="{modelApp.usuarioActivo.perfil == 3 ? false : true}" includeInLayout="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
 								<components:ListaAcordeon id="laClientes" label="Clientes" img="assets/icons/clientes.png"/>
-								<components:ListaAcordeon height="50" label="Tipificación" id="lst" img="assets/icons/tipificacion.png"/>
-								<components:ListaAcordeon height="50" label="Informes" img="assets/icons/analytics.png"/>
+								<components:ListaAcordeon height="50" label="Tipificación" id="lst" img="assets/icons/tipificacion.png" visible="{modelApp.usuarioActivo.perfil == 1 ? true : false}" includeInLayout="{modelApp.usuarioActivo.perfil == 1 ? true : false}"/>
+								<components:ListaAcordeon height="50" label="Informes" img="assets/icons/analytics.png" visible="{modelApp.usuarioActivo.perfil == 1 ? true : false}" includeInLayout="{modelApp.usuarioActivo.perfil == 1 ? true : false}"/>
 								<!--<components:ListaAcordeon height="50" label="Tipificación" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}]}"/>-->
 							</s:VGroup>
 							

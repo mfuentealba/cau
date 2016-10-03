@@ -129,7 +129,7 @@ class UsuariosService {
 		  $not = new NotificacionVO();
 		  $not->id = 'TicketVO|' . $row->id;
 		  $not->tipo = 'TicketVO';
-		  $not->mensaje = 'Se ha asignado el ticket N° ' . $not->id;
+		  $not->mensaje = 'Se ha asignado el ticket N° ' . $row->id;
 		  $not->fecha = $row->fecha . ' ' . $row->hora;
 	      $rows[] = $not;
 		  $row = new stdclass();

@@ -185,13 +185,13 @@
 				// TODO Auto-generated method stub
 				if(evento.rowIndex > -1){
 					modelApp.ticketSeleccionado = dgTickets.selectedItem as TicketVO;
-					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, CAU(FlexGlobals.topLevelApplication).fnComentarios);
 					Controller.getInstance().dispatchEvent(ticketEvent);
 				}
 			}
 			
 			
-			private function fnComentarios(arr:Array):void{
+			/*private function fnComentarios(arr:Array):void{
 				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
 				if(modelApp.ticketSeleccionado.notificacion == 'N'){
 					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, modelApp.ticketSeleccionado, fnNotificacion);				
@@ -207,10 +207,7 @@
 			private function fnNotificacion(item:TicketVO):void{
 				var auxTicket:TicketVO = dgTickets.selectedItem as TicketVO;
 				
-				/*var o:* = modelApp.arrNotificaciones.removeItemAt(modelApp.arrNotificaciones.getItemIndex(modelApp.dictNotificaciones[auxTicket]['obj']));
-				if(!o){
-					delete modelApp.arrNotificaciones.source[modelApp.dictNotificaciones[auxTicket]['pos']];
-				delete modelApp.dictNotificaciones[dgTickets.selectedItem];*/
+				
 				
 				var i:int = modelApp.arrNotificaciones.getItemIndex(modelApp.objNotificaciones["TicketVO|" + item.id]);
 				if(i > -1){
@@ -229,7 +226,7 @@
 				CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 6;
 				CAU(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Creación', data: CAU(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(3)}];
 				
-			}
+			}*/
 			
 			
 			protected function fnTraeData(event:*):void
@@ -287,7 +284,7 @@
 					<s:ComboBox id="cmbTipo" dataProvider="{modelApp.arrClasificacion}" requireSelection="true" labelField="nombreClasificacion" change="fnTraeData(null)"/>
 					<s:Label text=" asignados: " fontWeight="bold"/>
 					<s:RadioButton label="Propios" groupName="rbgAsignados" selected="true"/>
-					<s:RadioButton label="Todos" groupName="rbgAsignados"/>
+					<s:RadioButton label="Todos" groupName="rbgAsignados" enabled="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
 					<s:Label text=" Estado: " fontWeight="bold"/>
 					<s:ComboBox id="cmbEstados" dataProvider="{modelApp.arrEstados}" requireSelection="true" labelField="label" change="fnTraeData(null)"/>
 				</s:BorderContainer>

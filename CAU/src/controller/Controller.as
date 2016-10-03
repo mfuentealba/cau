@@ -119,7 +119,7 @@ package controller
 			addEventListenerNew(TicketEvent.SOLICITUD_CERRAR_TICKET, TicketListener);
 			addEventListenerNew(TicketEvent.REPORTE_VOLCADO_MOSTRAR, TicketListener);
 			addEventListenerNew(TicketEvent.LEER_TICKET, TicketListener);
-			
+			addEventListenerNew(TicketEvent.BUSCAR_TICKET, TicketListener);
 			
 			
 			dlNode.callbackRecep = callbackRecep;
@@ -160,9 +160,26 @@ package controller
 					if(ticketVO.soporte == modelApp.usuarioActivo.username){
 						var obj:NotificacionVO = new NotificacionVO();
 						obj.mensaje = 'Se ha asignado el ticket N° ' + ticketVO.id;
-						obj.fecha = ticketVO.fecha + ' ' + ticketVO.hora;
+						var f:String = ticketVO.fecha + '';
+						obj.fecha = f.substr(0, 4) + '-' + f.substr(2, 2) + '-' + f.substr(4, 2) + ' ' + ticketVO.hora;
 						obj.tipo = 'TicketVO';
 						obj.id = 'TicketVO|' + ticketVO.id;
+						modelApp.arrNotificaciones.addItem(obj);
+						//modelApp.dictNotificaciones[ticketVO] = {pos: modelApp.arrNotificaciones.source.length - 1, obj: obj};
+						modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+					}
+					break;
+				
+				case 'REASIGNACION_TICKET':
+					ticketVO = new TicketVO(com.adobe.serialization.json.JSON.decode(arrParam[2]));
+					
+					if(ticketVO.soporte == modelApp.usuarioActivo.username){
+						obj = new NotificacionVO();
+						obj.mensaje = 'Se ha reasignado el ticket N° ' + ticketVO.id;
+						f = ticketVO.fecha + '';
+						obj.fecha = f.substr(0, 4) + '-' + f.substr(2, 2) + '-' + f.substr(4, 2) + ' ' + ticketVO.hora;
+						obj.tipo = 'Reasignacion';
+						obj.id = 'Reasignacion|' + ticketVO.id;
 						modelApp.arrNotificaciones.addItem(obj);
 						//modelApp.dictNotificaciones[ticketVO] = {pos: modelApp.arrNotificaciones.source.length - 1, obj: obj};
 						modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';

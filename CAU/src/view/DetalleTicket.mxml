@@ -434,9 +434,9 @@
 			<s:HGroup height="100%" visible="{ticketVO.estado == 'Cerrado' ? false : true}" includeInLayout="{ticketVO.estado == 'Cerrado' ? false : true}">
 				<mx:LinkButton label="Reasignar" fontSize="16" click="fnReasignar(event)"/>
 				<s:Label text="|"/>
-				<mx:LinkButton label="Solicitud de cierre" fontSize="16" click="fnSolicitudCerrarTicket(event)"/>
+				<mx:LinkButton label="Solicitud de cierre" fontSize="16" click="fnSolicitudCerrarTicket(event)" enabled="{modelApp.usuarioActivo.perfil == 1 ? false : true}"/>
 				<s:Label text="|"/>
-				<mx:LinkButton label="Cerrar" fontSize="16" click="fnCerrarTicket(event)"/>
+				<mx:LinkButton label="Cerrar" fontSize="16" click="fnCerrarTicket(event)" enabled="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
 				<s:Label text="|"/>
 				<mx:LinkButton label="Volver" fontSize="16" click="{CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 5;}"/>	
 			</s:HGroup>

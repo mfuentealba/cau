@@ -88,6 +88,10 @@ package listeners
 					rmtObjTickets.leerTicket(evento.ticketVO.id);	
 					break;
 				
+				case TicketEvent.BUSCAR_TICKET:
+					rmtObjTickets.getTicketByID(evento.ticketVO.id);	
+					break;
+				
 			}
 		}
 		
@@ -186,6 +190,13 @@ package listeners
 					//modelApp.arrTickets.filterFunction = modelApp.fnTicketsFilter;
 					break;
 				case TicketEvent.LEER_TICKET:
+					if(data.result.hasOwnProperty('id')){
+						evento.callback.call(null, data.result);	
+					} else {
+						Alert.show(data.result + "", 'Atencion');	
+					}
+					break;
+				case TicketEvent.BUSCAR_TICKET:
 					if(data.result.hasOwnProperty('id')){
 						evento.callback.call(null, data.result);	
 					} else {

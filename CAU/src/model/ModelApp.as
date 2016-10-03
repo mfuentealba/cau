@@ -95,7 +95,7 @@ package model
 		public static const SUBCATEGORIA:String = 'SubCategoria';
 		public static const PROBLEMA:String = 'Problema';
 		
-		
+		[Embed(source="assets/icons/ticket.png")] public var iconTicket:Class;
 		
 		public static function getInstance():ModelApp
 		{

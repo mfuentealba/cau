@@ -496,7 +496,7 @@
 			</s:Form>	
 		</components:CustomPanelSpark>
 		
-		<components:CustomPanelSpark title="Detalle Ticket" width="100%" color="#eeeeee" imgBl="true" height="300">
+		<components:CustomPanelSpark title="Detalle Ticket" width="100%" color="#eeeeee" height="300">
 			<s:Form id="formTicket" width="100%" skinClass="spark.skins.spark.StackedFormItemSkin">
 				<s:layout>
 					<s:TileLayout requestedColumnCount="4"/>
@@ -558,7 +558,7 @@
 		
 		
 		
-		<components:CustomPanelSpark title="Descripción" width="100%" color="#eeeeee" imgBl="true" height="270">
+		<components:CustomPanelSpark title="Descripción" width="100%" color="#eeeeee" height="270">
 			<components:layout>
 				<s:VerticalLayout paddingTop="5" paddingBottom="30" paddingLeft="10" paddingRight="10" gap="5" 
 								  horizontalAlign="left" verticalAlign="top"/>

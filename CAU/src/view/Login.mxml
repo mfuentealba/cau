@@ -27,7 +27,7 @@
 				CAU(this.parentApplication)['vsVistas'].selectedIndex = 1;
 				var usuarioEvent:UsuarioEvent = new UsuarioEvent(UsuarioEvent.CONN, ModelApp.getInstance().usuarioActivo);
 				Controller.getInstance().dispatchEvent(usuarioEvent);
-				var usuarioEvent:UsuarioEvent = new UsuarioEvent(UsuarioEvent.BUSCAR_NOTIFICACIONES, ModelApp.getInstance().usuarioActivo);
+				usuarioEvent = new UsuarioEvent(UsuarioEvent.BUSCAR_NOTIFICACIONES, ModelApp.getInstance().usuarioActivo);
 				Controller.getInstance().dispatchEvent(usuarioEvent);
 			}
 			

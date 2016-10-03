@@ -115,6 +115,9 @@ package listeners
 		
 		public static function fnNot(item:NotificacionVO, index:int, arr:Array):void{
 			modelApp.objNotificaciones[item.id] = item;
+			var arr:Array = item.fecha.split(' '); 
+			var f:String = arr[0];
+			item.fecha = f.substr(0, 4) + '-' + f.substr(2, 2) + '-' + f.substr(4, 2) + ' ' + arr[1];
 		}
 		
 		public static function fault(info:Object):void
