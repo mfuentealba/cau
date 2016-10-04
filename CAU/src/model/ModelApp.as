@@ -9,6 +9,7 @@ package model
 	
 	import services.ConexionSocket;
 	
+	import vo.ObjBinding;
 	import vo.TicketVO;
 	import vo.UserVO;
 
@@ -48,7 +49,7 @@ package model
 		public var strNot:String = '';
 		
 		public var arrCriticidad:ArrayCollection = new ArrayCollection([{label: 'Baja', id: '1'}, {label: 'Media', id: '2'}, {label: 'Baja', id: '3'}]);
-		public var arrEstados:ArrayCollection = new ArrayCollection([{label: 'Todos', id: '0'}, {label: 'Asignado', id: '1'}, {label: 'Cerrado', id: '2'}]);
+		public var arrEstados:ArrayCollection = new ArrayCollection([{label: 'Todos', id: '0'}, {label: 'Asignado', id: '1'}, {label: 'Cerrado', id: '2'}, {label: 'Pendiente de Cierre', id: '3'}]);
 		public var popBl:TrdProgressBar;
 		public var cntrBl:int = 0;
 		
@@ -96,6 +97,13 @@ package model
 		public static const PROBLEMA:String = 'Problema';
 		
 		[Embed(source="assets/icons/ticket.png")] public var iconTicket:Class;
+		
+		
+		
+		/***********************BINDING PARA EVITAR TANTOS EVENTOS******************************/
+		public var objBinding:ObjBinding = new ObjBinding();
+		public var arrBinding:ArrayCollection = new ArrayCollection();
+		
 		
 		public static function getInstance():ModelApp
 		{

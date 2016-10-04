@@ -323,7 +323,7 @@
 				ticketVO.solucion_dada_por = ticketVO.soporte;
 				ticketVO.soporte = ticketVO.creadoPor;
 				var comentarioVO:ComentarioVO = new ComentarioVO();
-				comentarioVO.comentarios = 'Ha sido asignado el ticket a ' + ticketVO.creadoPor + ' para evaluar solución dada por ' + ticketVO.soporte;
+				comentarioVO.comentarios = 'Ha sido asignado el ticket a ' + ticketVO.creadoPor + ' para evaluar solución dada por ' + modelApp.usuarioActivo.username;
 				comentarioVO.reporte = ticketVO.id;		
 				comentarioVO.soporte = modelApp.usuarioActivo.username;
 				var fecha:Date = new Date();
@@ -433,12 +433,30 @@
 			<s:Label text="{ticketVO.soporte}" fontWeight="bold" fontSize="16"/>
 			<s:HGroup height="100%" visible="{ticketVO.estado == 'Cerrado' ? false : true}" includeInLayout="{ticketVO.estado == 'Cerrado' ? false : true}">
 				<mx:LinkButton label="Reasignar" fontSize="16" click="fnReasignar(event)"/>
-				<s:Label text="|"/>
+				
+				<s:Line width="1" height="100%">
+					<s:stroke>
+						<s:SolidColorStroke color="#cccccc" weight="1"/>
+					</s:stroke>
+				</s:Line>
+				
 				<mx:LinkButton label="Solicitud de cierre" fontSize="16" click="fnSolicitudCerrarTicket(event)" enabled="{modelApp.usuarioActivo.perfil == 1 ? false : true}"/>
-				<s:Label text="|"/>
+				<s:Line width="1" height="100%">
+					<s:stroke>
+						<s:SolidColorStroke color="#cccccc" weight="1"/>
+					</s:stroke>
+				</s:Line>
 				<mx:LinkButton label="Cerrar" fontSize="16" click="fnCerrarTicket(event)" enabled="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
-				<s:Label text="|"/>
-				<mx:LinkButton label="Volver" fontSize="16" click="{CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 5;}"/>	
+				<s:Line width="1" height="100%">
+					<s:stroke>
+						<s:SolidColorStroke color="#cccccc" weight="1"/>
+					</s:stroke>
+				</s:Line>
+				<mx:LinkButton label="Volver" fontSize="16" click="{CAU(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 5;}"/>
+				<s:HGroup width="100%" height="100%" paddingRight="10" verticalAlign="middle" horizontalAlign="right">
+					<s:Label text="Estado: " fontWeight="bold" fontSize="16" textAlign="right"/>
+					<s:Label text="{ticketVO.estado}" fontWeight="bold" fontSize="16" textAlign="right"/>
+				</s:HGroup>
 			</s:HGroup>
 			
 		</s:BorderContainer>

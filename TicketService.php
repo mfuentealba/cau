@@ -193,16 +193,27 @@ class TicketService {
 		//$autoid = mysqli_stmt_insert_id($stmt);
 
 		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
+		//mysqli_close($this->connection);
 		$row->id = $autoid;
+		
+		
+		
+		/*$comentario = new ComentarioVO();
+		$comentario->reporte = $autoid;
+		$comentario->soporte = $row->soporte;
+		$comentario->comentarios = "Ticket creado y signado a " . $row->soporte;
+		$comentario->fecha = $row->fecha; 
+		$comentario->hora = $row->hora;
+	
+		$this->saveComentarios($comentario);*/
 		
 		$stmt = mysqli_prepare($this->connection, "INSERT INTO reportes_grabados (id, soporte, reporte, comentarios, fecha, hora) VALUES (null, ?, ?, ?, ?, ?)");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
-		$msg = "Ticket ssignado a " . $row->soporte;
-		mysqli_stmt_bind_param($stmt, 'sisis',  $row->soporte, $autoid, $msg, $row->fecha, $row->hora);
+		$msge = "Ticket creado y asignado a " . $row->soporte;
+		mysqli_stmt_bind_param($stmt, 'sisis',  $row->soporte, $autoid, $msge, $row->fecha, $row->hora);
 		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
@@ -214,6 +225,13 @@ class TicketService {
 		if($msg != ''){
 			return $msg;
 		}
+		
+		
+		
+		
+		
+		
+		
 //return $stmt;
 		//$autoid = mysqli_stmt_insert_id($stmt);
 

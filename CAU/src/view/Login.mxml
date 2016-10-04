@@ -11,6 +11,10 @@
 			import model.ModelApp;
 			
 			import vo.UserVO;
+			
+			
+			private var modelApp:ModelApp = ModelApp.getInstance();
+			
 			protected function fnIngresar(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
@@ -29,12 +33,15 @@
 				Controller.getInstance().dispatchEvent(usuarioEvent);
 				usuarioEvent = new UsuarioEvent(UsuarioEvent.BUSCAR_NOTIFICACIONES, ModelApp.getInstance().usuarioActivo);
 				Controller.getInstance().dispatchEvent(usuarioEvent);
+				modelApp.objBinding['entradaSistema']++;
+				modelApp.arrBinding.setItemAt({}, 0);
 			}
 			
 			protected function btnRegistrar_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
 				CAU(this.parentApplication)['vsVistas'].selectedIndex = 2;
+				
 			}
 			
 		]]>

@@ -1,7 +1,7 @@
 
 console.log("Inicio 0.0.2");
 
-var arrSocket ={};
+var arrSocket = {};
 
 var usuario = 0;
 
@@ -23,7 +23,7 @@ function enviaMasivo(arrSocket, obj, arrOpt, opt, me){
 		console.log('todas las partidas para usuario ' + allSock);
 		arrSocket[allSock].write('RECEP|' + opt + '|' + obj + '|' + arrSocket[allSock].finStream, 'utf8');
 		console.log('Corresponde para usuario ' + allSock);
-		console.log('RECEP|' + opt + '|' + obj + '|' + arrSocket[allSock].finStream);
+		//console.log('RECEP|' + opt + '|' + obj + '|' + arrSocket[allSock].finStream);
 		
 		/*if(allSock == socket.id || me){                
 			arrSocket[allSock].write('RECEP|' + opt + '|' + arrOpt, 'utf8');
@@ -70,7 +70,7 @@ function newSocket(socket) {
 function closeSocket(socket) {
 	console.log('***************************************');
 	console.log('ingresando en closeSocket');//53820010
-		
+	delete arrSocket[socket.id];	
 	
 	
 }
@@ -78,7 +78,7 @@ function closeSocket(socket) {
 function onClose(socket)
 {
 	console.log("ingresando en onClose");
-	
+	delete arrSocket[socket.id];	
 }
 
 function onError()

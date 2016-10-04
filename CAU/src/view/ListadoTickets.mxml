@@ -4,7 +4,7 @@
 			xmlns:mx="library://ns.adobe.com/flex/mx"
 			xmlns:controllerbd="services.controllerbd.*"
 			xmlns:skins="assets.skins.*" 
-			xmlns:components="components.*" initialize="ini(event)" show="fnTraeData(event)" creationComplete="fnTraeData(event)">
+			xmlns:components="components.*" initialize="ini(event)"  creationComplete="fnTraeData(event)">
 	<fx:Script>
 		<![CDATA[
 			import controller.Controller;
