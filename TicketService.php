@@ -309,63 +309,66 @@ class TicketService {
 		
 		$this->saveComentarios($comentario);
 		
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename WHERE id = " . $id);		
-		$this->throwExceptionOnError();
+		$stmt = mysqli_prepare($this->connectionAux, "SELECT * FROM $this->tablename where id=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 's', $id);		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 		
 		mysqli_stmt_execute($stmt);
-		$this->throwExceptionOnError();
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
-		
-		$this->throwExceptionOnError();
-		
 		$row = new TicketVO();
-		
 		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
-		
-		mysqli_stmt_fetch($stmt);
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
+		if(mysqli_stmt_fetch($stmt)) {
+			$cuerpoMensaje = "============================================================ <br />";
+			$cuerpoMensaje.= "     Centro de Atencion Usuarios - Notificacion de Reasignacion de Ticket    <br />";
+			$cuerpoMensaje.= "============================================================ <br />";
+			$cuerpoMensaje.= " <br /> <br />";
+			$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br />";
+			$cuerpoMensaje.= " <br /> <br />";
+			$cuerpoMensaje.= " Se ha reasignado este ticket a su agenda del Sistema de Reportes <br />";
+			$cuerpoMensaje.= " con los siguientes datos de identificacion :                   <br />";
+			$cuerpoMensaje.= " <br /> ";
+			$cuerpoMensaje.= " Nº de Ticket : ".$id." <br /><br />";
+			$cuerpoMensaje.= " Para conocer mas detalles del ticket antes mencionado, puede acceder<br />";
+			$cuerpoMensaje.= " a los comentarios en nuestro sistema.  <br />";
+			$cuerpoMensaje.= " <br /> <br />";
+			$cuerpoMensaje.= " Atte:<br />";
+			$cuerpoMensaje.= " <br />";
+			
+			
+			$this->fnCorreo('', $cuerpoMensaje);
+			
+			$socket=socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+			socket_connect($socket , "localhost", 9003 );
+			//socket_write($socket, 'NUEVO_TICKET' . '|kkkkkkk|');// + json_encode($row));
+			socket_write($socket, 'REASIGNACION_TICKET' . '|' . json_encode($row) . '|');
+			
+			mysqli_stmt_free_result($stmt);		
+			mysqli_close($this->connection);
+			return $row;
+		} else {
+			mysqli_stmt_free_result($stmt);		
+			mysqli_close($this->connection);
+	      return 'nada';
 		}
 		
-		$cuerpoMensaje = "============================================================ <br />";
-		$cuerpoMensaje.= "     Centro de Atencion Usuarios - Notificacion de Reasignacion de Ticket    <br />";
-		$cuerpoMensaje.= "============================================================ <br />";
-		$cuerpoMensaje.= " <br /> <br />";
-		$cuerpoMensaje.= " Estimado(a) Usuario(a) :<br />";
-		$cuerpoMensaje.= " <br /> <br />";
-		$cuerpoMensaje.= " Se ha reasignado este ticket a su agenda del Sistema de Reportes <br />";
-		$cuerpoMensaje.= " con los siguientes datos de identificacion :                   <br />";
-		$cuerpoMensaje.= " <br /> ";
-		$cuerpoMensaje.= " Nº de Ticket : ".$id." <br /><br />";
-		$cuerpoMensaje.= " Para conocer mas detalles del ticket antes mencionado, puede acceder<br />";
-		$cuerpoMensaje.= " a los comentarios en nuestro sistema.  <br />";
-		$cuerpoMensaje.= " <br /> <br />";
-		$cuerpoMensaje.= " Atte:<br />";
-		$cuerpoMensaje.= " <br />";
 		
 		
-		$this->fnCorreo('', $cuerpoMensaje);
 		
-		$socket=socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-		socket_connect($socket , "localhost", 9003 );
-		//socket_write($socket, 'NUEVO_TICKET' . '|kkkkkkk|');// + json_encode($row));
-		socket_write($socket, 'REASIGNACION_TICKET' . '|' . json_encode($row) . '|');
-		
-		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
-		return $row;
 	}
 	
 	

@@ -400,7 +400,7 @@
 			public function fnTicketEncontrado(ticketVO:TicketVO):void{
 				if(ticketVO){
 					modelApp.ticketSeleccionado = ticketVO;
-					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnReasignacionComentarios);
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
 					Controller.getInstance().dispatchEvent(ticketEvent);	
 				}
 				
@@ -409,7 +409,7 @@
 			public function fnTicketEncontradoReasignacion(ticketVO:TicketVO):void{
 				if(ticketVO){
 					modelApp.ticketSeleccionado = ticketVO;
-					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnReasignacionComentarios);
 					Controller.getInstance().dispatchEvent(ticketEvent);	
 				}
 				
@@ -440,7 +440,16 @@
 					}
 				}
 				delete modelApp.objNotificaciones["Reasignacion|" + modelApp.ticketSeleccionado.id];
-				modelApp.arrTickets.setItemAt(modelApp.ticketSeleccionado, modelApp.arrTickets.getItemIndex(modelApp.ticketSeleccionado));
+				i = modelApp.arrTickets.getItemIndex(modelApp.ticketSeleccionado);
+				if(i > -1){
+					modelApp.arrTickets.setItemAt(modelApp.ticketSeleccionado, i);
+				} else {
+					i = modelApp.arrTickets.list.getItemIndex(modelApp.ticketSeleccionado);
+					if(i > -1){
+						modelApp.arrTickets.list.setItemAt(modelApp.ticketSeleccionado, i);
+					}
+				}
+				
 				
 				
 				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';

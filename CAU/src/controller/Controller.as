@@ -165,7 +165,7 @@ package controller
 						obj.tipo = 'TicketVO';
 						obj.id = 'TicketVO|' + ticketVO.id;
 						modelApp.arrNotificaciones.addItem(obj);
-						//modelApp.dictNotificaciones[ticketVO] = {pos: modelApp.arrNotificaciones.source.length - 1, obj: obj};
+						modelApp.objNotificaciones[obj.id] = obj;
 						modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
 					}
 					break;
@@ -181,7 +181,7 @@ package controller
 						obj.tipo = 'Reasignacion';
 						obj.id = 'Reasignacion|' + ticketVO.id;
 						modelApp.arrNotificaciones.addItem(obj);
-						//modelApp.dictNotificaciones[ticketVO] = {pos: modelApp.arrNotificaciones.source.length - 1, obj: obj};
+						modelApp.objNotificaciones[obj.id] = obj;
 						modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
 					}
 					break;

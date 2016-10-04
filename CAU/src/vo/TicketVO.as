@@ -55,6 +55,8 @@ package vo
 		
 		public function TicketVO(obj:Object = null){
 			if(obj){
+				this.arrComentarios = new ArrayCollection(obj['arrComentarios'] as Array);
+				delete obj['arrComentarios'];
 				for(var str:String in obj){
 					this[str] = obj[str];
 				}
