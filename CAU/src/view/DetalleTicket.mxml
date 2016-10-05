@@ -431,7 +431,7 @@
 			<s:Label text="{ticketVO.id}" fontWeight="bold" fontSize="16"/>
 			<s:Label text=" asignado a: " fontWeight="bold" fontSize="16"/>
 			<s:Label text="{ticketVO.soporte}" fontWeight="bold" fontSize="16"/>
-			<s:HGroup height="100%" visible="{ticketVO.estado == 'Cerrado' ? false : true}" includeInLayout="{ticketVO.estado == 'Cerrado' ? false : true}">
+			<s:HGroup height="100%" width="100%" visible="{ticketVO.estado == 'Cerrado' ? false : true}" includeInLayout="{ticketVO.estado == 'Cerrado' ? false : true}">
 				<mx:LinkButton label="Reasignar" fontSize="16" click="fnReasignar(event)"/>
 				
 				<s:Line width="1" height="100%">
@@ -460,7 +460,10 @@
 			</s:HGroup>
 			
 		</s:BorderContainer>
-		<components:CustomPanelSpark title="Cliente" width="100%" height="{50 + formCliente.height}" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">
+		<components:CustomPanelSpark title="Solución" width="100%" color="#eeeeee" visible="{ticketVO.comentario_solucion != 'null' ? true : false}" includeInLayout="{ticketVO.comentario_solucion != 'null' ? true : false}">
+			<s:Label width="100%" text="{ticketVO.comentario_solucion}"/>
+		</components:CustomPanelSpark>
+		<components:CustomPanelSpark title="Cliente" width="100%" height="{50 + formCliente.height}" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">			
 			<s:Form id="formCliente" width="100%" bottom="10">
 				<s:layout>
 					<s:TileLayout requestedColumnCount="5"/>
