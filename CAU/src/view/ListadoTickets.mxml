@@ -229,7 +229,7 @@
 			}*/
 			
 			
-			protected function fnTraeData(event:*):void
+			public function fnTraeData(event:*):void
 			{
 				// TODO Auto-generated method stub
 				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.TOTAL_PAGINAS, null, fnArmaPaginador, {idCla: ClasificacionVO(cmbTipo.selectedItem).idClasificacion, propietario: (rbgAsignados.selection.label == 'Propios' ? modelApp.usuarioActivo.username : ''), estado: cmbEstados.selectedItem['label']});				

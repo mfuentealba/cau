@@ -102,6 +102,9 @@ package model
 		
 		/***********************BINDING PARA EVITAR TANTOS EVENTOS******************************/
 		public var objBinding:ObjBinding = new ObjBinding();
+		
+		public var INGRESO_SISTEMA:int = -1;
+		
 		public var arrBinding:ArrayCollection = new ArrayCollection();
 		
 		

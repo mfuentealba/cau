@@ -33,8 +33,8 @@
 				Controller.getInstance().dispatchEvent(usuarioEvent);
 				usuarioEvent = new UsuarioEvent(UsuarioEvent.BUSCAR_NOTIFICACIONES, ModelApp.getInstance().usuarioActivo);
 				Controller.getInstance().dispatchEvent(usuarioEvent);
-				modelApp.objBinding['entradaSistema']++;
-				modelApp.arrBinding.setItemAt({}, 0);
+				//modelApp.objBinding['entradaSistema']++;
+				modelApp.arrBinding.setItemAt({}, modelApp.INGRESO_SISTEMA);
 			}
 			
 			protected function btnRegistrar_clickHandler(event:MouseEvent):void

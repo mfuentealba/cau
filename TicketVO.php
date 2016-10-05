@@ -40,5 +40,6 @@ class TicketVO {
 	var $horasTotalTicket;
 	var $arrComentarios = array();
 	var $notificacion;
+	var $comentario_solucion;
 }
 

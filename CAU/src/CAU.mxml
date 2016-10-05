@@ -66,6 +66,11 @@
 			protected function iniciaRO(event:FlexEvent):void
 			{
 				// TODO Auto-generated method stub
+				modelApp.INGRESO_SISTEMA = modelApp.arrBinding.length;
+				modelApp.arrBinding.addItem({});
+				
+				
+				
 				updater.initialize();
 				var obj1:Object = {id: 1, valor: "Nivel 1"};
 				var obj2:Object = {id: 2, valor: "Nivel 2"};
@@ -180,6 +185,12 @@
 					case 'Tickets':
 						vsGeneral.selectedIndex = 5;
 						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(5)}, {label: 'Listado', data: vsGeneral.getElementAt(3)}];
+						try{
+							listadoTicket.fnTraeData(null);	
+						} catch(e:*){
+							
+						}
+						
 						break;
 					case 'Usuarios':
 						vsGeneral.selectedIndex = 0;
@@ -553,7 +564,7 @@
 				BindingUtils.bindSetter(fnEntradaSistema, modelApp.objBinding, 'entradaSistema', true);
 				modelApp.objBinding['entradaSistema']++;
 				modelApp.arrBinding.addEventListener(CollectionEvent.COLLECTION_CHANGE, fbArrChange);
-				modelApp.arrBinding.setItemAt({}, 0);
+				modelApp.arrBinding.setItemAt({}, modelApp.INGRESO_SISTEMA);
 			}
 			private function fnEntradaSistema(val:*):void{
 				switch(modelApp.usuarioActivo.perfil){
@@ -571,7 +582,20 @@
 			
 			private function fbArrChange(evento:CollectionEvent):void{
 				if(evento.kind == 'replace'){
-					var arr:Array = [];					
+					switch(evento.location){
+						case 0:
+							switch(modelApp.usuarioActivo.perfil){
+								case 1:
+									break;
+								case 2:
+									
+									break;
+								case 3:
+									laTicket.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+									break;
+							}
+							break;
+					}
 				}
 			}
 			

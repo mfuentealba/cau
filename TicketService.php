@@ -123,7 +123,13 @@ class TicketService {
 	 */
 	public function getTicketByID($itemID) {
 		
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename where id=?");
+		$stmt = mysqli_prepare($this->connection, "SELECT t.*, (SELECT max(comentario) 
+                FROM comentarios_solucion c 
+                where c.idreporte = t.id
+                group by c.fecha, c.hora 
+                having c.fecha = max(c.fecha) 
+                    AND c.hora = max(c.hora)) comentario_solucion  
+				FROM $this->tablename t where id=?");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -135,7 +141,7 @@ class TicketService {
 		mysqli_stmt_execute($stmt);
 		$this->throwExceptionOnError();
 		$row = new TicketVO();
-		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion);
+		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion, $row->comentario_solucion);
 		
 		if(mysqli_stmt_fetch($stmt)) {
 	      return $row;
@@ -695,7 +701,14 @@ class TicketService {
 			$opt .= " AND estado = '" . $estado . "'";
 		}
 		//return "SELECT * FROM $this->tablename where idClasificacion = " . $idCla . " " . $opt . " order by fecha desc limit $startIndex, $numItems";
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename where idClasificacion = " . $idCla . " " . $opt . " order by fecha desc limit $startIndex, $numItems");		
+		$stmt = mysqli_prepare($this->connection, "SELECT t.*, (SELECT max(comentario) 
+                FROM comentarios_solucion c 
+                where c.idreporte = t.id
+                group by c.fecha, c.hora 
+                having c.fecha = max(c.fecha) 
+                    AND c.hora = max(c.hora)) comentario_solucion  
+				FROM $this->tablename t  
+				where idClasificacion = " . $idCla . " " . $opt . " order by fecha desc limit $startIndex, $numItems");		
 		$this->throwExceptionOnError();
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
@@ -712,7 +725,7 @@ class TicketService {
 		$rows = array();
 		$row = new TicketVO();
 		
-		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion);
+		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion, $row->comentario_cierre);
 		
 		//$data = $row->id;
 		$msg = $this->throwExceptionOnError();

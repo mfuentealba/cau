@@ -50,6 +50,7 @@ package vo
 		public var horasTotalTicket:String;
 		//private var _notificacion:String;
 		public var notificacion:String;
+		public var comentario_solucion:String;
 		//private var modelApp:ModelApp = ModelApp.getInstance();
 		
 		
