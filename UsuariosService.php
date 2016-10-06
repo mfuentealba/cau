@@ -137,6 +137,45 @@ class UsuariosService {
 	    }
 		
 		mysqli_stmt_free_result($stmt);
+		
+		$stmt = mysqli_prepare($this->connection, "SELECT idreporte, fecha, hora, origen FROM asignaciones WHERE destino=? AND estado = 'N'  order by fecha desc, hora desc");		
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		mysqli_stmt_bind_param($stmt, 's', $soporte);
+		mysqli_stmt_execute($stmt);
+		$this->throwExceptionOnError();
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$rows = array();
+		$row = new stdclass();
+		
+		mysqli_stmt_bind_result($stmt, $row->id, $row->fecha, $row->hora, $row->origen);
+		
+		//$data = $row->id;
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+	    while (mysqli_stmt_fetch($stmt)) {
+		  $not = new NotificacionVO();
+		  $not->id = 'Reasignacion|' . $row->id;
+		  $not->tipo = 'Reasignacion';
+		  $not->mensaje = 'El usuario ' . $row->origen . ' ha reasignado el ticket N° ' . $row->id;
+		  $not->fecha = $row->fecha . ' ' . $row->hora;
+	      $rows[] = $not;
+		  $row = new stdclass();
+	      mysqli_stmt_bind_result($stmt, $row->id, $row->fecha, $row->hora);
+	    }
+		
+		mysqli_stmt_free_result($stmt);
+		
 	    mysqli_close($this->connection);
 		
 		return $rows;

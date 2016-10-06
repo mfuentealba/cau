@@ -179,17 +179,17 @@
 				return item.username.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) > -1 || item.nombre_completo.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) > -1 ? true : false;
 			}
 			
+			private function fnNavegar2(evento:MouseEvent):void{
+				
+			}
+			
 			
 			private function fnNavegar(evento:MouseEvent):void{
 				switch(evento.target.label){
 					case 'Tickets':
-						vsGeneral.selectedIndex = 5;
+						
+						vsGeneral.selectedIndex = modelApp.usuarioActivo.perfil == 2 ? 4 : 5;
 						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(5)}, {label: 'Listado', data: vsGeneral.getElementAt(3)}];
-						try{
-							listadoTicket.fnTraeData(null);	
-						} catch(e:*){
-							
-						}
 						
 						break;
 					case 'Usuarios':
@@ -461,6 +461,12 @@
 			
 			
 			public function fnReasignacionComentarios(arr:Array):void{
+				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, modelApp.ticketSeleccionado, fnNotificacionAsignacion);				
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+			public function fnNotificacionAsignacion(item:TicketVO):void{
 				var i:int = modelApp.arrNotificaciones.getItemIndex(modelApp.objNotificaciones["Reasignacion|" + modelApp.ticketSeleccionado.id]);
 				if(i > -1){
 					modelApp.arrNotificaciones.removeItemAt(i);
@@ -662,7 +668,7 @@
 								</s:fill>
 							</s:Rect>
 							<s:VGroup id="vgbotones" click="fnNavegar(event)" width="100%" gap="0" creationComplete="fnArr(event)">
-								<components:ListaAcordeon id="laTicket" label="Tickets" img="assets/icons/issue.png" arrData="{[{icono: '', data: {label: 'Creación', accion: fnNavegar}}, {icono: '', data: {label: 'Listado', accion: fnNavegar}}]}" defaultSelected="1"/>
+								<components:ListaAcordeon id="laTicket" label="Tickets" img="assets/icons/issue.png" arrData="{[{icono: '', data: {label: 'Creación', accion: fnNavegar2}}, {icono: '', data: {label: 'Listado', accion: fnNavegar2}}]}" defaultSelected="{modelApp.usuarioActivo.perfil == 2 ? 0 : 1}"/>
 								<components:ListaAcordeon id="laUsuarios" label="Usuarios" img="assets/icons/usuarios.png" visible="{modelApp.usuarioActivo.perfil == 3 ? false : true}" includeInLayout="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
 								<components:ListaAcordeon id="laSucursales" label="Sucursales" img="assets/icons/sucursal.png" visible="{modelApp.usuarioActivo.perfil == 3 ? false : true}" includeInLayout="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
 								<components:ListaAcordeon id="laClientes" label="Clientes" img="assets/icons/clientes.png"/>

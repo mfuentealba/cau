@@ -47,7 +47,7 @@ class TicketService {
 	  							$this->databasename,
 	  							$this->port
 	  						);
-
+		mysqli_autocommit($this->connection, FALSE);
 		$this->throwExceptionOnError($this->connection);
 		$this->connectionAux = mysqli_connect(
 	  							$this->server,  
@@ -313,27 +313,13 @@ class TicketService {
 
 	public function reasignarTicket($soporte, $id, $comentario) {
 	
-		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET soporte=? WHERE id=?");		
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-		
-		mysqli_stmt_bind_param($stmt, 'ss', $soporte, $id);		
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-		
-		mysqli_stmt_execute($stmt);		
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-		
-		$this->saveComentarios($comentario);
-		
-		$stmt = mysqli_prepare($this->connectionAux, "SELECT * FROM $this->tablename where id=?");
+		$stmt = mysqli_prepare($this->connectionAux, "SELECT t.*, (SELECT max(comentario) 
+                FROM comentarios_solucion c 
+                where c.idreporte = t.id
+                group by c.fecha, c.hora 
+                having c.fecha = max(c.fecha) 
+                    AND c.hora = max(c.hora)) comentario_solucion  
+				FROM $this->tablename t where id=?");
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -351,7 +337,79 @@ class TicketService {
 			return $msg;
 		}
 		$row = new TicketVO();
-		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion);
+		mysqli_stmt_bind_result($stmt, $row->id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion, $row->comentario_solucion);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		mysqli_stmt_fetch($stmt);
+		
+		$asignacion = new stdclass();
+		$asignacion->idReporte = $id;
+		$asignacion->origen = $row->soporte;
+		$asignacion->destino = $soporte;
+		$asignacion->motivo = 'REASIGNACION';
+		$asignacion->fecha = $comentario->fecha;
+		$asignacion->hora = $comentario->hora;
+		
+	
+		$msg = $this->saveAsignacion($asignacion);
+		if($msg != ''){
+			mysqli_rollback($this->connection);
+			return $msg;
+		}
+		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET soporte=? WHERE id=?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 'ss', $soporte, $id);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			mysqli_rollback($this->connection);
+			return $msg;
+		}
+		
+		$msg = $this->saveComentarios($comentario);
+		if($msg != ''){
+			mysqli_rollback($this->connection);
+			return $msg;
+		}
+		
+		mysqli_commit($this->connection);
+		$stmt = mysqli_prepare($this->connection, "SELECT t.*, (SELECT max(comentario) 
+                FROM comentarios_solucion c 
+                where c.idreporte = t.id
+                group by c.fecha, c.hora 
+                having c.fecha = max(c.fecha) 
+                    AND c.hora = max(c.hora)) comentario_solucion  
+				FROM $this->tablename t where id=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 's', $id);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		$row = new TicketVO();
+		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion, $row->comentario_solucion);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -399,6 +457,24 @@ class TicketService {
 	public function leerTicket($id) {
 	
 		$stmt = mysqli_prepare($this->connection, "UPDATE $this->tablename SET notificacion='S' WHERE id=?");		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_bind_param($stmt, 's', $id);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		
+		$stmt = mysqli_prepare($this->connection, "UPDATE asignaciones SET estado='S' WHERE idreporte=?");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -806,12 +882,55 @@ class TicketService {
 			return $msg;
 		}
 //return $stmt;
-		$autoid = mysqli_stmt_insert_id($stmt);
+		
 
-		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
-		$row->id = $autoid;
-		return $row;
+		return '';
+	}
+	
+	
+	
+	public function saveAsignacion($row) {
+		//return $row;
+		
+		$stmt = mysqli_prepare($this->connection, "UPDATE `asignaciones` SET `estado` = 'S' WHERE idReporte=?");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		mysqli_stmt_bind_param($stmt, 's',  $row->idReporte);
+		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){			
+			return $msg;
+		}
+		
+		
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO `asignaciones`(`idReporte`, `origen`, `destino`, `motivo`, `fecha`, `hora`, `estado`) VALUES (?,?,?,?,?,?,'N')");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		mysqli_stmt_bind_param($stmt, 'ssssis',  $row->idReporte, $row->origen, $row->destino, $row->motivo, $row->fecha, $row->hora);
+		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){			
+			return $msg;
+		}
+		
+//return $stmt;
+		return '';
 	}
 	
 	
@@ -834,13 +953,10 @@ class TicketService {
 		if($msg != ''){
 			return $msg;
 		}
-//return $stmt;
-		
+//return $stmt;		
 
-		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
 		
-		return $row;
+		return '';
 	}
 	
 	/**
