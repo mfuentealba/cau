@@ -553,6 +553,7 @@ class TicketService {
 		}
 		
 		$this->saveComentarios($comentario);
+		$this->saveComentariosSolucion($comentario);
 		
 		$stmt = mysqli_prepare($this->connection, "SELECT * FROM $this->tablename WHERE id = " . $ticket->id);		
 		$this->throwExceptionOnError();
@@ -725,7 +726,7 @@ class TicketService {
 		$rows = array();
 		$row = new TicketVO();
 		
-		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion, $row->comentario_cierre);
+		mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion, $row->comentario_solucion);
 		
 		//$data = $row->id;
 		$msg = $this->throwExceptionOnError();
@@ -736,7 +737,7 @@ class TicketService {
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  $row = new TicketVO();
-	      mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion, $row->comentario_cierre);
+	      mysqli_stmt_bind_result($stmt, $row-> id, $row->tipo_solucion, $row->problema, $row->sub_problema, $row->rotulo, $row->dir_ip, $row->cliente_rut, $row->fecha, $row->hora, $row->soporte, $row->estado, $row->descripcion, $row->hora_cierre, $row->fecha_cierre, $row->asignado_por, $row->comentario_cierre, $row->problema_e, $row->sub_problema_e, $row->solucion_dada_por, $row->idClasificacion, $row->idDescripcion, $row->tiempoSolucion, $row->administracionRemota, $row->tipoNivel, $row->reporteSolucionado, $row->fechaSolucion, $row->horaSolucion, $row->solucionadoPor, $row->clasificacionCierre, $row->categoriaCierre, $row->subcategoriaCierre, $row->descripcionCierre, $row->creadoPor, $row->notificacion, $row->comentario_solucion);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -813,6 +814,34 @@ class TicketService {
 		return $row;
 	}
 	
+	
+	public function saveComentariosSolucion($row) {
+		//return $row;
+		$stmt = mysqli_prepare($this->connectionAux, "INSERT INTO comentarios_solucion (idreporte, username, comentario, fecha, hora) VALUES (?, ?, ?, ?, ?)");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+		mysqli_stmt_bind_param($stmt, 'sssis', $row->reporte,  $row->soporte, $row->comentarios, $row->fecha, $row->hora);
+		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+//return $stmt;
+		
+
+		mysqli_stmt_free_result($stmt);		
+		mysqli_close($this->connection);
+		
+		return $row;
+	}
 	
 	/**
 	 * Utility function to throw an exception if an error occurs 

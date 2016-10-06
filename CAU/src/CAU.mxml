@@ -216,6 +216,11 @@
 					case 'Listado':
 						vsGeneral.selectedIndex = 5;
 						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(4)}, {label: 'Listado', data: vsGeneral.getElementAt(3)}];
+						try{
+							listadoTicket.fnTraeData(null);	
+						} catch(e:*){
+							
+						}
 						break;
 					/*case 'Subcategorías':
 						vsGeneral.selectedIndex = 5;
