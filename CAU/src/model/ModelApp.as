@@ -3,6 +3,8 @@ package model
 	import components.TrdProgressBar;
 	
 	import flash.utils.Dictionary;
+	import flash.utils.getDefinitionByName;
+	import flash.utils.getQualifiedClassName;
 	
 	import mx.collections.ArrayCollection;
 	import mx.rpc.remoting.RemoteObject;
@@ -125,6 +127,9 @@ package model
 			modelLocator = this;
 		}
 		
+		public static function getClass(obj : Object) : Class {
+			return Class(getDefinitionByName(getQualifiedClassName(obj)));
+		}
 		
 	}
 }

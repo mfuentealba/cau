@@ -862,6 +862,16 @@ class TicketService {
 		return $rows;
 	}
 	
+	
+	public function saveComentariosDirecto($row) {
+	
+		$msg = $this->saveComentarios($row);
+		if($msg != ''){
+			return $msg;
+		}
+		return $row;
+	}
+	
 	public function saveComentarios($row) {
 		//return $row;
 		$stmt = mysqli_prepare($this->connection, "INSERT INTO reportes_grabados (id, soporte, reporte, comentarios, fecha, hora) VALUES (null, ?, ?, ?, ?, ?)");

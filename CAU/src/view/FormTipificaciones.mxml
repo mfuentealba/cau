@@ -103,8 +103,25 @@
 				clasificacionVO.nombreClasificacion = auxNuevoVO.nombreClasificacion;
 				clasificacionVO.arrCategoriasIn = auxNuevoVO.arrCategoriasIn;
 				clasificacionVO.arrCategoriasOut = auxNuevoVO.arrCategoriasOut;*/
+				
 				auxNuevoVO.arrAsociadosIn.refresh();
 				auxNuevoVO.arrAsociadosOut.refresh();
+				/*var cf:ClassFactory = new ClassFactory();
+				cf.*/
+				
+				var cl:Class = ModelApp.getClass(auxNuevoVO);
+				switch(cl){
+					case ClasificacionVO:
+						dgCategorias.dataProvider = auxNuevoVO.arrAsociadosIn;
+						break;
+					case CategoriaVO:
+						dgSubCategorias.dataProvider = auxNuevoVO.arrAsociadosIn;
+						break;
+					case SubCategoriaVO:
+						dgProblemas.dataProvider = auxNuevoVO.arrAsociadosIn;
+						break;
+				}
+				
 			}
 			
 			protected function fnPopAgregar(obj:*, campoVisible:String, idCampoVisible:String, eventoEjecucion:String):void
@@ -622,7 +639,7 @@
 							<s:Button label="Agregar Categoría" click="fnPopAgregar(dgClasificacion.selectedItem, 'nombreCategoria', 'idCategoria', MantenedoresEvent.AGREGAR_CATEGORIAS)" width="100%"/>
 							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgClasificacion.selectedItem, 'idCategoria', MantenedoresEvent.ELIMINAR_CLASIFICACION_CATEGORIAS, dgCategorias)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
-						<components:CustomDataGridSpark id="dgCategorias" fnEncabezado="fnSeleccionCategoria" arrSelectorTodo="{['Habilitada']}" dataProvider="{dgClasificacion.selectedItem.arrAsociadosIn}" width="100%" height="100%" gridClick="fnBuscarAsociados(event)">
+						<components:CustomDataGridSpark id="dgCategorias" fnEncabezado="fnSeleccionCategoria" arrSelectorTodo="{['Habilitada']}" width="100%" height="100%" gridClick="fnBuscarAsociados(event)">
 							<components:columns>
 								<s:ArrayList>
 									<s:GridColumn dataField="obj.nombreCategoria" headerText="Nombre"/>
@@ -649,7 +666,7 @@
 							<s:Button label="Agregar Subcategoría" click="fnPopAgregar(dgCategorias.selectedItem ? dgCategorias.selectedItem.obj : null, 'nombreSubCategoria', 'idSubCategoria', MantenedoresEvent.AGREGAR_SUBCATEGORIAS)" width="100%"/>
 							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgCategorias.selectedItem.obj, 'idSubCategoria', MantenedoresEvent.ELIMINAR_CATEGORIA_SUBCATEGORIA, dgSubCategorias)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>						
-						<components:CustomDataGridSpark id="dgSubCategorias" fnEncabezado="fnSeleccionSubCategoria" arrSelectorTodo="{['Habilitada']}" dataProvider="{dgCategorias.selectedItem.obj.arrAsociadosIn}" gridClick="fnBuscarAsociados(event)" width="100%" height="100%">
+						<components:CustomDataGridSpark id="dgSubCategorias" fnEncabezado="fnSeleccionSubCategoria" arrSelectorTodo="{['Habilitada']}" gridClick="fnBuscarAsociados(event)" width="100%" height="100%">
 							<components:columns>
 								<s:ArrayList>
 									<s:GridColumn dataField="obj.idSubCategoria" headerText="Id"/>
@@ -672,7 +689,7 @@
 							<s:Button label="Agregar Problema" click="fnPopAgregar(dgSubCategorias.selectedItem ? dgSubCategorias.selectedItem.obj : null, 'nombreDescripcion', 'idDescripcion', MantenedoresEvent.AGREGAR_PROBLEMAS)" width="100%"/>
 							<s:Button label="Eliminar no habilitada" click="fnEliminarNoSeleccionadas(dgSubCategorias.selectedItem.obj, 'idDescripcion', MantenedoresEvent.ELIMINAR_SUBCATEGORIA_PROBLEMAS, dgProblemas)" skinClass="assets.skins.ButtonCleanLVSkin" width="100%"/>
 						</s:HGroup>
-						<components:CustomDataGridSpark id="dgProblemas" fnEncabezado="fnSeleccionProblema" arrSelectorTodo="{['Habilitada']}" dataProvider="{dgSubCategorias.selectedItem.obj.arrAsociadosIn}" width="100%" height="100%">
+						<components:CustomDataGridSpark id="dgProblemas" fnEncabezado="fnSeleccionProblema" arrSelectorTodo="{['Habilitada']}" width="100%" height="100%">
 							<components:columns>
 								<s:ArrayList>
 									<s:GridColumn dataField="obj.idDescripcion" headerText="Id"/>

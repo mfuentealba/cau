@@ -66,7 +66,7 @@ package listeners
 					break;
 				
 				case TicketEvent.GUARDAR_COMENTARIOS:
-					rmtObjTickets.saveComentarios(evento.objAdicional as ComentarioVO);
+					rmtObjTickets.saveComentariosDirecto(evento.objAdicional as ComentarioVO);
 					
 					break;
 				case TicketEvent.REASIGNAR_TICKET:

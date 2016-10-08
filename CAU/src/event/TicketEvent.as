@@ -13,7 +13,7 @@ package event
 		public static const TOTAL_PAGINAS:String = 'count';
 		public static const LISTAR_PAGINA:String = 'getTickets_paged';
 		public static const LISTAR_COMENTARIOS:String = 'getAllComentarios';
-		public static const GUARDAR_COMENTARIOS:String = 'saveComentarios';
+		public static const GUARDAR_COMENTARIOS:String = 'saveComentariosDirecto';
 		public static const REASIGNAR_TICKET:String = 'reasignarTicket';
 		public static const CERRAR_TICKET:String = 'cerrarTicket';
 		public static const SOLICITUD_CERRAR_TICKET:String = 'solicitudCerrarTicket';
