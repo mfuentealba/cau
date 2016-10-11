@@ -18,7 +18,7 @@ package vo
 		public var rotulo:String = '';
 		public var dir_ip:String = '';
 		public var gerencia:String = '';
-		public var password:String = '';
+		//public var password:String = '';
 		public var empresa:String = '';
 		public var sucursalVO:SucursalVO;
 		

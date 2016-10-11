@@ -68,7 +68,7 @@
 					clienteVO.rotulo = auxCliente.rotulo;
 					clienteVO.dir_ip = auxCliente.dir_ip;
 					clienteVO.gerencia = auxCliente.gerencia;
-					clienteVO.password = auxCliente.password;
+					//clienteVO.password = auxCliente.password;
 					clienteVO.empresa = auxCliente.empresa;
 				}
 				
@@ -88,7 +88,7 @@
 				auxCliente.rotulo = item.rotulo;
 				auxCliente.dir_ip = item.dir_ip;
 				auxCliente.gerencia = item.gerencia;
-				auxCliente.password = item.password;
+				//auxCliente.password = item.password;
 				auxCliente.empresa = item.empresa;	
 			}
 			
@@ -146,7 +146,7 @@
 	<fx:Binding source="txtRotulo.text" destination="clienteVO.rotulo" twoWay="true"/>
 	<fx:Binding source="txtIp.text" destination="clienteVO.dir_ip" twoWay="true"/>
 	<fx:Binding source="txtGerencia.text" destination="clienteVO.gerencia" twoWay="true"/>
-	<fx:Binding source="txtPassword.text" destination="clienteVO.password" twoWay="true"/>
+	<!--<fx:Binding source="txtPassword.text" destination="clienteVO.password" twoWay="true"/>-->
 	<fx:Binding source="txtEmpresa.text" destination="clienteVO.empresa" twoWay="true"/>
 	
 	<s:Group 
@@ -194,9 +194,9 @@
 				<s:FormItem label="Gerencia" width="100%" height="30">
 					<s:TextInput id="txtGerencia" width="100%" height="30"/>
 				</s:FormItem>
-				<s:FormItem label="Password" width="100%" height="30">
+				<!--<s:FormItem label="Password" width="100%" height="30">
 					<s:TextInput id="txtPassword" width="100%" height="30"/>
-				</s:FormItem>
+				</s:FormItem>-->
 				<s:FormItem label="Empresa" width="100%" height="30">
 					<s:TextInput id="txtEmpresa" width="100%" height="30"/>
 				</s:FormItem>

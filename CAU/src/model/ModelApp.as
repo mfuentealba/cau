@@ -24,6 +24,7 @@ package model
 		public var rmtObjUsuarios:RemoteObject;*/
 		//public var rmtObjMant:RemoteObject;
 		public var conexion:ConexionSocket = new ConexionSocket();
+		public var conexionExcel:String = '';
 		public var arrSucursales:ArrayCollection;
 		public var objSucursales:Object = {};
 		public var arrSucursalesTodas:ArrayCollection;

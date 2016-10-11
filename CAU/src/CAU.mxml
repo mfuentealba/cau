@@ -375,6 +375,7 @@
 				// TODO Auto-generated method stub
 				modelApp.conexion.server = evento.result.config.server.ip;
 				modelApp.conexion.port = evento.result.config.server.port;
+				modelApp.conexionExcel = evento.result.config.excel.url;
 				modelApp.conexion.ini();				
 				
 			}

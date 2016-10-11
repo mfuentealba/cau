@@ -135,13 +135,19 @@ package listeners
 					trace("BUSCA_SUBCATEGORIAS_ASOCIADAS");
 					//str = com.adobe.serialization.json.JSON.encode(evento.item);
 					try{
-						rmtObj[evento.type].send(evento.item.idCategoria.obj.idCategoria, evento.item.idClas);
-						rmtObj.item = evento.item['idCategoria']['obj'];
-						rmtObj.callback = evento.callback;	
+						if(evento.item.idCategoria.obj && evento.item.idClas){
+							rmtObj[evento.type].send(evento.item.idCategoria.obj.idCategoria, evento.item.idClas);
+							rmtObj.item = evento.item['idCategoria']['obj'];
+							rmtObj.callback = evento.callback;	
+						}
+							
 					} catch(e:*){
-						rmtObj[evento.type].send(evento.item.idCategoria.idCategoria, evento.item.idClas);
-						rmtObj.item = evento.item['idCategoria']
-						rmtObj.callback = evento.callback;	
+						if(evento.item.idCategoria && evento.item.idClas){
+							rmtObj[evento.type].send(evento.item.idCategoria.idCategoria, evento.item.idClas);
+							rmtObj.item = evento.item['idCategoria'];
+							rmtObj.callback = evento.callback;	
+						}
+							
 					}
 					
 					break;
@@ -164,7 +170,7 @@ package listeners
 					trace("CREAR_CATEGORIA");
 					obj = {idCategoria: evento.item[0].idCategoria, nombreCategoria: evento.item[0].nombreCategoria};
 					//str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send(evento.item[0].nombreCategoria, evento.item[1].source);
+					rmtObj[evento.type].send(evento.item[0].nombreCategoria, evento.item[1].source.join(','));
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -221,7 +227,7 @@ package listeners
 				case MantenedoresEvent.CREAR_SUBCATEGORIAS:
 					obj = {idSubCategoria: evento.item[0].idSubCategoria, nombreSubCategoria: evento.item[0].nombreSubCategoria};
 					//str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send(evento.item[0].nombreSubCategoria, evento.item[1], evento.item[2].source);
+					rmtObj[evento.type].send(evento.item[0].nombreSubCategoria, evento.item[1], evento.item[2].source.join(','));
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					
@@ -250,7 +256,7 @@ package listeners
 				case MantenedoresEvent.CREAR_PROBLEMAS:
 					obj = {idDescripcion: evento.item[0].idDescripcion, nombreDescripcion: evento.item[0].nombreDescripcion};
 					//str = com.adobe.serialization.json.JSON.encode(obj);
-					rmtObj[evento.type].send(evento.item[0].nombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion, evento.item[1], evento.item[2], evento.item[3].source);
+					rmtObj[evento.type].send(evento.item[0].nombreDescripcion, evento.item[0].idFormaAtencion, evento.item[0].idTiempoSolucion, evento.item[1], evento.item[2], evento.item[3].source.join(','));
 					rmtObj.item = evento.item[0];
 					rmtObj.callback = evento.callback;
 					

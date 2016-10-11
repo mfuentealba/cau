@@ -147,7 +147,7 @@
 				
 				
 				/*URL Request*/
-				var request:URLRequest = new URLRequest('http://localhost:8080/weborb/Services/Weborb/cau/informeTrece.php');//model.ConfigUrlCargoAbono);
+				var request:URLRequest = new URLRequest(modelApp.conexionExcel + 'informeTrece.php');//model.ConfigUrlCargoAbono);
 				request.method = URLRequestMethod.POST;
 				request.contentType = "text/xml";
 				request.data = variables;

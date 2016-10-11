@@ -10,6 +10,7 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import components.Callback;
 			import components.PopTipificacion;
 			import components.PopupAgregar;
 			import components.PopupCategorias;
@@ -297,47 +298,9 @@
 				//fnNuevaClasificacion(null);
 			}
 			
-			private var optDelete:String;
-			private function fnEliminacion(opt:String):void{
-				optDelete = opt;
-				switch(opt){
-					case ModelApp.CLASIFICACION:
-						Alert.show('Esta acción eliminará la clasificación y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
-						break;
-					case ModelApp.CATEGORIA:
-						Alert.show('Esta acción eliminará la categoría y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
-						break;
-					case ModelApp.SUBCATEGORIA:
-						Alert.show('Esta acción eliminará la subcategoría y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
-						break;
-					case ModelApp.PROBLEMA:
-						Alert.show('Esta acción eliminará el problema y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
-						break;
-				}
-				optDelete = opt;
-			}
 			
-			private function fnElimina(evento:CloseEvent):void{
-				if(evento.detail == Alert.OK){
-					var mantenedoresEvent:MantenedoresEvent;
-					switch(optDelete){
-						case ModelApp.CLASIFICACION:
-							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION, fnRemueveGrilla, [dgClasificacion.selectedItem, modelApp.arrClasificacion]);
-							break;
-						case ModelApp.CATEGORIA:
-							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CATEGORIA, fnRemueveGrilla, [dgCategorias.selectedItem, modelApp.arrCategoria]);
-							break;
-						case ModelApp.SUBCATEGORIA:
-							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_SUBCATEGORIAS, fnRemueveGrilla, [dgSubCategorias.selectedItem, modelApp.arrSubCategoria]);
-							break;
-						case ModelApp.PROBLEMA:
-							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_PROBLEMAS, fnRemueveGrilla, [dgProblemas.selectedItem, modelApp.arrDescripcion]);
-							break;
-					}
-					
-					Controller.getInstance().dispatchEvent(mantenedoresEvent);
-				}
-			}
+			
+			
 			
 			private function fnFormaAtencion(item:Object, column:*):String{
 				return modelApp.objFormaAtencion[item.obj.idFormaAtencion]['descripcion'];
@@ -388,8 +351,13 @@
 						}
 						break;
 					case 'btnEliminar':
-						optDelete = ModelApp.CLASIFICACION;
-						Alert.show('Esta acción eliminará la clasificación y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
+						//optDelete = ModelApp.CLASIFICACION;
+						if(dgClasificacion.selectedIndex > -1){
+							Alert.show('Esta acción eliminará la clasificación y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, Callback.create(fnElimina, ModelApp.CLASIFICACION));	
+						} else {
+							Alert.show('Debe Seleccionar clasificación a eliminar', 'info');
+						}
+						
 						break;
 				}
 			}
@@ -434,6 +402,14 @@
 						} else {
 							Alert.show('Debe Seleccionar Categoría a modificar');
 						}
+						break;
+					case 'btnEliminar':
+						if(dgCategorias.selectedIndex > -1){
+							Alert.show('Esta acción eliminará la categoría y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, Callback.create(fnElimina, ModelApp.CATEGORIA));	
+						} else {
+							Alert.show('Debe Seleccionar categoría a eliminar', 'info');
+						}
+						
 						break;
 					
 					
@@ -483,8 +459,16 @@
 							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
 							PopUpManager.centerPopUp(pop);
 						} else {
-							Alert.show('Debe Seleccionar Subcategoría a modificar');
+							Alert.show('Debe Seleccionar Subcategoría a modificar', 'info');
 						}
+						break;
+					case 'btnEliminar':
+						if(dgSubCategorias.selectedIndex > -1){
+							Alert.show('Esta acción eliminará la subcategoría y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, Callback.create(fnElimina, ModelApp.SUBCATEGORIA));	
+						} else {
+							Alert.show('Debe Seleccionar Subcategoría a eliminar', 'info');
+						}
+						
 						break;
 				
 				}
@@ -542,13 +526,68 @@
 							PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
 							PopUpManager.centerPopUp(pop);
 						} else {
-							Alert.show('Debe Seleccionar Problema a modificar');
+							Alert.show('Debe Seleccionar Problema a modificar', 'info');
 						}
+						break;
+					
+					case 'btnEliminar':
+						if(dgProblemas.selectedIndex > -1){
+							Alert.show('Esta acción eliminará el problema y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, Callback.create(fnElimina, ModelApp.PROBLEMA));	
+						} else {
+							Alert.show('Debe Seleccionar Problema a eliminar', 'info');
+						}
+						
 						break;
 				}
 				
 				
 			}
+			
+			
+			
+			//private var optDelete:String;
+			private function fnEliminacion(opt:String):void{
+				//optDelete = opt;
+				switch(opt){
+					case ModelApp.CLASIFICACION:
+						Alert.show('Esta acción eliminará la clasificación y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
+						break;
+					case ModelApp.CATEGORIA:
+						Alert.show('Esta acción eliminará la categoría y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
+						break;
+					case ModelApp.SUBCATEGORIA:
+						Alert.show('Esta acción eliminará la subcategoría y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
+						break;
+					case ModelApp.PROBLEMA:
+						Alert.show('Esta acción eliminará el problema y todo lo relacionado con esta. ¿Está seguro que desea continuar?', 'Atención', Alert.OK|Alert.NO, null, fnElimina);
+						break;
+				}
+				//optDelete = opt;
+			}
+			
+			
+			private function fnElimina(evento:CloseEvent, optDelete:String):void{
+				if(evento.detail == Alert.OK){
+					var mantenedoresEvent:MantenedoresEvent;
+					switch(optDelete){
+						case ModelApp.CLASIFICACION:
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CLASIFICACION, fnRemueveGrilla, [dgClasificacion.selectedItem, modelApp.arrClasificacion]);
+							break;
+						case ModelApp.CATEGORIA:
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_CATEGORIA, fnRemueveGrilla, [dgCategorias.selectedItem, modelApp.arrCategoria]);
+							break;
+						case ModelApp.SUBCATEGORIA:
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_SUBCATEGORIAS, fnRemueveGrilla, [dgSubCategorias.selectedItem, modelApp.arrSubCategoria]);
+							break;
+						case ModelApp.PROBLEMA:
+							mantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.ELIMINAR_PROBLEMAS, fnRemueveGrilla, [dgProblemas.selectedItem, modelApp.arrDescripcion]);
+							break;
+					}
+					
+					Controller.getInstance().dispatchEvent(mantenedoresEvent);
+				}
+			}
+			
 			
 			private function fnSeleccionCategoria(evento:MouseEvent):void{
 				evento.stopImmediatePropagation();

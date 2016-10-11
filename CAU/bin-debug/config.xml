@@ -2,13 +2,13 @@
 <config>
 	<!-- <ip>201.239.167.204</ip> -->
 	<server>
-		<ip>127.0.0.1</ip>
-		<!--  <ip>172.16.240.79</ip> -->
+		<!-- <ip>127.0.0.1</ip>-->
+		 <ip>172.16.240.79</ip> 
 		<port>9003</port>
 	</server>
-	<chat>
+	<excel>
 		<!-- <ip>190.162.247.94</ip> -->
-		<ip>127.0.0.1</ip>
-		<port>9002</port>
-	</chat>
+		<url>http://172.16.240.79:8080/weborb/Services/Weborb/cau/</url>		
+		<!-- <url>http://localhost:8080/weborb/Services/Weborb/cau/informeTrece.php</url> -->
+	</excel>
 </config>

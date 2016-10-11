@@ -126,13 +126,13 @@ class ClientesService {
 	public function createClientes($item) {
 		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO $this->tablename (nombres, apellidos, rut, telefono, anexo, email, sucursal, unidad, rotulo, dir_ip, gerencia, password, empresa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO $this->tablename (nombres, apellidos, rut, telefono, anexo, email, sucursal, unidad, rotulo, dir_ip, gerencia, password, empresa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '', ?)");
 		$this->throwExceptionOnError();
 
 		/*$item->sucursal = 'hola';
 		$item->direccion = 'hola';*/
 		
-		mysqli_stmt_bind_param($stmt, 'sssssssssssss', $item->nombres, $item->apellidos, $item->rut, $item->telefono, $item->anexo, $item->email, $item->sucursal, $item->unidad, $item->rotulo, $item->dir_ip, $item->gerencia, $item->password, $item->empresa);
+		mysqli_stmt_bind_param($stmt, 'ssssssssssss', $item->nombres, $item->apellidos, $item->rut, $item->telefono, $item->anexo, $item->email, $item->sucursal, $item->unidad, $item->rotulo, $item->dir_ip, $item->gerencia, $item->empresa);
 		$this->throwExceptionOnError();
 
 		mysqli_stmt_execute($stmt);		

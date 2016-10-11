@@ -148,7 +148,7 @@
 					clienteVO.rotulo = auxCliente.rotulo;
 					clienteVO.dir_ip = auxCliente.dir_ip;
 					clienteVO.gerencia = auxCliente.gerencia;
-					clienteVO.password = auxCliente.password;
+					//clienteVO.password = auxCliente.password;
 					clienteVO.empresa = auxCliente.empresa;	
 				} else {
 					clienteVO = new ClienteVO();
