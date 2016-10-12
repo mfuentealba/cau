@@ -42,6 +42,11 @@
 					Alert.show("Debe completar todos los campos", "Atención");
 					return;
 				}
+				if(txtpassword.text != txtRepassword.text){
+					Alert.show('Las contraseñas no coinciden', 'Atención');
+					txtRepassword.text = '';
+					return;
+				}
 				fnOperarUsuario(evento);
 				
 			}
@@ -201,6 +206,15 @@
 				Controller.getInstance().dispatchEvent(usuarioEvent);
 			}
 			
+			protected function txtRepassword_focusOutHandler(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(txtpassword.text != txtRepassword.text){
+					Alert.show('Las contraseñas no coinciden', 'Atención');
+					txtRepassword.text = '';
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Binding source="cmbPerfil.selectedItem.id" destination="usuarioVO.perfil" twoWay="true"/>
@@ -259,7 +273,7 @@
 					<s:TextInput id="txtpassword" displayAsPassword="true" height="30" width="100%"/>
 				</s:FormItem>
 				<s:FormItem label="Repetir password" width="100%" height="30">
-					<s:TextInput id="txtRepassword" displayAsPassword="true" height="30" width="100%"/>
+					<s:TextInput id="txtRepassword" displayAsPassword="true" height="30" width="100%" focusOut="txtRepassword_focusOutHandler(event)"/>
 				</s:FormItem>
 				<s:FormItem label="Nombre completo" width="100%" height="30">
 					<s:TextInput id="txtNombreCompleto" height="30" width="100%"/>

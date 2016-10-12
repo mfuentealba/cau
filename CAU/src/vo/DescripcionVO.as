@@ -8,6 +8,7 @@ package vo
 		public var nombreDescripcion:String;
 		public var idFormaAtencion:int;
 		public var idTiempoSolucion:int;
+		public var asociada:String;
 		
 		public function DescripcionVO()
 		{

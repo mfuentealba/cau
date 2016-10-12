@@ -10,6 +10,7 @@ package vo
 		public var nombreSubCategoria:String;
 		public var arrAsociadosIn:ArrayCollection = new ArrayCollection();
 		public var arrAsociadosOut:ArrayCollection = new ArrayCollection();
+		public var asociada:String;
 		
 		public function SubCategoriaVO()
 		{

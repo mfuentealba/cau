@@ -5,5 +5,6 @@ class DescripcionVO {
 	var $nombreDescripcion;
 	var $idFormaAtencion;
 	var $idTiempoSolucion;
+	var $asociada;
 		
 }

@@ -166,7 +166,7 @@ class MantenedorService {
 	
 	public function getAllCategoria() {
 		//echo "hfdfgjsfgskdf";
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Categoria");		
+		$stmt = mysqli_prepare($this->connection, "SELECT c.*, case when a.idcategoria is null then 'N' else 'S' end FROM  Categoria c left join asocia_clasificacioncategoria a on c.idcategoria=a.idcategoria");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -181,14 +181,14 @@ class MantenedorService {
 		$rows = array();
 		//$rows = new stdClass();
 		$row = new CategoriaVO();
-		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->nombreCategoria);
+		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->nombreCategoria, $row->asociada);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  //$rows->{$row->id} = $row;
 	      //$row = new stdClass();
 		  $row = new CategoriaVO();
-	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->nombreCategoria);
+	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->nombreCategoria, $row->asociada);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -502,10 +502,30 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	
 	public function setClasificacionCategorias2($arr, $idCat) {
 	
-		for($i = 0; $i < count($arr); $i++){
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_clasificacioncategoria (idClasificacion, idCategoria) 
+													SELECT idClasificacion, ?
+													FROM clasificacion
+													WHERE idClasificacion in (" . $arr . ")");
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_bind_param($stmt, 'i', $idCat);
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		mysqli_stmt_execute($stmt);		
+		$msg = $this->throwExceptionOnError();
+		if($msg != ''){
+			return $msg;
+		}
+
+		
+		/*for($i = 0; $i < count($arr); $i++){
 			$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_clasificacioncategoria (idClasificacion, idCategoria) VALUES (?,?)");
-			/*$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_clasificacioncategoria (idCategoria, idClasificacion)  SELECT idClasificacion, ? FROM clasificacion WHERE (idClasificacion = ? OR ? = 0)");
-			return  "INSERT INTO asocia_clasificacioncategoria (idCategoria, idClasificacion)  SELECT idClasificacion, " . $arr[$i] . " FROM clasificacion WHERE (idClasificacion = " . $idCat . " OR " . $idCat . " = 0)";*/
 			$msg = $this->throwExceptionOnError();
 			if($msg != ''){
 				return $msg;
@@ -523,7 +543,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 				return $msg;
 			}
 
-		}
+		}*/
 		
 		return '';	
 		
@@ -561,17 +581,27 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function setCategoriaSubCategorias2($idClas, $arr, $idSub) {
 	
 		
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_categoriasubcategoria (idClasificacion, idCategoria, idSubCategoria) 
+		/*$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_categoriasubcategoria (idClasificacion, idCategoria, idSubCategoria) 
 												   SELECT idClasificacion, idCategoria, ? 
 												   FROM asocia_clasificacioncategoria 
 												   WHERE (idClasificacion = ? OR ? = 0) 
-														AND idCategoria in (" . $arr . ")");
+														AND idCategoria in (" . $arr . ")");*/
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_categoriasubcategoria (idClasificacion, idCategoria, idSubCategoria) 
+												   SELECT idClasificacion, idCategoria, ? 
+												   FROM asocia_clasificacioncategoria 
+												   WHERE idCategoria in (" . $arr . ")");
 		$msg = $this->throwExceptionOnError();
+		
+		return "INSERT INTO asocia_categoriasubcategoria (idClasificacion, idCategoria, idSubCategoria) 
+												   SELECT idClasificacion, idCategoria, " . $idSub . " 
+												   FROM asocia_clasificacioncategoria 
+												   WHERE idCategoria in (" . $arr . ")";
+		
 		if($msg != ''){
 			return $msg;
 		}
 
-		mysqli_stmt_bind_param($stmt, 'iii', $idSub, $idClas, $idClas);
+		mysqli_stmt_bind_param($stmt, 'i', $idSub);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -643,18 +673,23 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	public function setSubCategoriaProblemas2($idClas, $idCat, $arr, $idProb) {
 	
 		
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_subcategoriadescripcion (idClasificacion, idCategoria, idSubCategoria, idDescripcion)
+		/*$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_subcategoriadescripcion (idClasificacion, idCategoria, idSubCategoria, idDescripcion)
 												   SELECT idClasificacion, idCategoria, idSubCategoria, ? 
 												   FROM asocia_categoriasubcategoria 
 												   WHERE (idClasificacion = ? OR ? = 0) 
 														AND (idCategoria = ? OR ? = 0)
-														AND idSubcategoria in (" . $arr . ")");
+														AND idSubcategoria in (" . $arr . ")");*/
+		$stmt = mysqli_prepare($this->connection, "INSERT INTO asocia_subcategoriadescripcion (idClasificacion, idCategoria, idSubCategoria, idDescripcion)
+												   SELECT idClasificacion, idCategoria, idSubCategoria, ? 
+												   FROM asocia_categoriasubcategoria 
+												   WHERE idSubcategoria in (" . $arr . ")");												
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
 		}
 
-		mysqli_stmt_bind_param($stmt, 'iiiii', $idProb, $idClas, $idClas, $idCat, $idCat);
+		//mysqli_stmt_bind_param($stmt, 'iiiii', $idProb, $idClas, $idClas, $idCat, $idCat);
+		mysqli_stmt_bind_param($stmt, 'i', $idProb);
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -835,7 +870,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		
 		mysqli_stmt_free_result($stmt);	
 		//return count($arr) . ' ' . $autoid;
-		if(count($arr) > 0 && isset($autoid)){
+		if($arr != '' && isset($autoid)){
 			
 			$val = $this->setClasificacionCategorias2($arr, $autoid);
 			
@@ -880,7 +915,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 
 		$autoid = mysqli_stmt_insert_id($stmt);
 
-		if(count($arr) > 0 && isset($autoid)){
+		if($arr != '' && isset($autoid)){
 			$val = $this->setCategoriaSubcategorias2($idClas, $arr, $autoid);
 			
 		}

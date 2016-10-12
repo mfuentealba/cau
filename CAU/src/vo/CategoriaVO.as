@@ -10,6 +10,7 @@ package vo
 		public var nombreCategoria:String;
 		public var arrAsociadosIn:ArrayCollection = new ArrayCollection();
 		public var arrAsociadosOut:ArrayCollection = new ArrayCollection();
+		public var asociada:String;
 		
 		public function CategoriaVO()
 		{
