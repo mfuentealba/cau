@@ -200,7 +200,7 @@ class MantenedorService {
 	
 	public function getAllSubCategoria() {
 		//echo "hfdfgjsfgskdf";
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  SubCategoria");		
+		$stmt = mysqli_prepare($this->connection, "SELECT s.*, case when a.idsubcategoria is null then 'N' else 'S' end FROM SubCategoria s left join asocia_categoriasubcategoria a on s.idsubcategoria=a.idsubcategoria");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -215,14 +215,14 @@ class MantenedorService {
 		$rows = array();
 		//$rows = new stdClass();
 		$row = new SubCategoriaVO();
-		mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->nombreSubCategoria);
+		mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->nombreSubCategoria, $row->asociada);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  //$rows->{$row->id} = $row;
 	      //$row = new stdClass();
 		  $row = new SubCategoriaVO();
-	      mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->nombreSubCategoria);
+	      mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->nombreSubCategoria, $row->asociada);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -234,7 +234,7 @@ class MantenedorService {
 	
 	public function getAllDescripcion() {
 		//echo "hfdfgjsfgskdf";
-		$stmt = mysqli_prepare($this->connection, "SELECT * FROM  Descripcion");		
+		$stmt = mysqli_prepare($this->connection, "SELECT d.*, case when a.iddescripcion is null then 'N' else 'S' end FROM Descripcion d left join asocia_categoriasubcategoria a on d.iddescripcion=a.iddescripcion");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -249,14 +249,14 @@ class MantenedorService {
 		$rows = array();
 		//$rows = new stdClass();
 		$row = new DescripcionVO();
-		mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->nombreDescripcion, $row->idFormaAtencion, $row->idTiempoSolucion);
+		mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->nombreDescripcion, $row->idFormaAtencion, $row->idTiempoSolucion, $row->asociada);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  //$rows->{$row->id} = $row;
 	      //$row = new stdClass();
 		  $row = new DescripcionVO();
-	      mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->nombreDescripcion, $row->idFormaAtencion, $row->idTiempoSolucion);
+	      mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->nombreDescripcion, $row->idFormaAtencion, $row->idTiempoSolucion, $row->asociada);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -433,7 +433,9 @@ FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcatego
 		/*return "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
 FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas;*/
 		$stmt = mysqli_prepare($this->connection, "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
-FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas);		
+FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas);	
+		/*return "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
+FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas;*/
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
