@@ -114,7 +114,10 @@
 				if(arr){
 					
 					for each(var obj:* in dgDataProvider){
-						dgDataProvider2.addItem({obj: obj, sel: false});
+						if(obj.asociada == 'S'){
+							dgDataProvider2.addItem({obj: obj, sel: false});	
+						}
+						
 					}
 				}
 			}

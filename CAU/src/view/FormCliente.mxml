@@ -2,7 +2,10 @@
 <s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
-	xmlns:controllerbd="services.controllerbd.*" creationComplete="ini()">
+	xmlns:controllerbd="services.controllerbd.*"
+	xmlns:skins="assets.skins.*" 
+	xmlns:components="components.*"
+	creationComplete="ini()">
 	<fx:Script>
 		<![CDATA[
 			import controller.Controller;
@@ -150,13 +153,13 @@
 	<fx:Binding source="txtEmpresa.text" destination="clienteVO.empresa" twoWay="true"/>
 	
 	<s:Group 
-		width="100%" height="100%" xmlns:skins="assets.skins.*" xmlns:components="components.*"
+		width="100%" height="100%"
 		>
 		
 		<s:layout>
 			<s:HorizontalLayout/>
 		</s:layout>
-		<components:CustomPanelSpark title="Clientes" width="400" color="#eeeeee" imgBl="true">
+		<components:CustomPanelSpark title="Clientes" width="400" color="#eeeeee">
 			<s:Form width="100%">
 				<s:FormItem label="ID" width="100%" height="30">
 					<s:Label id="idLbl" width="100%" height="30"/>

@@ -379,6 +379,7 @@
 						pop.idCampoVisible = 'idClasificacion';
 						pop.campo1 = 'nombreCategoria';
 						pop.arrUpdate = new ArrayCollection(modelApp.arrCategoria.source);
+						
 						pop.claseOperacion = CategoriaVO;
 						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
 						PopUpManager.centerPopUp(pop);	
@@ -418,6 +419,12 @@
 				
 			}
 			
+			
+			/*private function fnfiltroCreacion(item:*):Boolean{
+				return item.asociada == 'S' ? true : false;
+			}*/
+			
+			
 			public function fnPopSubCategoria(evento:MouseEvent):void{
 				var pop:PopTipificacion = new PopTipificacion();
 				var sw:Boolean;
@@ -431,11 +438,15 @@
 						pop.title = 'Crear Subcategoría';
 						pop.tipoEvento = MantenedoresEvent.CREAR_SUBCATEGORIAS;
 						pop.fnPost = fnNuevaSubcategoria;
-						pop.dgDataProvider = modelApp.arrCategoria;
+						pop.dgDataProvider = new ArrayCollection(modelApp.arrCategoria.source);
+				/*		pop.dgDataProvider.filterFunction = fnfiltroCreacion;
+						pop.dgDataProvider.refresh();*/
 						pop.campoVisible = 'nombreCategoria';
 						pop.idCampoVisible = 'idCategoria';
 						pop.campo1 = 'nombreSubCategoria';
 						pop.arrUpdate = new ArrayCollection(modelApp.arrSubCategoria.source);
+						
+						
 						pop.claseOperacion = SubCategoriaVO;
 						
 						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);

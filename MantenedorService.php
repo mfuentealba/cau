@@ -234,7 +234,7 @@ class MantenedorService {
 	
 	public function getAllDescripcion() {
 		//echo "hfdfgjsfgskdf";
-		$stmt = mysqli_prepare($this->connection, "SELECT d.*, case when a.iddescripcion is null then 'N' else 'S' end FROM Descripcion d left join asocia_categoriasubcategoria a on d.iddescripcion=a.iddescripcion");		
+		$stmt = mysqli_prepare($this->connection, "SELECT d.*, case when a.iddescripcion is null then 'N' else 'S' end FROM Descripcion d left join asocia_subcategoriadescripcion a on d.iddescripcion=a.iddescripcion");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
 			return $msg;
@@ -340,7 +340,7 @@ class MantenedorService {
 	
 	public function getClasificacionCategorias($id) {//http://localhost:8080/weborb/services/weborb/cau/Controller.php?data={"arrCategorias":{"length":0,"sort":null,"source":[],"list":{"length":0,"uid":"E4766D9D-07DA-9BB5-33E7-522DAC7B42F1","source":[]},"filterFunction":null},"idClasificacion":1,"nombreClasificacion":"Incidencia"}&servicio=MantenedorService&accion=getClasificacionCategorias
 		//echo "hfdfgjsfgskdf";
-		$stmt = mysqli_prepare($this->connection, "SELECT c.idCategoria, case when idClasificacion is null then 0 else 1 end sel 
+		$stmt = mysqli_prepare($this->connection, "SELECT c.idCategoria, case when idClasificacion is null then 0 else 1 end sel, case when (SELECT max(d.idCategoria) FROM asocia_clasificacioncategoria d WHERE d.idCategoria = c.idCategoria) is null then 'N' else 'S' end
 FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria = asoc.idcategoria and asoc.idclasificacion = ?");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
@@ -363,14 +363,14 @@ FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria =
 		//$rows = new stdClass();
 		//$row = new CategoriaVO();
 		$row = new stdClass();
-		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel);
+		mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel, $row->asociada);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  //$rows->{$row->id} = $row;
 	      //$row = new stdClass();
 		  $row = new stdClass();
-	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel);
+	      mysqli_stmt_bind_result($stmt, $row->idCategoria, $row->sel, $row->asociada);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -388,7 +388,7 @@ FROM categoria c left join asocia_clasificacioncategoria asoc on c.idcategoria =
 		/*$id = $arr[0]; 
 		$idClas = $arr[1]; */
 		//return " ca: " . $id . " cla: " . $idClas;
-		$stmt = mysqli_prepare($this->connection, "SELECT c.idSubCategoria, case when idCategoria is null then 0 else 1 end sel 
+		$stmt = mysqli_prepare($this->connection, "SELECT c.idSubCategoria, case when idCategoria is null then 0 else 1 end sel, case when (SELECT max(d.idSubCategoria) FROM asocia_categoriasubcategoria d WHERE d.idSubCategoria = c.idSubCategoria) is null then 'N' else 'S' end
 FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcategoria = asoc.idsubcategoria and asoc.idcategoria = " . $id . " and asoc.idClasificacion=" . $idClas . "");		
 		$msg = $this->throwExceptionOnError();
 		if($msg != ''){
@@ -411,14 +411,14 @@ FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcatego
 		//$rows = new stdClass();
 		//$row = new CategoriaVO();
 		$row = new stdClass();
-		mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->sel);
+		mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->sel, $row->asociada);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  //$rows->{$row->id} = $row;
 	      //$row = new stdClass();
 		  $row = new stdClass();
-	      mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->sel);
+	      mysqli_stmt_bind_result($stmt, $row->idSubCategoria, $row->sel, $row->asociada);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -432,7 +432,7 @@ FROM subcategoria c left join asocia_categoriasubcategoria asoc on c.idsubcatego
 		
 		/*return "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
 FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas;*/
-		$stmt = mysqli_prepare($this->connection, "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
+		$stmt = mysqli_prepare($this->connection, "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel , case when (SELECT max(d.idDescripcion) FROM asocia_subcategoriadescripcion d WHERE d.idDescripcion = c.idDescripcion) is null then 'N' else 'S' end
 FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas);	
 		/*return "SELECT c.idDescripcion, case when idSubCategoria is null then 0 else 1 end sel 
 FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripcion = asoc.idDescripcion and asoc.idsubcategoria = " . $id . " and asoc.idcategoria = " . $idCat . " and idclasificacion = " . $idClas;*/
@@ -457,14 +457,14 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		//$rows = new stdClass();
 		//$row = new CategoriaVO();
 		$row = new stdClass();
-		mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->sel);
+		mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->sel, $row->asociada);
 		
 	    while (mysqli_stmt_fetch($stmt)) {
 	      $rows[] = $row;
 		  //$rows->{$row->id} = $row;
 	      //$row = new stdClass();
 		  $row = new stdClass();
-	      mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->sel);
+	      mysqli_stmt_bind_result($stmt, $row->idDescripcion, $row->sel, $row->asociada);
 	    }
 		
 		mysqli_stmt_free_result($stmt);
@@ -594,10 +594,10 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 												   WHERE idCategoria in (" . $arr . ")");
 		$msg = $this->throwExceptionOnError();
 		
-		return "INSERT INTO asocia_categoriasubcategoria (idClasificacion, idCategoria, idSubCategoria) 
+		/*return "INSERT INTO asocia_categoriasubcategoria (idClasificacion, idCategoria, idSubCategoria) 
 												   SELECT idClasificacion, idCategoria, " . $idSub . " 
 												   FROM asocia_clasificacioncategoria 
-												   WHERE idCategoria in (" . $arr . ")";
+												   WHERE idCategoria in (" . $arr . ")";*/
 		
 		if($msg != ''){
 			return $msg;
@@ -890,6 +890,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		$row2 = new CategoriaVO();
 		$row2->idCategoria = $autoid;
 		$row2->nombreCategoria = $row;
+		$row2->asociada = $arr != '' ? 'S' : 'N';
 		return $row2;
 	}
 	
@@ -934,6 +935,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		$row2 = new SubCategoriaVO();
 		$row2->idSubCategoria = $autoid;
 		$row2->nombreSubCategoria = $row;
+		$row2->asociada = $arr != '' ? 'S' : 'N';
 		return $row2;
 	}
 	
@@ -981,6 +983,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		$row2->nombreDescripcion = $row;
 		$row2->idFormaAtencion = $idFormaAtencion; 
 		$row2->idTiempoSolucion = $idTiempoSolucion;
+		$row2->asociada = $arr != '' ? 'S' : 'N';
 		return $row2;
 	}
 	
@@ -1411,133 +1414,7 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 	 * 
 	 * @return stdClass
 	 */
-	public function createClasificacion($item) {
-		//return 0;
 
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO Clasificacion (nombreClasificacion) VALUES (?)");
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		/*$item->sucursal = 'hola';
-		$item->direccion = 'hola';*/
-		
-		mysqli_stmt_bind_param($stmt, 's', $item->nombreClasificacion);
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		mysqli_stmt_execute($stmt);		
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		$autoid = mysqli_stmt_insert_id($stmt);
-
-		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
-		$item->id = $autoid;
-		return $item;
-	}
-	
-	public function createCategoria($item) {
-		//return 0;
-
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO Categoria (nombreCategoria) VALUES (?)");
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		/*$item->sucursal = 'hola';
-		$item->direccion = 'hola';*/
-		
-		mysqli_stmt_bind_param($stmt, 's', $item->nombreCategoria);
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		mysqli_stmt_execute($stmt);		
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		$autoid = mysqli_stmt_insert_id($stmt);
-
-		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
-		$item->id = $autoid;
-		return $item;
-	}
-	
-	public function createSubCategoria($item) {
-		//return 0;
-
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO SubCategoria (nombreSubCategoria) VALUES (?)");
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		/*$item->sucursal = 'hola';
-		$item->direccion = 'hola';*/
-		
-		mysqli_stmt_bind_param($stmt, 's', $item->nombreSubCategoria);
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		mysqli_stmt_execute($stmt);		
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		$autoid = mysqli_stmt_insert_id($stmt);
-
-		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
-		$item->id = $autoid;
-		return $item;
-	}
-	
-	public function createDescripcion($item) {
-		//return 0;
-
-		$stmt = mysqli_prepare($this->connection, "INSERT INTO Descripcion (nombreDescripcion, idFormaAtencion, idTiempoSolucion) VALUES (?, ?, ?)");
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		/*$item->sucursal = 'hola';
-		$item->direccion = 'hola';*/
-		
-		mysqli_stmt_bind_param($stmt, 'sii', $item->nombreDescripcion, $item->idFormaAtencion, $item->idTiempoSolucion);
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		mysqli_stmt_execute($stmt);		
-		$msg = $this->throwExceptionOnError();
-		if($msg != ''){
-			return $msg;
-		}
-
-		$autoid = mysqli_stmt_insert_id($stmt);
-
-		mysqli_stmt_free_result($stmt);		
-		mysqli_close($this->connection);
-		$item->id = $autoid;
-		return $item;
-	}
 
 	/**
 	 * Updates the passed item in the table.

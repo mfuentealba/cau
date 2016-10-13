@@ -251,7 +251,7 @@
 		<s:layout>
 			<s:HorizontalLayout paddingBottom="50"/>
 		</s:layout>
-		<components:CustomPanelSpark id="cpMant" title="{customUsuarios.dgUsuarios.selectedIndex > -1 ? 'Actualizar id: ' + usuarioVO.id : 'Nuevo'}" width="400" height="600" color="#eeeeee" imgBl="true">
+		<components:CustomPanelSpark id="cpMant" title="{customUsuarios.dgUsuarios.selectedIndex > -1 ? 'Actualizar id: ' + usuarioVO.id : 'Nuevo'}" width="400" height="600" color="#eeeeee">
 			<s:Form id="formMant" width="100%">
 				<s:FormItem label="perfil" width="100%" height="30">
 					<s:ComboBox id="cmbPerfil" color="#333333" skinClass="assets.skins.ComboBoxLVNoEditSkin" dataProvider="{modelApp.arrPerfiles}" labelField="perfil" width="100%"></s:ComboBox>

@@ -353,6 +353,7 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(var obj:* in arr){
 						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+							modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]]['asociada'] = obj['asociada'];
 							if(obj['sel'] == 1){
 								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 							} else {
@@ -372,6 +373,7 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
 						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+							modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]]['asociada'] = obj['asociada'];
 							if(obj['sel'] == 1){
 								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 							} else {
@@ -392,6 +394,7 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
 						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+							modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]]['asociada'] = obj['asociada']; 
 							if(obj['sel'] == 1){
 								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 							} else {
@@ -446,6 +449,7 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
 						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+							modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]]['asociada'] = obj['asociada'];
 							if(obj['sel'] == 1){
 								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 							} else {
@@ -465,6 +469,7 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
 					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]]['asociada'] = obj['asociada'];
 						if(obj['sel'] == 1){
 							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 						} else {
@@ -485,6 +490,7 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
 						if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+							modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]]['asociada'] = obj['asociada'];
 							if(obj['sel'] == 1){
 								data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 							} else {
@@ -538,6 +544,7 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
 					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]]['asociada'] = obj['asociada'];
 						if(obj['sel'] == 1){
 							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 						} else {
@@ -557,6 +564,7 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
 					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]]['asociada'] = obj['asociada'];
 						if(obj['sel'] == 1){
 							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 						} else {
@@ -577,6 +585,7 @@ package listeners
 					data.target['item'][objTipificacion[opt]['arrOut']] = new ArrayCollection();
 					for each(obj in arr){
 					if(modelApp[objTipificacion[opt]['obj']].hasOwnProperty(obj[objTipificacion[opt]['id']])){
+						modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]]['asociada'] = obj['asociada'];
 						if(obj['sel'] == 1){
 							data.target['item'][objTipificacion[opt]['arrIn']].addItem({obj: modelApp[objTipificacion[opt]['obj']][obj[objTipificacion[opt]['id']]], sel: true});	
 						} else {
