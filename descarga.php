@@ -14,8 +14,17 @@ $objMes->{"10"} = "octubre";
 $objMes->{"11"} = "noviembre";
 $objMes->{"12"} = "diciembre";
 
-/*
-for($x = 2004; $x < 2017; $x++){
+
+$con=mysqli_connect("localhost","forex","forex","forex");
+
+if (mysqli_connect_errno()) {
+	echo "Failed to connect to MySQL: " . mysqli_connect_error();
+} else {
+	echo "BIEN";
+}
+
+
+for($x = 2009; $x < 2010; $x++){
 	$url = $urlBase . $x;
 	$contenido = file_get_contents($url);
 	//echo "El contenido de la URL es:n";
@@ -35,6 +44,7 @@ for($x = 2004; $x < 2017; $x++){
 		//echo $contenido;
 		$patrón = '/EUR_USD_.{1,20}zip"/';
 		preg_match_all($patrón, $contenido, $arrZIP);
+		sort($arrZIP[0]);
 		print_r($arrZIP);
 		
 		for($j = 0; $j < count($arrZIP[0]); $j++){
@@ -43,23 +53,64 @@ for($x = 2004; $x < 2017; $x++){
 			$arrZIP[0][$j] = $arr[0][$i] . '/' . $arrZIP[0][$j];
 			$contenido = file_get_contents($arrZIP[0][$j]);
 			//echo $contenido;
-			file_put_contents ("EURUSD\\EURUSD" . $x . "_" . $mes . "_" . $nomFile, $contenido);			
+			file_put_contents ("EURUSD\\EURUSD" . $x . "_" . $mes . "_" . $nomFile, $contenido);	
+			
+			$newName = "EURUSD" . $x . "_" . $mes . "_" . $nomFile . ".csv";
+			$zip = new ZipArchive;
+			if($zip->open("EURUSD\\EURUSD" . $x . "_" . $mes . "_" . $nomFile) === TRUE) {
+				
+				$zip->renameIndex(0, $newName);
+				$zip->close();
+				$zip->open("EURUSD\\EURUSD" . $x . "_" . $mes . "_" . $nomFile);
+				$zip->extractTo('EURUSD\\Procesados');
+				$zip->close();
+				echo 'ok';
+			} else {
+				echo 'failed';
+			}
 			//exit();
+			
+			echo "EURUSD\\Procesados\\" . $newName;
+			$contenido = file_get_contents("EURUSD\\Procesados\\" . $newName);
+			echo $contenido;
+			$contenido = limpiaCadena($contenido);
+			echo $contenido;
+			file_put_contents ("EURUSD\\Procesados\\" . $newName, $contenido);
+			
+			
+			$contenido = file_get_contents("EURUSD\\Procesados\\" . $newName);
+			echo $contenido;
+			$contenido = limpiaCadena2($contenido);
+			echo $contenido;
+			file_put_contents ("EURUSD\\Procesados\\" . $newName, $contenido);
+			
+			
+			$str = fnStrImport($newName);
+			echo $str;
+			
+			/*if($newName == "EURUSD2009_noviembre_EUR_USD_Week4.zip.csv"){
+				
+				$result = mysqli_query($con, "ALTER TABLE eurusd MODIFY COLUMN cDealable VARCHAR(1) after id");
+			}*/
+			mysqli_query($con, "TRUNCATE TABLE eurusd_der");
+			
+			$result = mysqli_query($con, $str);
+			if (mysqli_affected_rows($con) > 0) {
+			  $message = "The data was successfully added!" . mysqli_affected_rows($con);
+			} else {
+			  $message = "The user update failed: " . mysqli_affected_rows($con);
+			  $message .= mysqli_error($con); 
+			}
+			exit();
 		}
 	}
 	
 
-}*/
+}
 
-/*
-	LOAD DATA INFILE 'c:/tmp/discounts_2.csv'
-INTO TABLE discounts
-FIELDS TERMINATED BY ',' ENCLOSED BY '"'
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS
-(title,@expired_date,amount)
-SET expired_date = STR_TO_DATE(@expired_date, '%m/%d/%Y');
-	*/
+
+
+/*	
 $zip = new ZipArchive;
 if($zip->open('EURUSD\\EURUSD2009_noviembre_EUR_USD_Week4.zip') === TRUE) {
     $zip->extractTo('EURUSD\\Procesados');
@@ -69,54 +120,65 @@ if($zip->open('EURUSD\\EURUSD2009_noviembre_EUR_USD_Week4.zip') === TRUE) {
     echo 'failed';
 }
 
-$username = "forex";
-$password = "forex";
-$server = "localhost";
-$port = "3306";
-$databasename = "forex";
-$tablename = "EURUSD";	
-$connection = mysqli_connect(
-						$server,  
-						$username,  
-						$password, 
-						$databasename,
-						$port
-					);
-
-/*$stmt = mysqli_ prepare($connection, "LOAD DATA INFILE 'EURUSD\\Procesados\\EUR_USD_Week4.csv'
+$str = "LOAD DATA LOCAL INFILE 'C:\\\\Users\\\\mfuentealba\\\\EURUSD\\\\Procesados\\\\EUR_USD_Week4.csv'
 INTO TABLE eurusd
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '\"'
-LINES TERMINATED BY '\n'
-IGNORE 1 ROWS;");
+LINES TERMINATED BY '\\n';";
+echo $str;
+
+
+
+$result = mysqli_query($con, "select * from eurusd");
+
+
+ while ($row = mysqli_fetch_row($result)) {
+	printf("%s\n", $row[0]);
+}
+
 */
-$str = "LOAD DATA INFILE 'C:\\\\Users\\\\mario\\\\EURUSD\\\\Procesados\\\\EUR_USD_Week4.csv'
-INTO TABLE eurusd
+
+
+
+/*
+$result = mysqli_query($con, $str);
+
+if (mysqli_affected_rows($con) > 0) {
+  $message = "The data was successfully added!" . mysqli_affected_rows($con);
+} else {
+  $message = "The user update failed: " . mysqli_affected_rows($con);
+  $message .= mysqli_error($con); 
+};*/
+
+//echo $message;
+mysqli_close($con);
+
+
+function limpiaCadena($cadena) {
+	//return utf8_encode($cadena);
+	return iconv("ISO-8859-1","ISO-8859-1//IGNORE",$cadena);
+}
+
+
+function limpiaCadena2($cadena) {
+	 
+	return $cadena;
+}
+
+function fnStrImport($str){
+	$str = "LOAD DATA LOCAL INFILE 'C:\\\\Users\\\\mfuentealba\\\\EURUSD\\\\Procesados\\\\" . $str . "'
+INTO TABLE eurusd_der
+CHARACTER SET latin1
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '\"'
 LINES TERMINATED BY '\\n'
-IGNORE 1 ROWS;";
-echo $str;
-if ($connection->query($str) === TRUE) {
-    printf("Se creó con éxtio la tabla myCity.\n");
-} else {
-	printf("MAL.\n");
-}		
-
-/*$msg = throwExceptionOnError($connection);
-if($msg != ''){
-	echo $msg;
-	exit();
+(id, CurrencyPair, @RateDateTime, RateBid, RateAsk, cDealable, CodPer)
+SET RateDateTime = REPLACE(@RateDateTime,'�','');";
+	return $str;
 }
 
-mysqli_stmt_execute($stmt);
 
-$msg = throwExceptionOnError($connection);
-if($msg != ''){
-	echo $msg;
-	exit();
-}
-*/
+
 function throwExceptionOnError($link = null) {
 	
 	if(mysqli_error($link)) {
