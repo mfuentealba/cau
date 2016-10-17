@@ -965,7 +965,8 @@ FROM descripcion c left join asocia_subcategoriadescripcion asoc on c.idDescripc
 		$autoid = mysqli_stmt_insert_id($stmt);
 		
 		
-		if(count($arr) > 0 && isset($autoid)){
+		if($arr != '' && isset($autoid)){
+			//return $arr;
 			$val = $this->setSubcategoriaProblemas2($idClas, $idCat, $arr, $autoid);
 			
 		}

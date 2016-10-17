@@ -385,7 +385,7 @@
 						PopUpManager.centerPopUp(pop);	
 						break;
 					
-					case 'btnModificarCategoria':
+					case 'btnEditar':
 						pop.opcion = evento.target.label;
 						
 						if(dgCategorias.selectedIndex > -1){
@@ -454,7 +454,7 @@
 						
 						break;
 					
-					case 'btnModificarSubCategoria':
+					case 'btnEditar':
 						pop.opcion = evento.target.label;
 						
 						if(dgSubCategorias.selectedIndex > -1){
@@ -520,7 +520,7 @@
 						PopUpManager.addPopUp(pop, CAU(this.parentApplication), true);
 						PopUpManager.centerPopUp(pop);	
 						break;
-					case 'btnModificarProblema':
+					case 'btnEditar':
 						pop.opcion = evento.target.label; 
 						
 						pop.ext = true;

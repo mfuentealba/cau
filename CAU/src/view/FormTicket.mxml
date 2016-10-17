@@ -47,14 +47,19 @@
 			{
 				// TODO Auto-generated method stub
 				var clienteEvent:ClienteEvent;
-				if(btnEnviar.label == 'Crear'){
-					clienteVO.rut = txtRut.text;
-					clienteEvent = new ClienteEvent(ClienteEvent.CREAR, clienteVO, fn);						
+				if(formCliente.accessibilityName == ''){
+					if(btnEnviar.label == 'Crear'){
+						clienteVO.rut = txtRut.text;
+						clienteEvent = new ClienteEvent(ClienteEvent.CREAR, clienteVO, fn);						
+					} else {
+						clienteEvent = new ClienteEvent(ClienteEvent.MODIFICAR, clienteVO, fnUpdateCliente);
+					}
+					
+					Controller.getInstance().dispatchEvent(clienteEvent);	
 				} else {
-					clienteEvent = new ClienteEvent(ClienteEvent.MODIFICAR, clienteVO, fnUpdateCliente);
+					Alert.show("Debe corregir errores en el formulario", "Atención");
 				}
 				
-				Controller.getInstance().dispatchEvent(clienteEvent);
 			}	
 			
 			

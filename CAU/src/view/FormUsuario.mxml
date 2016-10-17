@@ -293,7 +293,7 @@
 					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{usuarioVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnValidaUsuario(event)" height="50" skinClass="assets.skins.ButtonSendLVSkin" width="100%"/>
 				</s:FormItem>
 				<s:FormItem label="" width="100%" height="50">
-					<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo Cliente" click="fnNuevoUsuario(event)" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
+					<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo usuario" click="fnNuevoUsuario(event)" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
 				</s:FormItem>
 				<s:FormItem label="" width="100%" height="50">
 					<s:Button id="btnEliminar" color="white" fontWeight="bold" label="Eliminar" click="fnOperarUsuario(event)" enabled="{customUsuarios.dgUsuarios.selectedItem != null ? true : false}" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
