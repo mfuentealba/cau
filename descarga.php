@@ -24,7 +24,7 @@ if (mysqli_connect_errno()) {
 }
 
 
-for($x = 2009; $x < 2010; $x++){
+for($x = 2010; $x < 2017; $x++){
 	$url = $urlBase . $x;
 	$contenido = file_get_contents($url);
 	//echo "El contenido de la URL es:n";
@@ -36,6 +36,17 @@ for($x = 2009; $x < 2010; $x++){
 	for($i = 0; $i < count($arr[0]); $i++){
 		$mes = $objMes->{explode(" ", $arr[0][$i])[0]};
 		echo $mes;
+		mysqli_query($con, "CREATE TABLE IF NOT EXISTS `eurusd_der" . $x . "_" . $mes . "` (
+							`id` int(11) NOT NULL,
+							  `cDealable` varchar(30) COLLATE utf8_spanish2_ci NOT NULL DEFAULT 'D',
+							  `CurrencyPair` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+							  `RateDateTime` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+							  `RateBid` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+							  `RateAsk` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+							  `CodPer` varchar(30) COLLATE utf8_spanish2_ci NOT NULL
+							) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+							");
 		//exit();
 		$arr[0][$i] = $url . '/' . $arr[0][$i];
 		$arr[0][$i] = substr($arr[0][$i], 0, count($arr[0][$i]) - 3);
@@ -71,7 +82,7 @@ for($x = 2009; $x < 2010; $x++){
 			//exit();
 			
 			echo "EURUSD\\Procesados\\" . $newName;
-			$contenido = file_get_contents("EURUSD\\Procesados\\" . $newName);
+/*			$contenido = file_get_contents("EURUSD\\Procesados\\" . $newName);
 			echo $contenido;
 			$contenido = limpiaCadena($contenido);
 			echo $contenido;
@@ -83,16 +94,30 @@ for($x = 2009; $x < 2010; $x++){
 			$contenido = limpiaCadena2($contenido);
 			echo $contenido;
 			file_put_contents ("EURUSD\\Procesados\\" . $newName, $contenido);
+	*/		
 			
-			
-			$str = fnStrImport($newName);
+			$str = fnStrImport($newName, $x, $mes);
 			echo $str;
 			
 			/*if($newName == "EURUSD2009_noviembre_EUR_USD_Week4.zip.csv"){
 				
 				$result = mysqli_query($con, "ALTER TABLE eurusd MODIFY COLUMN cDealable VARCHAR(1) after id");
 			}*/
-			mysqli_query($con, "TRUNCATE TABLE eurusd_der");
+			//mysqli_query($con, "TRUNCATE TABLE eurusd_der");
+			
+			
+	/*		mysqli_query($con, "CREATE TABLE IF NOT EXISTS `eurusd_der" . $x . "` (
+`id` int(11) NOT NULL,
+  `cDealable` varchar(30) COLLATE utf8_spanish2_ci NOT NULL DEFAULT 'D',
+  `CurrencyPair` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+  `RateDateTime` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+  `RateBid` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+  `RateAsk` varchar(30) COLLATE utf8_spanish2_ci NOT NULL,
+  `CodPer` varchar(30) COLLATE utf8_spanish2_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
+
+");*/
+			
 			
 			$result = mysqli_query($con, $str);
 			if (mysqli_affected_rows($con) > 0) {
@@ -101,7 +126,7 @@ for($x = 2009; $x < 2010; $x++){
 			  $message = "The user update failed: " . mysqli_affected_rows($con);
 			  $message .= mysqli_error($con); 
 			}
-			exit();
+			//exit();
 		}
 	}
 	
@@ -165,19 +190,19 @@ function limpiaCadena2($cadena) {
 	return $cadena;
 }
 
-function fnStrImport($str){
-	$str = "LOAD DATA LOCAL INFILE 'C:\\\\Users\\\\mfuentealba\\\\EURUSD\\\\Procesados\\\\" . $str . "'
-INTO TABLE eurusd_der
-CHARACTER SET latin1
+function fnStrImport($str, $x, $mes){
+	$str = "LOAD DATA LOCAL INFILE 'C:\\\\Users\\\\mario\\\\EURUSD\\\\Procesados\\\\" . $str . "'
+INTO TABLE eurusd_der" . $x . "_" . $mes . "
+CHARACTER SET utf8
 FIELDS TERMINATED BY ',' 
 ENCLOSED BY '\"'
 LINES TERMINATED BY '\\n'
-(id, CurrencyPair, @RateDateTime, RateBid, RateAsk, cDealable, CodPer)
-SET RateDateTime = REPLACE(@RateDateTime,'�','');";
+;";
 	return $str;
 }
 
-
+/*(id, cDealable, CurrencyPair, RateDateTime, RateBid, RateAsk, @CodPer)
+SET RateDateTime = SUBSTRING(@CodPer, 0, 7)*/
 
 function throwExceptionOnError($link = null) {
 	
