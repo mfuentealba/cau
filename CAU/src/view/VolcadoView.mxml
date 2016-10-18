@@ -141,20 +141,22 @@
 			protected function btnExcel_clickHandler(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
-				var variables:URLVariables = new URLVariables();
+				/*var variables:URLVariables = new URLVariables();
 				variables.fecha = fecIni.text.split('-').join('');
 				variables.fecha_fin = fecFin.text.split('-').join('');
-				
+				*/
 				
 				/*URL Request*/
-				var request:URLRequest = new URLRequest(modelApp.conexionExcel + 'informeTrece.php');//model.ConfigUrlCargoAbono);
-				request.method = URLRequestMethod.POST;
+				var request:URLRequest = new URLRequest(modelApp.conexionExcel + 'informeTrece.php?fecha=' + fecIni.text.split('-').join('') + '&fecha_fin=' + fecFin.text.split('-').join(''));//model.ConfigUrlCargoAbono);
+				/*request.method = URLRequestMethod.GET;
 				request.contentType = "text/xml";
-				request.data = variables;
+				request.data = variables;*/
 				
 				/*urlLoader*/
+				//navigateToURL(new URLRequest("http://localhost:8080/weborb/Services/Weborb/cau/informeTrece.php"), "_blank");
+				//Alert.show(modelApp.conexionExcel + 'informeTrece.php');
+				navigateToURL(request, "_blank");
 				
-				navigateToURL(request);
 				/*var urlLoader:URLLoader = new URLLoader();
 				urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
 				urlLoader.addEventListener(Event.COMPLETE,loaderComplete);
