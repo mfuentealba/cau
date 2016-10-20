@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:CustomPanelSpark xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							 xmlns:s="library://ns.adobe.com/flex/spark" title="Seleccionar Items" 
+							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" width="400" height="300">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import controller.Controller;
+			
+			import event.MantenedoresEvent;
+			
+			import model.ModelApp;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			
+			import vo.CategoriaVO;
+			import vo.ClasificacionVO;
+			[Bindable] public var clasificacionVO:ClasificacionVO;
+			public var fnActualizaData:Function;
+			[Bindable] public var dgDataProvider:ArrayCollection;
+			[Bindable] public var dgDataProvider2:ArrayCollection;
+			[Bindable] public var campoVisible:String;
+			[Bindable] public var idCampoVisible:int;
+			public var optEvento:String;
+			
+			protected function fnCerrar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function fnAgregar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var arr:Array = [];
+				for each(var obj:Object in dgDataProvider2){
+					if(obj.sel == true){
+						arr.push(obj['obj'][idCampoVisible]);	
+					}
+					
+				}
+				
+				var manEvent:MantenedoresEvent;
+				switch(optEvento){
+					case ModelApp.CATEGORIA:
+						manEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, fnActualizaData, [clasificacionVO, arr]);
+						break;
+					case ModelApp.SUBCATEGORIA:
+						manEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, fnActualizaData, [clasificacionVO, arr]);
+						break;
+					case ModelApp.PROBLEMA:
+						manEvent = new MantenedoresEvent(MantenedoresEvent.AGREGAR_CATEGORIAS, fnActualizaData, [clasificacionVO, arr]);
+						break;
+				}
+				
+				Controller.getInstance().dispatchEvent(manEvent);
+				fnCerrar(null);
+			}
+			
+			private function set fnArmaDataProvider(arr:ArrayCollection):void{
+				if(arr){
+					for each(var obj:* in dgDataProvider){
+						dgDataProvider2.addItem({obj: obj, sel: false}
+					}
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Binding source="dgDataProvider" destination="fnArmaDataProvider"/>
+	<s:VGroup width="100%" height="100%" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" horizontalAlign="center">
+		<s:DataGrid id="dg" dataProvider="{dgDataProvider2}" width="100%" height="200">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="obj.idCampoVisible" headerText="ID"/>
+					<s:GridColumn dataField="obj.campoVisible" headerText="Nombre"/>
+					<s:GridColumn dataField="sel" rendererIsEditable="true" headerText="Sel" itemRenderer="components.RenderSel" width="40"/>	
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>
+		<s:HGroup>
+			<s:Button label="Agregar" width="100" click="fnAgregar(event)"/>
+			<s:Button label="Cancelar" width="100" click="fnCerrar(event)" skinClass="assets.skins.ButtonCleanLVSkin"/>
+			
+		</s:HGroup>	
+	</s:VGroup>
+	
+</components:CustomPanelSpark>

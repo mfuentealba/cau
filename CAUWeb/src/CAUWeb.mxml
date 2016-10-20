@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   creationComplete="iniciaRO(event)"
+			   
+			   backgroundAlpha="0" width="100%" height="100%" backgroundColor="0x000000" xmlns:components="components.*" xmlns:view="view.*"
+			   >
+	<fx:Script>
+		<![CDATA[
+			import air.update.events.StatusUpdateErrorEvent;
+			import air.update.events.UpdateEvent;
+			
+			import assets.skins.CustomListSkin;
+			
+			import components.RenderList;
+			import components.RenderListNotificacion;
+			import components.TrdProgressBar;
+			
+			import controller.Controller;
+			
+			import event.ClienteEvent;
+			import event.MantenedoresEvent;
+			import event.SucursalEvent;
+			import event.TicketEvent;
+			import event.UsuarioEvent;
+			
+			import model.ModelApp;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.components.List;
+			import spark.effects.Resize;
+			import spark.events.GridEvent;
+			
+			import vo.ClienteVO;
+			import vo.GrupoResolutorVO;
+			import vo.NotificacionVO;
+			import vo.SucursalVO;
+			import vo.TicketVO;
+			import vo.UserVO;
+			
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			private var arrElementos:ArrayCollection = new ArrayCollection();
+			private var bcElementos:List = new List();
+			
+			
+			
+			
+			protected function rmtObj_faultHandler(event:FaultEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			
+			private function fn(item:Object):Boolean{
+				return item.valor == "Nivel 2" ? false : true;
+			}
+			
+			protected function iniciaRO(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.INGRESO_SISTEMA = modelApp.arrBinding.length;
+				modelApp.arrBinding.addItem({});
+				
+				
+				
+				//updater.initialize();
+				var obj1:Object = {id: 1, valor: "Nivel 1"};
+				var obj2:Object = {id: 2, valor: "Nivel 2"};
+				var obj3:Object = {id: 3, valor: "Nivel 3"};
+				
+				var arr:Array = [obj1, obj2, obj3];
+				modelApp.arrTipoUsuario = new ArrayCollection(arr);
+				
+				/*modelApp.arrTipoUsuario.filterFunction = fn;
+				modelApp.arrTipoUsuario.refresh();
+				var i:int = modelApp.arrTipoUsuario.getItemIndex(obj2);
+				if(i > -1){
+				modelApp.arrTipoUsuario.removeItemAt(i);	
+				} else {
+				i = modelApp.arrTipoUsuario.list.getItemIndex(obj2);
+				if(i > -1){
+				modelApp.arrTipoUsuario.list.removeItemAt(i);
+				}
+				}
+				*/
+				
+				
+				modelApp.objTipoUsuario = {'1': obj1, '2': obj2, '3': obj3};
+				
+				
+				/*modelApp.rmtObjSucursales = rmtObjSucursales;
+				modelApp.rmtObjClientes = rmtObjClientes;
+				modelApp.rmtObjUsuarios = rmtObjUsuarios;*/
+				
+				var sucursalEvent:SucursalEvent = new SucursalEvent(SucursalEvent.LISTAR);
+				sucursalEvent.callback = fnListaClientes;
+				Controller.getInstance().dispatchEvent(sucursalEvent);
+				modelApp.fnSucursalesFilter = fnSucursalesFilter;
+				
+				var mantenedorEvent:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_PERFILES);
+				//mantenedorEvent.callback = fnListaClientes;
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				//modelApp.fnGrupoResolutorFilter = fnGrupoResolutorFilter;
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_CLASIFICACION);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_CATEGORIAS);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_SUBCATEGORIAS);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_DESCRIPCION);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				
+				
+				
+				
+				var usuarioEvent:UsuarioEvent = new UsuarioEvent(UsuarioEvent.LISTAR);
+				//usuarioEvent.callback = fnLista;
+				Controller.getInstance().dispatchEvent(usuarioEvent);
+				modelApp.fnUsuariosFilter = fnUsuariosFilter;
+				
+				
+				var clienteEvent:ClienteEvent = new ClienteEvent(ClienteEvent.LISTAR);
+				clienteEvent.callback = fnListaClientes;
+				Controller.getInstance().dispatchEvent(clienteEvent);
+				modelApp.fnClientesFilter = fnClientesFilter;
+				
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_FORMA_ATENCION);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				
+				mantenedorEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_TIEMPO_SOLUCION);				
+				Controller.getInstance().dispatchEvent(mantenedorEvent);
+				
+				
+				config.send();
+				
+				/*
+				var mantenedor2Event:MantenedoresEvent = new MantenedoresEvent(MantenedoresEvent.LISTAR_GRUPORESOLUTOR);				
+				Controller.getInstance().dispatchEvent(mantenedor2Event);*/
+				
+			}
+			
+			
+			
+			
+			private function fnListaClientes():void{
+				var clienteEvent:ClienteEvent = new ClienteEvent(ClienteEvent.LISTAR);
+				Controller.getInstance().dispatchEvent(clienteEvent);
+				modelApp.fnClientesFilter = fnClientesFilter;
+			}
+			
+			
+			private function fnSucursalesFilter(item:SucursalVO):Boolean{
+				return item.sucursal.toLowerCase().indexOf(modelApp.sucursalesFilter.toLocaleLowerCase()) > -1 ? true : false;
+			}
+			
+			private function fnClientesFilter(item:ClienteVO):Boolean{
+				return item.apellidos.toLowerCase().indexOf(modelApp.clientesFilter.toLocaleLowerCase()) > -1 || item.nombres.toLowerCase().indexOf(modelApp.clientesFilter.toLocaleLowerCase()) > -1 ? true : false;
+			}
+			
+			private function fnUsuariosFilter(item:UserVO):Boolean{
+				return item.username.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) > -1 || item.nombre_completo.toLowerCase().indexOf(modelApp.usuarioFilter.toLocaleLowerCase()) > -1 ? true : false;
+			}
+			
+			private function fnNavegar2(evento:MouseEvent):void{
+				
+			}
+			
+			
+			private function fnNavegar(evento:MouseEvent):void{
+				switch(evento.target.label){
+					case 'Tickets':
+						
+						vsGeneral.selectedIndex = modelApp.usuarioActivo.perfil == 2 ? 4 : 5;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(5)}, {label: 'Listado', data: vsGeneral.getElementAt(3)}];
+						
+						break;
+					case 'Usuarios':
+						vsGeneral.selectedIndex = 0;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Usuarios', data: vsGeneral.getElementAt(0)}];
+						break;
+					case 'Clientes':
+						vsGeneral.selectedIndex = 1;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Clientes', data: vsGeneral.getElementAt(1)}];
+						break;
+					case 'Sucursales':
+						vsGeneral.selectedIndex = 2;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Sucursales', data: vsGeneral.getElementAt(2)}];
+						break;
+					case 'Creación':
+						if(modelApp.usuarioActivo.perfil != 3){
+							vsGeneral.selectedIndex = 4;
+							titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(4)}, {label: 'Creación', data: vsGeneral.getElementAt(3)}];	
+						} else {
+							Alert.show('No está autorizado para esta operación', 'Info');
+						}
+						
+						break;
+					case 'Listado':
+						vsGeneral.selectedIndex = 5;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tickets', data: vsGeneral.getElementAt(4)}, {label: 'Listado', data: vsGeneral.getElementAt(3)}];
+						try{
+							listadoTicket.fnTraeData(null);	
+						} catch(e:*){
+							
+						}
+						break;
+					/*case 'Subcategorías':
+					vsGeneral.selectedIndex = 5;
+					titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}, {label: 'Subcategorías', data: vsGeneral.getElementAt(5)}];
+					break;
+					case 'Problemas':
+					vsGeneral.selectedIndex = 6;
+					titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}, {label: 'Problemas', data: vsGeneral.getElementAt(6)}];
+					break;*/					
+					case 'Tipificación':
+						vsGeneral.selectedIndex = 3;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(3)}];
+						break;
+					case 'Informes':
+						vsGeneral.selectedIndex = 8;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Informes', data: vsGeneral.getElementAt(8)}];
+						break;
+				}
+				
+				if(arrElementos.getItemIndex(evento.target) > -1){
+					var objAux:* = arrElementos.removeItemAt(arrElementos.getItemIndex(evento.target));
+				} else {
+					objAux = arrElementos.removeItemAt(arrElementos.getItemIndex(evento.target.parentDocument));	
+				}
+				
+				for each(var obj:* in arrElementos){
+					if(obj is ListaAcordeon){
+						obj.selected = 2;
+					} else {
+						obj.selected = false;	
+					}
+					
+				} 
+				arrElementos.addItem(objAux);
+				if(objAux is ListaAcordeon){
+					objAux.selected = 1;
+					/*if(ListaAcordeon(objAux).arrElementos.length > 0){
+					objAux.arrElementos[objAux.defaultSelected].selected = 1;//dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+					}*/
+				} else {
+					objAux.selected = true;	
+				}
+				
+				
+			}
+			
+			protected function fnArr(evento:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				for(var i:int = 0; i < vgbotones.numElements; i++){
+					arrElementos.addItem(vgbotones.getElementAt(i));	
+				}
+				
+			}
+			
+			protected function fnLogout(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				vsVistas.selectedIndex = 0;
+				modelApp.usuarioActivo = null;
+				modelApp.conexion._xmlSocket.close();
+				modelApp.arrTickets = new ArrayCollection();
+				modelApp.objTicket = {};
+				
+			}
+			
+			protected function fnRedimencion(event:ResizeEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(vgPrincipal){
+					vgPrincipal.width = this.width;
+					vgPrincipal.height = this.height;
+					sc.width = this.width;
+					sc.height = this.height;
+				}
+				
+			}
+			
+			protected function updater_initializedHandler(event:UpdateEvent):void
+			{				
+				//updater.checkNow();
+			}
+			
+			protected function fnLinkExt(evento:MouseEvent):void{
+				switch(evento.target.label){
+					case 'Tipificación':
+						/*var ev:MouseEvent = new MouseEvent(MouseEvent.CLICK);
+						laClientes.btnDespliegue.dispatchEvent(ev);
+						laClientes.selected = 1;*/
+						
+						vsGeneral.selectedIndex = 3;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}];
+						break;
+					case 'Clientes':
+						break;
+					case 'Sucursales':
+						vsGeneral.selectedIndex = 2;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Sucursales', data: vsGeneral.getElementAt(2)}];
+						break;
+					case 'Clasificación':
+						vsGeneral.selectedIndex = 3;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}, {label: 'Clasificación', data: vsGeneral.getElementAt(3)}];
+						break;
+					case 'Categorías':
+						vsGeneral.selectedIndex = 4;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}, {label: 'Categorías', data: vsGeneral.getElementAt(4)}];
+						break;
+					case 'Subcategorías':
+						vsGeneral.selectedIndex = 5;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}, {label: 'Subcategorías', data: vsGeneral.getElementAt(5)}];
+						break;
+					case 'Problemas':
+						vsGeneral.selectedIndex = 6;
+						titulos.strBreadcrumb = [{label: 'Home', data: vsGeneral.getElementAt(0)}, {label: 'Tipificación', data: vsGeneral.getElementAt(0)}, {label: 'Problemas', data: vsGeneral.getElementAt(6)}];
+						break;
+				}
+				
+			}
+			
+			
+			
+			protected function updater_errorHandler(event:ErrorEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show("Problemas al conectarse al servicio de actualización", "Error");
+			}
+			
+			protected function updater_updateErrorHandler(event:StatusUpdateErrorEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show("Problemas al conectarse al servicio de actualización", "Error");
+			}
+			
+			
+			private function set fnBloqueo(val:int):void{
+				if(val > 0){
+					if(!modelApp.popBl){
+						modelApp.popBl = new TrdProgressBar();
+						PopUpManager.addPopUp(modelApp.popBl, this, true);
+						PopUpManager.centerPopUp(modelApp.popBl);	
+					}
+					
+				} else {
+					PopUpManager.removePopUp(modelApp.popBl);
+					modelApp.popBl = null;
+				}
+			}
+			
+			
+			protected function config_resultHandler(evento:ResultEvent):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.conexion.server = evento.result.config.server.ip;
+				modelApp.conexion.port = evento.result.config.server.port;
+				modelApp.conexionExcel = evento.result.config.excel.url;
+				modelApp.conexion.ini();				
+				
+			}
+			
+			
+			private function fnClick(evento:* = null):void{
+				btnOpciones.selected = false;
+				var not:NotificacionVO = NotificacionVO(bcElementos.selectedItem);
+				switch(not.tipo){
+					case "TicketVO":
+						if(modelApp.objTicket.hasOwnProperty(not.id.split('|')[1])){
+							var i:int = modelApp.arrNotificaciones.getItemIndex(not);
+							/*if(i > -1){
+							modelApp.arrNotificaciones.removeItemAt(i);
+							} else {
+							i = modelApp.arrNotificaciones.list.getItemIndex(not);
+							if(i > -1){
+							modelApp.arrNotificaciones.list.removeItemAt(i);
+							}
+							}
+							delete modelApp.objNotificaciones[not.id];
+							modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';*/
+							modelApp.ticketSeleccionado = modelApp.objTicket[not.id.split('|')[1]] as TicketVO;
+							var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
+							Controller.getInstance().dispatchEvent(ticketEvent);
+						} else {
+							var ticketVO:TicketVO = new TicketVO();
+							ticketVO.id = not.id.split('|')[1];
+							ticketEvent = new TicketEvent(TicketEvent.BUSCAR_TICKET, ticketVO, fnTicketEncontrado);
+							Controller.getInstance().dispatchEvent(ticketEvent);
+						}
+						break;
+					case "Reasignacion":
+						if(modelApp.objTicket.hasOwnProperty(not.id.split('|')[1])){
+							i = modelApp.arrNotificaciones.getItemIndex(not);
+							modelApp.ticketSeleccionado = modelApp.objTicket[not.id.split('|')[1]] as TicketVO;
+							ticketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnReasignacionComentarios);
+							Controller.getInstance().dispatchEvent(ticketEvent);
+						} else {
+							ticketVO = new TicketVO();
+							ticketVO.id = not.id.split('|')[1];
+							ticketEvent = new TicketEvent(TicketEvent.BUSCAR_TICKET, ticketVO, fnTicketEncontradoReasignacion);
+							Controller.getInstance().dispatchEvent(ticketEvent);
+						}
+						break;
+				}
+				PopUpManager.removePopUp(bcElementos);
+				//vgList.removeElement(bcElementos);
+				
+				bcElementos = null;
+			}
+			
+			
+			public function fnTicketEncontrado(ticketVO:TicketVO):void{
+				if(ticketVO){
+					modelApp.ticketSeleccionado = ticketVO;
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnComentarios);
+					Controller.getInstance().dispatchEvent(ticketEvent);	
+				}
+				
+			}
+			
+			public function fnTicketEncontradoReasignacion(ticketVO:TicketVO):void{
+				if(ticketVO){
+					modelApp.ticketSeleccionado = ticketVO;
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, fnReasignacionComentarios);
+					Controller.getInstance().dispatchEvent(ticketEvent);	
+				}
+				
+			}
+			
+			public function fnComentarios(arr:Array):void{
+				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
+				if(modelApp.ticketSeleccionado.notificacion == 'N'){
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, modelApp.ticketSeleccionado, fnNotificacion);				
+					Controller.getInstance().dispatchEvent(ticketEvent);		
+					
+				} else {
+					this.vsGeneral.selectedIndex = 6;
+					this.titulos.strBreadcrumb = [{label: 'Home', data: this.vsGeneral.getElementAt(0)}, {label: 'Tickets', data: this.vsGeneral.getElementAt(4)}, {label: 'Creación', data: this.vsGeneral.getElementAt(3)}];
+					
+				}
+			}
+			
+			
+			public function fnReasignacionComentarios(arr:Array):void{
+				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, modelApp.ticketSeleccionado, fnNotificacionAsignacion);				
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+			public function fnNotificacionAsignacion(item:TicketVO):void{
+				var i:int = modelApp.arrNotificaciones.getItemIndex(modelApp.objNotificaciones["Reasignacion|" + modelApp.ticketSeleccionado.id]);
+				if(i > -1){
+					modelApp.arrNotificaciones.removeItemAt(i);
+				} else {
+					i = modelApp.arrNotificaciones.list.getItemIndex(modelApp.objNotificaciones["Reasignacion|" + modelApp.ticketSeleccionado.id]);
+					if(i > -1){
+						modelApp.arrNotificaciones.list.removeItemAt(i);
+					}
+				}
+				delete modelApp.objNotificaciones["Reasignacion|" + modelApp.ticketSeleccionado.id];
+				i = modelApp.arrTickets.getItemIndex(modelApp.ticketSeleccionado);
+				if(i > -1){
+					modelApp.arrTickets.setItemAt(modelApp.ticketSeleccionado, i);
+				} else {
+					i = modelApp.arrTickets.list.getItemIndex(modelApp.ticketSeleccionado);
+					if(i > -1){
+						modelApp.arrTickets.list.setItemAt(modelApp.ticketSeleccionado, i);
+					}
+				}
+				
+				
+				
+				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+				this.vsGeneral.selectedIndex = 6;
+				this.titulos.strBreadcrumb = [{label: 'Home', data: this.vsGeneral.getElementAt(0)}, {label: 'Tickets', data: this.vsGeneral.getElementAt(4)}, {label: 'Creación', data: this.vsGeneral.getElementAt(3)}];
+			}
+			
+			private function fnNotificacion(item:TicketVO):void{
+				var auxTicket:TicketVO = modelApp.ticketSeleccionado as TicketVO;
+				
+				/*var o:* = modelApp.arrNotificaciones.removeItemAt(modelApp.arrNotificaciones.getItemIndex(modelApp.dictNotificaciones[auxTicket]['obj']));
+				if(!o){
+				delete modelApp.arrNotificaciones.source[modelApp.dictNotificaciones[auxTicket]['pos']];
+				delete modelApp.dictNotificaciones[modelApp.ticketSeleccionado];*/
+				
+				var i:int = modelApp.arrNotificaciones.getItemIndex(modelApp.objNotificaciones["TicketVO|" + item.id]);
+				if(i > -1){
+					modelApp.arrNotificaciones.removeItemAt(i);
+				} else {
+					i = modelApp.arrNotificaciones.list.getItemIndex(modelApp.objNotificaciones["TicketVO|" + item.id]);
+					if(i > -1){
+						modelApp.arrNotificaciones.list.removeItemAt(i);
+					}
+				}
+				delete modelApp.objNotificaciones["TicketVO|" + item.id];
+				i = modelApp.arrTickets.getItemIndex(modelApp.ticketSeleccionado);
+				if(i > -1){
+					modelApp.arrTickets.setItemAt(item, i);
+				} else {
+					i = modelApp.arrTickets.list.getItemIndex(modelApp.ticketSeleccionado);
+					if(i > -1){
+						modelApp.arrTickets.list.setItemAt(item, i);
+					}
+				}
+				
+				
+				
+				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+				this.vsGeneral.selectedIndex = 6;
+				this.titulos.strBreadcrumb = [{label: 'Home', data: this.vsGeneral.getElementAt(0)}, {label: 'Tickets', data: this.vsGeneral.getElementAt(4)}, {label: 'Creación', data: this.vsGeneral.getElementAt(3)}];
+				
+			}
+			
+			
+			protected function btnOpciones_clickHandler(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(btnOpciones.selected){			
+					bcElementos = new List();
+					bcElementos.minHeight = 0;
+					bcElementos.labelField = 'label';
+					bcElementos.setStyle("skinClass", CustomListSkin);
+					var f:ClassFactory = new ClassFactory(RenderListNotificacion);
+					bcElementos.itemRenderer = f; 
+					bcElementos.addEventListener(MouseEvent.CLICK, fnClick);
+					PopUpManager.addPopUp(bcElementos, evento.target as DisplayObject);
+					PopUpManager.centerPopUp(bcElementos);
+					//vgList.addElement(bcElementos);
+					bcElementos.dataProvider = modelApp.arrNotificaciones;
+					bcElementos.width = 400;
+					
+					bcElementos.y = 100;
+					//bcElementos.top = evento.target.height;
+					bcElementos.x -= bcElementos.width - evento.target.width;
+					//bcElementos.includeInLayout = false;
+					/*bcElementos.horizontalCenter = 0;	
+					bcElementos.verticalCenter = evento.target.height;*/
+					//bcElementos.x = event.target.x + event.target.parent.x;
+				} else {
+					PopUpManager.removePopUp(bcElementos);
+					//vgList.removeElement(bcElementos);
+					/*if(hostComponent.fnCallback != null){
+					hostComponent.fnCallback.call(this, evento);	
+					}*/
+					
+					bcElementos = null;
+				}
+			}
+			
+			
+			
+			protected function vsGeneral_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.arrBinding.addItem({label: 'entradaSistema'});
+				BindingUtils.bindSetter(fnEntradaSistema, modelApp.objBinding, 'entradaSistema', true);
+				modelApp.objBinding['entradaSistema']++;
+				modelApp.arrBinding.addEventListener(CollectionEvent.COLLECTION_CHANGE, fbArrChange);
+				modelApp.arrBinding.setItemAt({}, modelApp.INGRESO_SISTEMA);
+			}
+			private function fnEntradaSistema(val:*):void{
+				switch(modelApp.usuarioActivo.perfil){
+					case 1:
+						break;
+					case 2:
+						
+						break;
+					case 3:
+						laTicket.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+						break;
+				}
+			}
+			
+			
+			private function fbArrChange(evento:CollectionEvent):void{
+				if(evento.kind == 'replace'){
+					switch(evento.location){
+						case 0:
+							switch(modelApp.usuarioActivo.perfil){
+								case 1:
+									break;
+								case 2:
+									
+									break;
+								case 3:
+									laTicket.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
+									break;
+							}
+							break;
+					}
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Style source="./assets/css/style.css"/>
+	<fx:Declarations>
+		<!--<ns:NativeApplicationUpdater id="updater" 
+									 updateURL="http://172.16.240.79:8080/cauUpdate/assets/config/configUpdate.xml"
+									 initialized="updater_initializedHandler(event)"
+									 error="updater_errorHandler(event)" updateError="updater_updateErrorHandler(event)"/>-->
+		<s:HTTPService id="config" url="config.xml" result="config_resultHandler(event)"/>
+		
+	</fx:Declarations>
+	<fx:Binding source="modelApp.cntrBl" destination="fnBloqueo"/>
+	<s:Scroller id="sc" width="100%" height="100%">
+		
+		<s:VGroup id="vgPrincipal" gap="0">
+			<s:Group width="100%" height="50">
+				<s:Rect width="100%" height="100%">
+					<s:fill>
+						<s:SolidColor color="#000000"/>
+					</s:fill>
+				</s:Rect>
+				<s:Label text="HelpDesk - Sistema de Gestión de Incidencias" fontSize="20" color="#ffffff" verticalCenter="0" horizontalCenter="0"/>
+			</s:Group>
+			<s:Group width="100%" height="2">
+				<s:Rect width="100%" height="100%">
+					<s:fill>
+						<s:SolidColor color="#19aa8d"/>
+					</s:fill>
+				</s:Rect>
+			</s:Group>
+			<s:Group width="100%" height="100%">
+				<s:Rect width="100%" height="100%">
+					<s:fill>
+						<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+						<s:SolidColor color="#f3f3f4"/>
+					</s:fill>
+				</s:Rect>
+				
+				<s:HGroup width="100%" height="100%">
+					
+					<s:VGroup gap="0" height="100%" visible="{vsVistas.selectedIndex > 0 &amp;&amp; 2 > vsVistas.selectedIndex ? true : false}" includeInLayout="{vsVistas.selectedIndex > 0 &amp;&amp; 2 > vsVistas.selectedIndex ? true : false}">
+						<s:Group width="200" height="150">
+							<s:Rect width="100%" height="100%">
+								<s:fill>
+									<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+									<s:SolidColor color="#293846"/>
+								</s:fill>
+							</s:Rect>	
+						</s:Group>
+						
+						<s:Group width="200" height="100%">
+							<s:Rect width="100%" height="100%">
+								<s:fill>
+									<!--<s:BitmapFill source="@Embed(source='assets/imgs/skin-cloth.jpg')" fillMode="repeat"/>-->
+									<s:SolidColor color="#2f4050"/>
+								</s:fill>
+							</s:Rect>
+							<s:VGroup id="vgbotones" click="fnNavegar(event)" width="100%" gap="0" creationComplete="fnArr(event)">
+								<components:ListaAcordeon id="laTicket" label="Tickets" img="assets/icons/issue.png" arrData="{[{icono: '', data: {label: 'Creación', accion: fnNavegar2}}, {icono: '', data: {label: 'Listado', accion: fnNavegar2}}]}" defaultSelected="{modelApp.usuarioActivo.perfil == 2 ? 0 : 1}"/>
+								<components:ListaAcordeon id="laUsuarios" label="Usuarios" img="assets/icons/usuarios.png" visible="{modelApp.usuarioActivo.perfil == 3 ? false : true}" includeInLayout="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
+								<components:ListaAcordeon id="laSucursales" label="Sucursales" img="assets/icons/sucursal.png" visible="{modelApp.usuarioActivo.perfil == 3 ? false : true}" includeInLayout="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
+								<components:ListaAcordeon id="laClientes" label="Clientes" img="assets/icons/clientes.png"/>
+								<components:ListaAcordeon height="50" label="Tipificación" id="lst" img="assets/icons/tipificacion.png" visible="{modelApp.usuarioActivo.perfil == 1 ? true : false}" includeInLayout="{modelApp.usuarioActivo.perfil == 1 ? true : false}"/>
+								<components:ListaAcordeon height="50" label="Informes" img="assets/icons/analytics.png" visible="{modelApp.usuarioActivo.perfil == 1 ? true : false}" includeInLayout="{modelApp.usuarioActivo.perfil == 1 ? true : false}"/>
+								<!--<components:ListaAcordeon height="50" label="Tipificación" id="lst" img="assets/icons/tipificacion.png" arrData="{[{icono: '', data: {label: 'Clasificación', accion: fnNavegar}}, {icono: '', data: {label: 'Categorías', accion: fnNavegar}}, {icono: '', data: {label: 'Subcategorías', accion: fnNavegar}}, {icono: '', data: {label: 'Problemas', accion: fnNavegar}}]}"/>-->
+							</s:VGroup>
+							
+						</s:Group>
+						
+					</s:VGroup>
+					
+					<mx:ViewStack id="vsVistas" width="100%" height="100%">
+						<s:NavigatorContent>
+							<view:Login width="100%" height="100%"/>
+						</s:NavigatorContent>
+						<s:NavigatorContent>
+							<s:VGroup width="100%" height="100%">
+								<s:Group width="100%" height="50">
+									<s:HGroup height="100%" verticalAlign="middle" verticalCenter="0" right="10">
+										<s:VGroup horizontalAlign="right" id="vgList" height="30">
+											<s:ToggleButton id="btnOpciones" label="{modelApp.strNot}" skinClass="assets.skins.CustomToggleButtonAlertSkin" click="btnOpciones_clickHandler(event)"/>	
+										</s:VGroup>
+										
+										<s:Button skinClass="assets.skins.CustomButtonLogout" click="fnLogout(event)"/>		
+									</s:HGroup>
+									
+								</s:Group>
+								<components:Titulos id="titulos" titulo="{vsGeneral.selectedChild.label}" fnLinkExt="{fnLinkExt}"/>
+								<mx:ViewStack id="vsGeneral" width="100%" height="100%" selectedIndex="4" creationComplete="vsGeneral_creationCompleteHandler(event)">
+									<s:NavigatorContent label="Usuarios">
+										<view:FormUsuario width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Clientes">
+										<view:FormCliente width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Sucursales">
+										<view:FormSucursal width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Tipificaciones">
+										<view:FormTipificaciones width="100%" height="100%"/>
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Creación Ticket">
+										<view:FormTicket width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Listado Ticket">
+										<view:ListadoTickets id="listadoTicket" width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Información Ticket">
+										<view:DetalleTicket id="detalleTicket" ticketVO="{modelApp.ticketSeleccionado}" width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Resultado">
+										<view:ResultadoTransaccion id="resultadoTransaccion" width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Informes">
+										<view:InformesView id="informes" width="100%" height="100%"/>		
+									</s:NavigatorContent>
+									<s:NavigatorContent label="Volcado de datos">
+										<view:VolcadoView id="volcado" width="100%" height="100%"/>
+									</s:NavigatorContent>
+								</mx:ViewStack>	
+							</s:VGroup>	
+						</s:NavigatorContent>
+						<s:NavigatorContent>
+							<view:FormRegistroUsuario width="100%" height="100%"/>
+						</s:NavigatorContent>
+					</mx:ViewStack>
+					
+					
+				</s:HGroup>
+				
+				
+			</s:Group>	
+		</s:VGroup>	
+	</s:Scroller>
+
+</s:Application>

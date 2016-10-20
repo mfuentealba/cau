@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ComboBox xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			xmlns:s="library://ns.adobe.com/flex/spark" 
+			xmlns:mx="library://ns.adobe.com/flex/mx" skinClass="assets.skins.ComboBoxLVSkin"  keyUp="fnFiltroEscritura(event)"
+			focusOut="fnSalirFoco(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import flash.events.Event;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			
+			private var str:String = '';
+			
+			protected function fnFiltroEscritura(evento:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				switch(evento.charCode){
+					case 8:
+						this.textInput.text = '';
+						str = '';
+						ArrayCollection(this.dataProvider).refresh();
+						break;
+					case 9:
+						
+						break;
+					case 0:
+						break;
+					case 27:
+						break;
+					case 13:
+						trace('*** Obj con ENTER ' + (this.selectedItem ? this.selectedItem is String ? this.selectedItem + ' string' : this.selectedItem['nombreGrupoResolutor'] + ' Object' : ''));
+						
+						break;
+					default:
+						str += String.fromCharCode(evento.charCode);
+						ArrayCollection(this.dataProvider).refresh();
+				}
+				
+				trace('***' + str);
+				trace('***' + evento.charCode);
+				
+			}
+			
+			protected function fnFiltro(item:*):Boolean{
+				var b:Boolean;
+				b = String(item[this.labelField]).toLowerCase().indexOf(str.toLowerCase()) > -1 ? true : false;
+				return b;
+			}
+			
+			override protected function dataProvider_collectionChangeHandler(event:Event):void
+			{
+				// TODO Auto Generated method stub
+				super.dataProvider_collectionChangeHandler(event);
+				
+			}
+			
+			private function set fnAsociaFiltro(val:IList):void{
+				ArrayCollection(val).filterFunction = fnFiltro;
+			}
+			
+			protected function fnSalirFoco(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(this.selectedIndex < 0){
+					this.selectedIndex = -1;
+					str = '';
+					trace("SALIO SIN SELECCIONAR GRUPO");
+				} else {
+					str = this.selectedItem['nombreGrupoResolutor'];
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Binding source="dataProvider" destination="fnAsociaFiltro"/>
+</s:ComboBox>

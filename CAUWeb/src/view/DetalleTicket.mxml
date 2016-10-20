@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:comp="components.*"
+	xmlns:controllerbd="services.controllerbd.*" initialize="ini(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import components.Callback;
+			import components.CustomListadoClientes;
+			import components.CustomListadoUsuarios;
+			import components.PopupCustomListadoUsuarios;
+			
+			import controller.Controller;
+			
+			import event.ClienteEvent;
+			import event.MantenedoresEvent;
+			import event.TicketEvent;
+			
+			import model.ModelApp;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			import mx.formatters.DateFormatter;
+			import mx.managers.PopUpManager;
+			import mx.validators.Validator;
+			
+			import spark.components.DataGrid;
+			import spark.components.VGroup;
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			import vo.ClienteVO;
+			import vo.ComentarioVO;
+			import vo.TicketVO;
+			import vo.UserVO;
+			
+			[Bindable] public var clienteVO:ClienteVO = new ClienteVO();
+			[Bindable] public var ticketVO:TicketVO = new TicketVO();
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			[Bindable] private var now:Date;
+			[Bindable] private var formater:DateFormatter;
+			[Bindable] private var dia:String;
+			[Bindable] private var hora:String;
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			protected function fnNuevoTicket(auxTicket:TicketVO):void
+			{
+				// TODO Auto-generated method stub
+				//clienteVO = new ClienteVO();
+				/*fnCargaCliente(auxCliente);
+				btnEnviar.label = 'Actualizar';*/
+				
+				
+			}
+			
+			
+			
+			/*protected function fnFiltrarCliente(event:*):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.arrComboClientes.refresh();
+			}*/
+			
+			
+			
+			
+			
+			private function fnActualizaData(auxNuevoVO:*):void{				
+				/*clasificacionVO.idClasificacion = auxNuevoVO.idClasificacion; 
+				clasificacionVO.nombreClasificacion = auxNuevoVO.nombreClasificacion;
+				clasificacionVO.arrCategoriasIn = auxNuevoVO.arrCategoriasIn;
+				clasificacionVO.arrCategoriasOut = auxNuevoVO.arrCategoriasOut;*/
+				
+				var arr:Array = [];
+				for each(var obj:* in auxNuevoVO.arrAsociadosIn){
+					arr.push(obj.obj);
+				}
+				
+				auxNuevoVO.arrAsociadosIn = new ArrayCollection(arr);
+				//auxNuevoVO.arrAsociadosIn.refresh();
+				
+				//cmbCategoria.dataProvider = cmbClasificacion.selectedItem ? cmbClasificacion.selectedItem['arrAsociadosIn'] : null;
+			}
+			
+			
+			protected function ini(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				now = new Date();
+				formater = new DateFormatter();
+				formater.formatString = 'YYYY-MM-DD';
+				dia = formater.format(now);
+				formater.formatString = 'J:NN';
+				hora = formater.format(now);
+			}
+			
+			
+			
+			
+			
+			private function fnOpciones(evento:MouseEvent):void{
+				var pop:CustomListadoUsuarios = new CustomListadoUsuarios();
+				PopUpManager.addPopUp(pop, CAUWeb(this.parentApplication), true);
+				PopUpManager.centerPopUp(pop);
+				pop.closePopBl = true;
+				pop.title = 'Buscador de usuario';
+				var btn:Button = new Button();
+				btn.label = 'Seleccionar';
+				btn.addEventListener(MouseEvent.CLICK, Callback.create(fnSeleccionUsuario, pop));
+				pop.controlBarContent = [btn];
+				
+				pop.controlBarVisible = true;
+				//pop.searchBl = true;
+				pop.fnCallback = fnCerrarPopClentes;
+			}
+			
+			
+			
+			private function fnBuscaCl(item:ClienteVO, index:int, arr:Array):Boolean{
+				if(txtRut.text == item.rut){
+					return true;
+				}
+				return false;
+			}
+			
+			
+			
+			private function set fnRut(val:String):void{
+				if(val != ''){
+					txtRut.text = val;	
+				}
+					
+			}
+			
+			private function set fnActualizaSucursal(item:*):void{
+				if(item){
+					clienteVO.sucursal = item.id;
+				}
+			}
+			
+			private function fnFechaHora(item:ComentarioVO, column:GridColumn):String{
+				if(item){
+					var str:String = item.fecha + '';
+					return str.substr(0, 4) + '/' + str.substr(4, 2) + '/' + str.substr(6, 2) + ' ' + item.hora;
+				} else {
+					return '';
+				}
+			}
+
+			
+			
+			protected function btnComentario_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				var comentarioVO:ComentarioVO = new ComentarioVO();
+				comentarioVO.comentarios = txtComentario.text;
+				comentarioVO.reporte = ticketVO.id;
+				comentarioVO.soporte = modelApp.usuarioActivo.username;
+				var fecha:Date = new Date();
+				formater.formatString = 'YYYYMMDD';
+				comentarioVO.fecha = int(formater.format(fecha));
+				formater.formatString = 'J:NN';
+				comentarioVO.hora = formater.format(fecha);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.GUARDAR_COMENTARIOS, modelApp.ticketSeleccionado, null, comentarioVO);
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+			protected function fnReasignar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:CustomListadoUsuarios = new CustomListadoUsuarios();
+				PopUpManager.addPopUp(pop, CAUWeb(this.parentApplication), true);
+				PopUpManager.centerPopUp(pop);
+				pop.layout = new VerticalLayout();
+				pop.closePopBl = true;
+				pop.title = 'Buscador de Usuarios';
+				var btn:Button = new Button();
+				btn.label = 'Seleccionar';
+				
+				pop.controlBarContent = [btn];
+				var vg:VGroup = new VGroup();
+				vg.percentWidth = 100;
+				vg.height = 100;
+				vg.paddingLeft = 10;
+				vg.paddingRight = 10;
+				vg.horizontalAlign = 'center';
+				var ta:TextArea = new TextArea();
+				ta.percentWidth = 100;
+				ta.percentHeight = 100;
+				BindingUtils.bindSetter(Callback.create(fnHabAsig, btn, pop.dgUsuarios, ta), ta, "text");
+				BindingUtils.bindSetter(Callback.create(fnHabAsig, btn, pop.dgUsuarios, ta), pop.dgUsuarios, "selectedItem");
+				ta.prompt = 'Ingrese motivo de reasignación';
+				vg.addElement(ta);
+				btn.addEventListener(MouseEvent.CLICK, Callback.create(fnSeleccionUsuario, pop, ta));
+				pop.addElementAt(vg, 0);
+				pop.controlBarVisible = true;
+				//pop.searchBl = true;
+				pop.fnCallback = fnCerrarPopClentes;
+			}		
+			
+			protected function fnCerrarTicket(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:CustomListadoUsuarios = new CustomListadoUsuarios();
+				PopUpManager.addPopUp(pop, CAUWeb(this.parentApplication), true);
+				PopUpManager.centerPopUp(pop);
+				pop.layout = new VerticalLayout();
+				pop.closePopBl = true;
+				pop.title = 'Cerrar Ticket';
+				var btn:Button = new Button();
+				btn.label = 'Seleccionar';
+				
+				pop.controlBarContent = [btn];
+				var vg:VGroup = new VGroup();
+				vg.percentWidth = 100;
+				vg.height = 100;
+				vg.paddingLeft = 10;
+				vg.paddingRight = 10;
+				vg.horizontalAlign = 'center';
+				var ta:TextArea = new TextArea();
+				ta.percentWidth = 100;
+				ta.percentHeight = 100;
+				BindingUtils.bindSetter(Callback.create(fnHabAsig, btn, pop.dgUsuarios, ta), ta, "text");
+				BindingUtils.bindSetter(Callback.create(fnHabAsig, btn, pop.dgUsuarios, ta), pop.dgUsuarios, "selectedItem");
+				ta.prompt = 'Ingrese comentario solución';
+				vg.addElement(ta);
+				btn.addEventListener(MouseEvent.CLICK, Callback.create(fnSeleccionUsuarioCierre, pop, ta));
+				pop.addElementAt(vg, 0);
+				pop.controlBarVisible = true;
+				//pop.searchBl = true;
+				pop.fnCallback = fnCerrarPopClentes;
+			}
+			
+			
+			protected function fnSolicitudCerrarTicket(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:CustomPanelSpark = new CustomPanelSpark();
+				PopUpManager.addPopUp(pop, CAUWeb(this.parentApplication), true);
+				PopUpManager.centerPopUp(pop);
+				pop.layout = new VerticalLayout();
+				pop.closePopBl = true;
+				pop.title = 'Solicitud Cierre Ticket';
+				pop.closePopBl = false;
+				var btn:Button = new Button();
+				var btn2:Button = new Button();
+				btn.label = 'Aceptar';
+				btn2.label = 'Cancelar';
+				pop.controlBarContent = [btn, btn2];
+				var vg:VGroup = new VGroup();
+				vg.percentWidth = 100;
+				vg.height = 100;
+				vg.paddingLeft = 10;
+				vg.paddingRight = 10;
+				vg.horizontalAlign = 'center';
+				var ta:TextArea = new TextArea();
+				ta.percentWidth = 100;
+				ta.percentHeight = 100;
+				BindingUtils.bindSetter(Callback.create(fnHabBtn, btn, ta), ta, "text");
+				
+				ta.prompt = 'Ingrese solución dada';
+				vg.addElement(ta);
+				btn.addEventListener(MouseEvent.CLICK, Callback.create(fnSeleccionUsuarioSolicitudCierre, pop, ta));
+				btn2.addEventListener(MouseEvent.CLICK, Callback.create(fnCerrarPop, pop));
+				pop.addElementAt(vg, 0);
+				pop.controlBarVisible = true;
+				//pop.searchBl = true;
+				pop.fnCallback = fnCerrarPopClentes;
+			}
+			
+			
+			private function fnHabAsig(val:*, btn:Button, dg:DataGrid, ta:TextArea):void{
+				if(ta.text == '' || !dg.selectedItem){
+					btn.enabled = false;
+				} else {
+					btn.enabled = true;
+				}
+			}
+			
+			private function fnHabBtn(val:*, btn:Button, ta:TextArea):void{
+				if(ta.text == ''){
+					btn.enabled = false;
+				} else {
+					btn.enabled = true;
+				}
+			}
+			
+			private function fnSeleccionUsuarioCierre(evento:MouseEvent, pop:CustomListadoUsuarios, ta:TextArea):void{
+				str = ticketVO.soporte;
+				ticketVO.soporte = pop.dgUsuarios.selectedItem.username;
+				var comentarioVO:ComentarioVO = new ComentarioVO();
+				comentarioVO.comentarios = 'Ha sido cerrado el ticket por ' + ticketVO.soporte + ' con la siguiente solución: ' + ta.text;
+				comentarioVO.reporte = ticketVO.id;
+				comentarioVO.soporte = modelApp.usuarioActivo.username;
+				var fecha:Date = new Date();
+				formater.formatString = 'YYYYMMDD';
+				comentarioVO.fecha = int(formater.format(fecha));
+				formater.formatString = 'J:NN';
+				comentarioVO.hora = formater.format(fecha);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.CERRAR_TICKET, ticketVO, fnResultadoCierre, comentarioVO);
+				Controller.getInstance().dispatchEvent(ticketEvent);
+				PopUpManager.removePopUp(pop);
+			}
+			
+			
+			
+			private function fnSeleccionUsuarioSolicitudCierre(evento:MouseEvent, pop:CustomPanelSpark, ta:TextArea):void{
+				str = ticketVO.soporte;
+				ticketVO.solucion_dada_por = ticketVO.soporte;
+				ticketVO.soporte = ticketVO.creadoPor;
+				var comentarioVO:ComentarioVO = new ComentarioVO();
+				comentarioVO.comentarios = 'Ha sido asignado el ticket a ' + ticketVO.creadoPor + ' para evaluar solución dada por ' + modelApp.usuarioActivo.username;
+				comentarioVO.reporte = ticketVO.id;		
+				comentarioVO.soporte = modelApp.usuarioActivo.username;
+				var fecha:Date = new Date();
+				formater.formatString = 'YYYYMMDD';
+				comentarioVO.fecha = int(formater.format(fecha));
+				formater.formatString = 'J:NN';
+				comentarioVO.hora = formater.format(fecha);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.SOLICITUD_CERRAR_TICKET, ticketVO, fnResultadoSolicitudCierre, comentarioVO);
+				Controller.getInstance().dispatchEvent(ticketEvent);
+				PopUpManager.removePopUp(pop);
+			}
+			
+			private function fnCerrarPop(evento:MouseEvent, pop:CustomPanelSpark):void{
+				PopUpManager.removePopUp(pop);
+			}
+			
+			private var str:String;
+			private function fnSeleccionUsuario(evento:MouseEvent, pop:CustomListadoUsuarios, ta:TextArea):void{
+				str = ticketVO.soporte;
+				ticketVO.soporte = pop.dgUsuarios.selectedItem.username;
+				var comentarioVO:ComentarioVO = new ComentarioVO();
+				comentarioVO.comentarios = 'Ha sido reasignado de ' + str + ' a ' + ticketVO.soporte + ' por el siguiente motivo: ' + ta.text;
+				comentarioVO.reporte = ticketVO.id;
+				comentarioVO.soporte = modelApp.usuarioActivo.username;
+				var fecha:Date = new Date();
+				formater.formatString = 'YYYYMMDD';
+				comentarioVO.fecha = int(formater.format(fecha));
+				formater.formatString = 'J:NN';
+				comentarioVO.hora = formater.format(fecha);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.REASIGNAR_TICKET, ticketVO, fnResultadoReasignacion, comentarioVO);
+				Controller.getInstance().dispatchEvent(ticketEvent);
+				PopUpManager.removePopUp(pop);
+			}
+			
+			
+			private function fnResultadoReasignacion(item:TicketVO):void{
+				if(!item){
+					ticketVO.soporte = str;
+					Alert.show('Ha ocurrido un error al grabar en la base de datos', "Error");
+				} else {
+					modelApp.tituloTrans = 'Ticket reasignado';
+					modelApp.contenidoTrans = 'La reasignación del ticket ' + ticketVO.id + ' ha sido exitosa. Ha sido traspasado de ' + str + ' a ' + ticketVO.soporte + '.';
+					CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 7;
+					CAUWeb(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Resultado', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(5)}];
+					
+				}
+			}
+			
+			
+			private function fnResultadoCierre(item:TicketVO):void{
+				if(!item){
+					ticketVO.soporte = str;
+					Alert.show('Ha ocurrido un error al grabar en la base de datos', "Error");
+				} else {
+					modelApp.tituloTrans = 'Ticket Cerrado';
+					modelApp.contenidoTrans = 'El ticket ' + ticketVO.id + ' ha sido cerrado exitosamente.';
+					CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 7;
+					CAUWeb(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Resultado', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(5)}];
+					
+				}
+			}
+			
+			
+			private function fnResultadoSolicitudCierre(item:TicketVO):void{
+				if(!item){
+					ticketVO.soporte = ticketVO.solucion_dada_por;
+					
+					Alert.show('Ha ocurrido un error al grabar en la base de datos', "Error");
+				} else {
+					modelApp.tituloTrans = 'Ticket Reasignado para cierre';
+					modelApp.contenidoTrans = 'El ticket ' + ticketVO.id + ' ha sido reasignado exitosamente.';
+					CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 7;
+					CAUWeb(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Resultado', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(5)}];
+					
+				}
+			}
+			
+			private function fnCerrarPopClentes(evento:MouseEvent):void{
+				PopUpManager.removePopUp(evento.target.parentDocument.parentDocument);
+			}
+			
+		]]>
+	</fx:Script>
+	<!--<fx:Binding source="txtRut.selectedItem" destination="fnCargaCliente"/>-->
+	<!--<fx:Binding source="clienteVO" destination="txtRut.selectedItem"/>-->
+	<!--<fx:Binding source="txtGerencia.text" destination="clienteVO.gerencia" twoWay="true"/>
+	<fx:Binding source="txtEmpresa.text" destination="clienteVO.empresa" twoWay="true"/>-->
+	
+	<fx:Declarations>
+		
+	</fx:Declarations>
+	
+	<s:Group 
+		width="100%" height="100%" xmlns:skins="assets.skins.*" xmlns:components="components.*">
+		
+		<s:layout>
+			<s:VerticalLayout paddingBottom="40"/>
+		</s:layout>
+		
+		<s:BorderContainer width="100%" borderColor="#cececf" color="0x333333">
+			<s:layout>
+				<s:HorizontalLayout verticalAlign="middle" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+			</s:layout>
+			<s:Label text="Ticket Nro: " fontWeight="bold" fontSize="16"/>
+			<s:Label text="{ticketVO.id}" fontWeight="bold" fontSize="16"/>
+			<s:Label text=" asignado a: " fontWeight="bold" fontSize="16"/>
+			<s:Label text="{ticketVO.soporte}" fontWeight="bold" fontSize="16"/>
+			<s:HGroup height="100%" width="100%" visible="{ticketVO.estado == 'Cerrado' ? false : true}" includeInLayout="{ticketVO.estado == 'Cerrado' ? false : true}">
+				<mx:LinkButton label="Reasignar" fontSize="16" click="fnReasignar(event)"/>
+				
+				<s:Line width="1" height="100%">
+					<s:stroke>
+						<s:SolidColorStroke color="#cccccc" weight="1"/>
+					</s:stroke>
+				</s:Line>
+				
+				<mx:LinkButton label="Solicitud de cierre" fontSize="16" click="fnSolicitudCerrarTicket(event)" enabled="{modelApp.usuarioActivo.perfil == 1 ? false : true}"/>
+				<s:Line width="1" height="100%">
+					<s:stroke>
+						<s:SolidColorStroke color="#cccccc" weight="1"/>
+					</s:stroke>
+				</s:Line>
+				<mx:LinkButton label="Cerrar" fontSize="16" click="fnCerrarTicket(event)" enabled="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
+				<s:Line width="1" height="100%">
+					<s:stroke>
+						<s:SolidColorStroke color="#cccccc" weight="1"/>
+					</s:stroke>
+				</s:Line>
+				<mx:LinkButton label="Volver" fontSize="16" click="{CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 5;}"/>
+				<s:HGroup width="100%" height="100%" paddingRight="10" verticalAlign="middle" horizontalAlign="right">
+					<s:Label text="Estado: " fontWeight="bold" fontSize="16" textAlign="right"/>
+					<s:Label text="{ticketVO.estado}" fontWeight="bold" fontSize="16" textAlign="right"/>
+				</s:HGroup>
+			</s:HGroup>
+			
+		</s:BorderContainer>
+		<components:CustomPanelSpark title="Solución" width="100%" color="#eeeeee" visible="{ticketVO.comentario_solucion != null ? true : false}" includeInLayout="{ticketVO.comentario_solucion != null ? true : false}">
+			<s:HGroup width="100%" height="100%" paddingBottom="15" paddingLeft="15" paddingRight="15" paddingTop="15">
+				<s:Label width="100%" text="{ticketVO.comentario_solucion}"/>	
+			</s:HGroup>
+			
+		</components:CustomPanelSpark>
+		<components:CustomPanelSpark title="Cliente" width="100%" height="{50 + formCliente.height}" color="#eeeeee" searchBl="true" fnCallback="fnOpciones">			
+			<s:Form id="formCliente" width="100%" bottom="10">
+				<s:layout>
+					<s:TileLayout requestedColumnCount="5"/>
+				</s:layout>
+				<!--<s:FormHeading label="headingLabel"/>-->
+				<s:FormItem label="Rut" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtRut" text="{ticketVO.cliente_rut}" width="170" height="30"/>
+					<!--<s:Label id="txtRut" height="30" width="170"
+								dataProvider="{modelApp.arrComboClientes}" labelField="rut"/>-->
+				</s:FormItem>
+				<s:FormItem label="Nombres" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtNombres" text="{ticketVO.clienteVO.nombres}" width="170" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Apellidos" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtApellidos" text="{ticketVO.clienteVO.apellidos}" width="170" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Email" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtEmail" width="170" height="30" text="{ticketVO.clienteVO.email}"/>
+				</s:FormItem>
+				<s:FormItem label="Sucursal" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="cmbSucursal" color="#333333" text="{ticketVO.clienteVO.sucursalVO.sucursal}" width="170" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Teléfono" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtTelefono" text="{ticketVO.clienteVO.telefono}" width="170" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Anexo" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtAnexo" text="{ticketVO.clienteVO.anexo}" width="170" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Unidad" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtUnidad" text="{ticketVO.clienteVO.unidad}" width="170" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Rótulo" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtRotulo" text="{ticketVO.clienteVO.rotulo}" width="170" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Dirección ip" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtIp" text="{ticketVO.clienteVO.dir_ip}" width="170" height="30"/>
+				</s:FormItem>
+				<!--<s:FormItem label="Gerencia" width="100%" height="30">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtGerencia" width="170" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Empresa" width="100%" height="30">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtEmpresa" width="170" height="30"/>
+				</s:FormItem>-->
+				
+			</s:Form>	
+		</components:CustomPanelSpark>
+		
+		<components:CustomPanelSpark title="Detalle Ticket" width="100%" color="#eeeeee" imgBl="true" height="220">
+			<s:Form id="formTicket" width="100%">
+				<s:layout>
+					<s:TileLayout requestedColumnCount="4"/>
+				</s:layout>
+				<s:FormItem label="Fecha" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtFecha" text="{ticketVO.fecha + ''}" width="170" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Hora" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="txtHora"  width="170" height="30" text="{ticketVO.hora}"/>
+				</s:FormItem>
+				<s:FormItem label="Clasificación" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="cmbClasificacion" width="170" height="30" text="{modelApp.objClasificacion[ticketVO.idClasificacion]['nombreClasificacion']}"/>
+				</s:FormItem>
+				<s:FormItem label="Categoría" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="cmbCategoria" width="170" height="30" text="{modelApp.objCategoria[ticketVO.problema]['nombreCategoria']}"/>
+				</s:FormItem>
+				<s:FormItem label="Subcategoría" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="cmbSubcategoria" text="{modelApp.objSubCategoria[ticketVO.sub_problema]['nombreSubCategoria']}" color="#333333" width="170" height="30"></s:Label>
+				</s:FormItem>
+				<s:FormItem label="Descripción" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="cmbDescripcion"  width="170" height="30" text="{modelApp.objDescripcion[ticketVO.idDescripcion]['nombreDescripcion']}"/>
+				</s:FormItem>
+				<s:FormItem label="Tiempo de Solución" width="100%" height="50">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="lblTiempoSolucion"  width="170" height="30" text="{modelApp.objTiempoSolucion[modelApp.objDescripcion[ticketVO.idDescripcion]['idTiempoSolucion']]['descripcion']}"/>
+				</s:FormItem>
+				<s:FormItem label="Criticidad" width="100%" height="30">
+					<s:layout>
+						<s:HorizontalLayout horizontalAlign="right"/>
+					</s:layout>
+					<s:Label id="cmbCriticidad" width="170" height="30" text="{ticketVO.tipo_solucion}"/>
+				</s:FormItem>
+				<!--<s:FormItem width="100%" height="50">
+					<s:Button id="btnCreaTicket" label="Enviar" width="170" click="btnCreaTicket_clickHandler(event)"/>
+				</s:FormItem>-->
+				
+			</s:Form>	
+		</components:CustomPanelSpark>
+		
+		
+		
+		<components:CustomPanelSpark title="Descripción" width="100%" color="#eeeeee" imgBl="true" height="180">
+			<components:layout>
+				<s:VerticalLayout paddingTop="5" paddingBottom="30" paddingLeft="10" paddingRight="10" gap="5" 
+								  horizontalAlign="left" verticalAlign="top"/>
+				
+			</components:layout>
+			<s:TextArea id="txtDetalle" editable="false" width="100%" height="100" text="{ticketVO.descripcion}"/>			
+		</components:CustomPanelSpark>
+		
+		
+		<components:CustomPanelSpark title="Comentarios" width="100%" color="#eeeeee" imgBl="true">
+			<components:layout>
+				
+				<s:VerticalLayout paddingTop="5" paddingBottom="30" paddingLeft="10" paddingRight="10" gap="5" 
+								  horizontalAlign="left" verticalAlign="top"/>
+				
+			</components:layout>
+			<s:TextArea id="txtComentario" width="100%" height="100" prompt="Favor ser preciso"/>
+			<s:Button id="btnComentario" label="Añadir" width="170" click="btnComentario_clickHandler(event)"/>
+			<s:DataGrid id="dgComentarios" width="100%"
+						
+						requestedRowCount="5" dataProvider="{ticketVO.arrComentarios}"
+						rowHeight="35" height="100%">
+				<s:columns>
+					<s:ArrayList> 	 	 	 	 	 	 	 	 	 	 	
+						<s:GridColumn dataField="soporte" headerText="Añadido por"></s:GridColumn>
+						<s:GridColumn dataField="comentarios" headerText="Comentario"></s:GridColumn>
+						<s:GridColumn labelFunction="fnFechaHora" headerText="Fecha/Hora"></s:GridColumn>
+					</s:ArrayList>
+				</s:columns>
+				
+			</s:DataGrid>
+		</components:CustomPanelSpark>
+		
+		
+		
+	</s:Group>	
+</s:Scroller>
+

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="80"
+		 color="#555555" borderColor="#cececf">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Label top="20" left="20" text="{titulo}" fontSize="20"/>
+	<s:HGroup id="breadcrumb" bottom="10" left="20" verticalAlign="middle">
+		
+	</s:HGroup>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.controls.LinkButton;
+			[Bindable] public var strBreadcrumb:Array;
+			[Bindable] public var titulo:String;
+			public var fnLinkExt:Function;
+			
+			
+			private function set fnBreadcrumb(val:Array):void{
+				breadcrumb.removeAllElements();
+				for each(var obj:Object in val){
+					var link:LinkButton = new LinkButton();
+					link.label = obj.label;
+					link.addEventListener(MouseEvent.CLICK, fnLink);
+					link.data = obj.data;
+					breadcrumb.addElement(link);
+					var lbl:Label = new Label();
+					lbl.text = '/';
+					breadcrumb.addElement(lbl);					
+				}
+				
+				breadcrumb.removeElement(lbl);
+				lbl = new Label();
+				lbl.text = link.label;
+				lbl.setStyle('fontWeight', 'bold');
+				breadcrumb.removeElement(link);
+				breadcrumb.addElement(lbl);
+			}
+			
+			private function fnLink(evento:MouseEvent):void{
+				fnLinkExt.call(this, evento);
+				switch(evento){
+					
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Binding source="strBreadcrumb" destination="fnBreadcrumb"/>
+</s:BorderContainer>

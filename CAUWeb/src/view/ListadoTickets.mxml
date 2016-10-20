@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
+			xmlns:s="library://ns.adobe.com/flex/spark"
+			xmlns:mx="library://ns.adobe.com/flex/mx"
+			xmlns:controllerbd="services.controllerbd.*"
+			xmlns:skins="assets.skins.*" 
+			xmlns:components="components.*" initialize="ini(event)"  creationComplete="fnTraeData(event)">
+	<fx:Script>
+		<![CDATA[
+			import controller.Controller;
+			
+			import event.ClienteEvent;
+			import event.TicketEvent;
+			import event.UsuarioEvent;
+			
+			import model.ModelApp;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			import mx.formatters.DateFormatter;
+			import mx.validators.EmailValidator;
+			
+			import spark.events.GridEvent;
+			import spark.events.IndexChangeEvent;
+			
+			import vo.ClasificacionVO;
+			import vo.ClienteVO;
+			import vo.TicketVO;
+			import vo.UserVO;
+			
+			
+			[Bindable] public var usuarioVO:UserVO = new UserVO();
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			[Bindable] private var formater:DateFormatter = new DateFormatter();
+			
+			
+			
+			protected function fnFiltrarCliente(event:*):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.arrUsuarios.refresh();
+			}
+			
+			
+			protected function cmbIdGrupoResolutor_changingHandler(evento:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function cmbIdGrupoResolutor_keyUpHandler(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				//modelApp.grupoResolutorFilter = cmbIdGrupoResolutor.textInput.text;
+				modelApp.arrGrupoResolutor.refresh();	
+				
+				
+			}	
+			
+			
+			[Bindable(event="activate")]
+			private function fnCliente(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objClientesRut[item.cliente_rut]['obj']['nombres'] + ' ' + modelApp.objClientesRut[item.cliente_rut]['obj']['apellidos'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			private function fnSucursal(item:TicketVO, column:GridColumn):String{
+				try{
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]['obj']).sucursalVO.sucursal;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnUnidad(item:TicketVO, column:GridColumn):String{
+				try{
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]['obj']).unidad;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnClasificacion(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objClasificacion[item.idClasificacion]['nombreClasificacion'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnCategoria(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objCategoria[item.problema]['nombreCategoria'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnSubCategoria(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objSubCategoria[item.sub_problema]['nombreSubCategoria'];	
+				} catch(e:*){
+					return '';
+				}
+				return ''; 
+			}
+			
+			
+			private function fnDescripcion(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objDescripcion[item.idDescripcion]['nombreDescripcion'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnIP(item:TicketVO, column:GridColumn):String{
+				try{
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]).dir_ip;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				 
+			}
+			
+			
+			private function fnFecha(item:TicketVO, column:GridColumn):String{
+				try{
+					var f:String = String(item.fecha);
+					return f.substr(0, 4) + '-' + f.substr(2, 2) + '-' + f.substr(4, 2);	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			
+			
+			protected function ini(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				formater.formatString = 'YYYY-MM-DD';
+			}
+			
+			protected function fnNavegaPaginasHandler(opt:String):void
+			{
+				// TODO Auto-generated method stub
+				if(opt == 'Previa'){
+					modelApp.paginaActual--;
+				} else {
+					modelApp.paginaActual++;
+				}
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_PAGINA, null, null, modelApp.arrPaginas[modelApp.paginaActual]);				
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+			protected function fnDetalleTicket(evento:GridEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(evento.rowIndex > -1){
+					modelApp.ticketSeleccionado = dgTickets.selectedItem as TicketVO;
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_COMENTARIOS, modelApp.ticketSeleccionado, CAUWeb(FlexGlobals.topLevelApplication).fnComentarios);
+					Controller.getInstance().dispatchEvent(ticketEvent);
+				}
+			}
+			
+			
+			/*private function fnComentarios(arr:Array):void{
+				modelApp.ticketSeleccionado.arrComentarios = new ArrayCollection(arr);
+				if(modelApp.ticketSeleccionado.notificacion == 'N'){
+					var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LEER_TICKET, modelApp.ticketSeleccionado, fnNotificacion);				
+					Controller.getInstance().dispatchEvent(ticketEvent);		
+					
+				} else {
+					CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 6;
+					CAUWeb(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Creación', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(3)}];
+					
+				}
+			}
+			
+			private function fnNotificacion(item:TicketVO):void{
+				var auxTicket:TicketVO = dgTickets.selectedItem as TicketVO;
+				
+				
+				
+				var i:int = modelApp.arrNotificaciones.getItemIndex(modelApp.objNotificaciones["TicketVO|" + item.id]);
+				if(i > -1){
+					modelApp.arrNotificaciones.removeItemAt(i);
+				} else {
+					i = modelApp.arrNotificaciones.list.getItemIndex(modelApp.objNotificaciones["TicketVO|" + item.id]);
+					if(i > -1){
+						modelApp.arrNotificaciones.list.removeItemAt(i);
+					}
+				}
+				delete modelApp.objNotificaciones["TicketVO|" + item.id];
+				modelApp.arrTickets.setItemAt(item, modelApp.arrTickets.getItemIndex(dgTickets.selectedItem));
+				
+				
+				modelApp.strNot = modelApp.arrNotificaciones.source.length == 0 ? '' : modelApp.arrNotificaciones.source.length + '';
+				CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.selectedIndex = 6;
+				CAUWeb(FlexGlobals.topLevelApplication).titulos.strBreadcrumb = [{label: 'Home', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(0)}, {label: 'Tickets', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(4)}, {label: 'Creación', data: CAUWeb(FlexGlobals.topLevelApplication).vsGeneral.getElementAt(3)}];
+				
+			}*/
+			
+			
+			public function fnTraeData(evento:*):void
+			{
+				// TODO Auto-generated method stub
+				//trace(evento.target);
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.TOTAL_PAGINAS, null, fnArmaPaginador, {idCla: ClasificacionVO(cmbTipo.selectedItem).idClasificacion, propietario: (rbgAsignados.selection.label == 'Propios' ? modelApp.usuarioActivo.username : ''), estado: cmbEstados.selectedItem['label']});				
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+			private function fnArmaPaginador():void{
+				modelApp.arrPaginas = [];
+				var arr:Array = modelApp.arrPaginas; 
+				var pag:int = modelApp.cantidadPagina;
+				var opt:String = rbgAsignados.selection.label == 'Propios' ? modelApp.usuarioActivo.username : '';
+				for(var i:int = 0; i < modelApp.totalPaginas; i++){
+					arr.push({ini: pag * i, fin: pag, idCla: cmbTipo.selectedItem.idClasificacion, propietario: opt, estado: cmbEstados.selectedItem.label});
+				}
+				arr.push({ini: pag * i, fin: modelApp.totalRegistros, idCla: cmbTipo.selectedItem.idClasificacion, propietario: opt, estado: cmbEstados.selectedItem.label});
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.LISTAR_PAGINA, null, null, arr[0]);				
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<s:RadioButtonGroup id="rbgAsignados" change="fnTraeData(event)"/>
+	</fx:Declarations>
+	<s:Group 
+		width="100%" height="100%"
+		>
+		
+		<s:layout>
+			<s:HorizontalLayout paddingBottom="50"/>
+		</s:layout>
+		
+		
+		<components:CustomPanelSpark title="Lista de Tickets" width="100%" height="100%">
+			<s:VGroup width="100%" height="100%" paddingLeft="10" paddingRight="10">
+				<s:Group width="100%">
+					<s:Rect width="100%" height="100%">
+						<s:fill>
+							<s:SolidColor color="#333333"/>
+						</s:fill>
+					</s:Rect>
+					<s:HGroup color="#fefefe" verticalAlign="middle" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
+						<s:Label text="Filtro" fontWeight="bold"/>
+						<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
+					</s:HGroup>
+				</s:Group>
+				<s:BorderContainer width="100%" borderColor="#cececf" color="0x333333">
+					<s:layout>
+						<s:HorizontalLayout verticalAlign="middle" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>
+					</s:layout>
+					<s:Label text="Tipo" fontWeight="bold"/>
+					<s:ComboBox id="cmbTipo" dataProvider="{modelApp.arrClasificacion}" requireSelection="true" labelField="nombreClasificacion" change="fnTraeData(null)"/>
+					<s:Label text=" asignados: " fontWeight="bold"/>
+					<s:RadioButton label="Propios" groupName="rbgAsignados" selected="true"/>
+					<s:RadioButton label="Todos" groupName="rbgAsignados" enabled="{modelApp.usuarioActivo.perfil == 3 ? false : true}"/>
+					<s:Label text=" Estado: " fontWeight="bold"/>
+					<s:ComboBox id="cmbEstados" dataProvider="{modelApp.arrEstados}" requireSelection="true" labelField="label" change="fnTraeData(null)"/>
+				</s:BorderContainer>
+				<s:DataGrid id="dgTickets" width="100%"
+							doubleClickEnabled="true"
+							gridDoubleClick="fnDetalleTicket(event)"
+							requestedRowCount="4" dataProvider="{modelApp.arrTickets}"
+							rowHeight="35" height="100%">
+					<s:columns>
+						<s:ArrayList> 	 	 	 	 	 	 	 	 	 	 	
+							<s:GridColumn dataField="id" headerText="Nº de Ticket"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnCliente}" headerText="Cliente"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnSucursal}" headerText="Sucursal"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnUnidad}" headerText="Unidad"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnClasificacion}" headerText="Clasificacion"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnCategoria}" headerText="Categoria"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnSubCategoria}" headerText="SubCategoria"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnDescripcion}" headerText="Descripción"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnIP}" headerText="Dir IP"></s:GridColumn>
+							<s:GridColumn labelFunction="{fnFecha}" headerText="Fecha"></s:GridColumn>
+							<s:GridColumn dataField="hora" headerText="Hora"></s:GridColumn>
+							<s:GridColumn dataField="estado" headerText="Estado"></s:GridColumn>
+							<s:GridColumn dataField="soporte" headerText="Soporte"></s:GridColumn>
+						</s:ArrayList>
+					</s:columns>
+					
+				</s:DataGrid>
+				<s:HGroup width="100%" verticalAlign="middle" height="30">
+					<s:Label text="Mostrando"/>
+					<s:Label text="{(modelApp.paginaActual * modelApp.cantidadPagina) + 1}"/>
+					<s:Label text="hasta"/>
+					<s:Label text="{((modelApp.paginaActual + 1) * modelApp.cantidadPagina) > modelApp.totalRegistros ? modelApp.totalRegistros : ((modelApp.paginaActual + 1) * modelApp.cantidadPagina)}"/>
+					<s:Label text="de"/>
+					<s:Label text="{modelApp.totalRegistros}"/>
+					<mx:LinkButton label="Previa" enabled="{modelApp.paginaActual > 0 ? true : false}" click="fnNavegaPaginasHandler('Previa')"/>
+					<mx:LinkButton label="Siguiente" enabled="{modelApp.paginaActual != modelApp.totalPaginas ? true : false}" click="fnNavegaPaginasHandler('Siguiente')"/>
+					
+				</s:HGroup>
+			</s:VGroup>	
+		</components:CustomPanelSpark>
+		
+		
+		
+	</s:Group>
+	
+</s:Scroller>

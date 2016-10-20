@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
+			xmlns:s="library://ns.adobe.com/flex/spark"
+			xmlns:mx="library://ns.adobe.com/flex/mx"
+			xmlns:components="components.*"
+			xmlns:controllerbd="services.controllerbd.*">
+	<fx:Script>
+		<![CDATA[
+			import controller.Controller;
+			
+			import event.TicketEvent;
+			
+			import flash.net.navigateToURL;
+			
+			import model.ModelApp;
+			
+			import mx.controls.Alert;
+			
+			import vo.ClienteVO;
+			import vo.TicketVO;
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			
+			[Bindable(event="activate")]
+			private function fnCliente(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objClientesRut[item.cliente_rut]['obj']['nombres'] + ' ' + modelApp.objClientesRut[item.cliente_rut]['obj']['apellidos'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			
+			private function fnSucursal(item:TicketVO, column:GridColumn):String{
+				try{
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]['obj']).sucursalVO.sucursal;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			
+			private function fnUnidad(item:TicketVO, column:GridColumn):String{
+				try{
+					return ClienteVO(modelApp.objClientesRut[item.cliente_rut]['obj']).unidad;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			
+			
+			private function fnClasificacion(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objClasificacion[item.idClasificacion]['nombreClasificacion'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			
+			private function fnCategoria(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objCategoria[item.problema]['nombreCategoria'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			
+			private function fnSubCategoria(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objSubCategoria[item.sub_problema]['nombreSubCategoria'];	
+				} catch(e:*){
+					return '';
+				}
+				return ''; 
+			}
+			
+			
+			private function fnDescripcion(item:TicketVO, column:GridColumn):String{
+				try{
+					return modelApp.objDescripcion[item.idDescripcion]['nombreDescripcion'];	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			
+			private function fnFechaHora(item:TicketVO, column:GridColumn):String{
+				try{
+					var f:String = String(item.fecha);
+					return f.substr(0, 4) + '-' + f.substr(2, 2) + '-' + f.substr(4, 2) + ' ' + item.hora;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			private function fnFechaHoraSolucion(item:TicketVO, column:GridColumn):String{
+				try{
+					var f:String = String(item.fechaSolucion);
+					return f.substr(0, 4) + '-' + f.substr(2, 2) + '-' + f.substr(4, 2) + ' ' + item.horaSolucion;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			private function fnFechaHoraCierre(item:TicketVO, column:GridColumn):String{
+				try{
+					var f:String = String(item.fecha_cierre);
+					return f.substr(0, 4) + '-' + f.substr(2, 2) + '-' + f.substr(4, 2) + ' ' + item.hora_cierre;	
+				} catch(e:*){
+					return '';
+				}
+				return '';
+				
+			}
+			
+			protected function fnMostrarVolcado(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var ticketEvent:TicketEvent = new TicketEvent(TicketEvent.REPORTE_VOLCADO_MOSTRAR, null, null, {fecIni: fecIni.text.split('-').join(''), fecFin: fecFin.text.split('-').join('')});
+				Controller.getInstance().dispatchEvent(ticketEvent);
+			}
+			
+			protected function btnExcel_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				/*var variables:URLVariables = new URLVariables();
+				variables.fecha = fecIni.text.split('-').join('');
+				variables.fecha_fin = fecFin.text.split('-').join('');
+				*/
+				
+				/*URL Request*/
+				var request:URLRequest = new URLRequest(modelApp.conexionExcel + 'informeTrece.php?fecha=' + fecIni.text.split('-').join('') + '&fecha_fin=' + fecFin.text.split('-').join(''));//model.ConfigUrlCargoAbono);
+				/*request.method = URLRequestMethod.GET;
+				request.contentType = "text/xml";
+				request.data = variables;*/
+				
+				/*urlLoader*/
+				//navigateToURL(new URLRequest("http://localhost:8080/weborb/Services/Weborb/cau/informeTrece.php"), "_blank");
+				//Alert.show(modelApp.conexionExcel + 'informeTrece.php');
+				navigateToURL(request, "_blank");
+				
+				/*var urlLoader:URLLoader = new URLLoader();
+				urlLoader.dataFormat = URLLoaderDataFormat.TEXT;
+				urlLoader.addEventListener(Event.COMPLETE,loaderComplete);
+				urlLoader.addEventListener(IOErrorEvent.IO_ERROR, loaderError);	
+				urlLoader.load(request);*/
+			}
+			
+			
+			private function loaderError(e:IOErrorEvent):void
+			{
+				Alert.show("Error en la conección "+ e.text.toString(),"loaderError");
+			}
+			
+			private function loaderComplete(evento:Event):void
+			{
+				trace(evento.target.data);
+			/*	var xmlResponse:XMLList = XML(event.currentTarget.data)..row;
+				if(xmlResponse.length() > 0)
+				{
+					var strResponse:String = xmlResponse.@XML;
+					var xmlTmp:String = XML(XML(strResponse)..SolicitudImpresion).@pdf417;
+					var numSec:String = xmlResponse.@folioBolsa;
+					var evtPdf:Pdf_GenerarEvent;
+					for each (var itmFac:FacturaVO in arrFacturas)
+					{
+						if(itmFac.FAC_SecMovFX.toString() == numSec)
+						{
+							itmFac.codBarraImg = xmlTmp;
+							evtPdf = new Pdf_GenerarEvent(xmlTmp);
+							evtPdf.dispatch();
+						}
+					}
+					
+				}*/
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+			<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Group width="100%" height="100%">
+		
+		<s:layout>
+			<s:VerticalLayout horizontalAlign="center" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"/>		
+		</s:layout>
+		<components:CustomPanelSpark title="Parametrización" width="300" height="170">
+			<s:VGroup width="100%" height="100%" horizontalAlign="center">
+				<mx:DateField id="fecIni" formatString="YYYY-MM-DD"/>
+				<mx:DateField id="fecFin" formatString="YYYY-MM-DD"/>
+				<s:HGroup>
+					<s:Button id="btnMostrar" label="Detalle del informe" click="fnMostrarVolcado(event)"/>
+					<s:Button id="btnExcel" label="Exportar a Excel" click="btnExcel_clickHandler(event)"/>
+				</s:HGroup>	
+			</s:VGroup>
+			
+			
+		</components:CustomPanelSpark>
+		<s:DataGrid id="dataGrid" requestedRowCount="30" width="100%" height="100%" dataProvider="{modelApp.arrVolcado}">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="id" headerText="N° de Reporte"></s:GridColumn>
+					<s:GridColumn labelFunction="fnCliente" headerText="Cliente"></s:GridColumn>
+					<s:GridColumn labelFunction="fnSucursal" headerText="Agencia"></s:GridColumn>
+					<s:GridColumn labelFunction="fnUnidad" headerText="Unidad"></s:GridColumn>
+					<s:GridColumn labelFunction="fnClasificacion" headerText="Clasificación Apertura"></s:GridColumn>
+					<s:GridColumn labelFunction="fnCategoria" headerText="Categoria Apertura"></s:GridColumn>
+					<s:GridColumn labelFunction="fnSubCategoria" headerText="SubCategoria Apertura"></s:GridColumn>
+					<s:GridColumn labelFunction="fnDescripcion" headerText="Descripcion Apertura"></s:GridColumn>
+					<s:GridColumn labelFunction="fnFechaHora" headerText="Fecha/Hora Inicio"></s:GridColumn>
+					<s:GridColumn labelFunction="fnFechaHoraSolucion" headerText="Fecha/Hora Solucion"></s:GridColumn>
+					<s:GridColumn labelFunction="fnFechaHoraCierre" headerText="Fecha/Hora Cierre"></s:GridColumn>
+					<s:GridColumn dataField="diasTicket" headerText="Tiempo Solución (Días)"></s:GridColumn>
+					<s:GridColumn dataField="horasTicket" headerText="Tiempo Solución (Horas)"></s:GridColumn>
+					<s:GridColumn dataField="diasTotalTicket" headerText="Tiempo Total Reporte(Días)"></s:GridColumn>
+					<s:GridColumn dataField="horasTotalTicket" headerText="Tiempo Total Reporte(Horas)"></s:GridColumn>
+					<s:GridColumn dataField="creadoPor" headerText="Creado Por"></s:GridColumn>
+					<s:GridColumn dataField="soporte" headerText="Asignado a"></s:GridColumn>
+					<s:GridColumn dataField="dataField1" headerText="Grupo Resolutor"></s:GridColumn>
+					<s:GridColumn dataField="solucionadoPor" headerText="Solucionado Por"></s:GridColumn>
+					<s:GridColumn dataField="dataField1" headerText="Cerrado Por"></s:GridColumn>
+					<!--<s:GridColumn dataField="dataField1" headerText="Clasificación Cierre"></s:GridColumn>
+					<s:GridColumn dataField="dataField1" headerText="Categoria Cierre"></s:GridColumn>
+					<s:GridColumn dataField="dataField1" headerText="SubCategoria Cierre"></s:GridColumn>
+					<s:GridColumn dataField="dataField1" headerText="Descripcion Cierre"></s:GridColumn>-->
+					<s:GridColumn dataField="estado" headerText="Estado"></s:GridColumn>
+					<s:GridColumn dataField="tipo_solucion" headerText="Criticidad"></s:GridColumn>
+					<s:GridColumn dataField="tipoNivel" headerText="Nivel de Atención"></s:GridColumn>
+				</s:ArrayList>
+			</s:columns>		
+			
+		</s:DataGrid>
+		
+	</s:Group>
+</s:Scroller>

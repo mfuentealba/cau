@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
+			xmlns:s="library://ns.adobe.com/flex/spark"
+			xmlns:mx="library://ns.adobe.com/flex/mx"
+			xmlns:controllerbd="services.controllerbd.*"
+			xmlns:skins="assets.skins.*" 
+			xmlns:components="components.*"
+			>
+	<fx:Script>
+		<![CDATA[
+			//import com.adobe.serialization.json.JSON;
+			
+			import controller.Controller;
+			
+			import event.SucursalEvent;
+			
+			import model.ModelApp;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import spark.events.GridEvent;
+			
+			import vo.SucursalVO;
+			
+			[Bindable] public var sucursales:vo.SucursalVO = new vo.SucursalVO();
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			
+			protected function fnOperarSucursal(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var sucursalEvent:SucursalEvent;
+				switch(evento.target){
+					case btnEnviar:
+						if(btnEnviar.label == 'Crear'){
+							sucursalEvent = new SucursalEvent(SucursalEvent.CREAR, sucursales, fnNuevaSucursal);						
+						} else {
+							sucursalEvent = new SucursalEvent(SucursalEvent.MODIFICAR, sucursales, fnActualizaGrilla);
+						}
+						
+						break;
+					case btnEliminar:
+						sucursalEvent = new SucursalEvent(SucursalEvent.ELIMINAR, sucursales, fnRemueveGrilla);
+						
+						break;
+				}
+				
+				Controller.getInstance().dispatchEvent(sucursalEvent);
+			}			
+			
+			protected function fnNuevaSucursal(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				sucursales = new SucursalVO();
+				btnEnviar.label = 'Crear';
+			}
+			
+			protected function fnSelectSucursal(event:GridEvent):void
+			{
+				// TODO Auto-generated method stub
+				//sucursales = dgSucursales.selectedItem as SucursalVO;
+				var auxSucursal:SucursalVO = dgSucursales.selectedItem as SucursalVO;
+				sucursales.id = auxSucursal.id; 
+				sucursales.direccion = auxSucursal.direccion;
+				sucursales.sucursal = auxSucursal.sucursal;
+			}
+			
+			private function fnActualizaGrilla(item:SucursalVO):void{
+				var auxSucursal:SucursalVO = dgSucursales.selectedItem as SucursalVO;
+				auxSucursal.id = item.id;
+				auxSucursal.sucursal = item.sucursal;
+				auxSucursal.direccion = item.direccion;
+			}
+			
+			private function fnRemueveGrilla(id:String):void{
+				sucursales = new SucursalVO();
+				var auxSucursal:SucursalVO = dgSucursales.selectedItem as SucursalVO;
+				modelApp.arrSucursales.removeItemAt(modelApp.arrSucursales.getItemIndex(auxSucursal));
+			}
+			
+			
+			
+			protected function fnFiltrarSucursal(event:*):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.arrSucursales.refresh();
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		
+		
+		
+		
+	</fx:Declarations>
+	<!--<fx:Binding source="idLbl.text" destination="sucursales.id" twoWay="true"/>-->
+	<fx:Binding source="direccionTextInput.text" destination="sucursales.direccion" twoWay="true"/>
+	<fx:Binding source="sucursalTextInput.text" destination="sucursales.sucursal" twoWay="true"/>
+	<fx:Binding source="txtFiltro.text" destination="modelApp.sucursalesFilter" twoWay="true"/>
+	<s:Group width="100%" height="100%">
+		
+		<!--<fx:Binding source="getAllSucursalesResult.lastResult" destination="fnChangeSuc"/>-->
+		<s:layout>
+			<s:HorizontalLayout paddingBottom="50"/>
+		</s:layout>
+		<components:CustomPanelSpark title="{dgSucursales.selectedIndex > -1 ? 'Actualizar id: ' + sucursales.id : 'Nuevo'}" width="400" color="#eeeeee">
+			<s:Form defaultButton="{btnEnviar}">
+				<!--<s:FormItem label="Id">
+					<s:Label id="idLbl" />
+				</s:FormItem>-->
+				<s:FormItem label="Sucursal">
+					<s:TextInput id="sucursalTextInput"/>
+				</s:FormItem>
+				<s:FormItem label="Direccion">
+					<s:TextInput id="direccionTextInput"/>
+				</s:FormItem>
+				<s:Button id="btnEnviar" label="{sucursales.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarSucursal(event)"/>
+				<s:Button id="btnNuevo" label="Nueva Sucursal" click="fnNuevaSucursal(event)"/>
+				<s:Button id="btnEliminar" label="Eliminar" click="fnOperarSucursal(event)"/>
+				
+			</s:Form>	
+		</components:CustomPanelSpark>
+		
+		<components:CustomPanelSpark width="100%" height="100%" title="Sucursales Generadas">
+			<s:VGroup width="100%" height="100%" paddingLeft="10" paddingRight="10">
+				<s:Group width="100%">
+					<s:Rect width="100%" height="100%">
+						<s:fill>
+							<s:SolidColor color="#333333"/>
+						</s:fill>
+					</s:Rect>
+					<s:HGroup color="#fefefe" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
+						<s:Label text="Filtro" fontWeight="bold"/>
+						<s:TextInput id="txtFiltro" change="fnFiltrarSucursal(event)"/>
+					</s:HGroup>
+				</s:Group>
+				
+				<s:DataGrid id="dgSucursales" width="100%" height="100%" 
+							requestedRowCount="4"  dataProvider="{modelApp.arrSucursales}" gridClick="fnSelectSucursal(event)">
+					<s:columns>
+						<s:ArrayList>
+							<s:GridColumn dataField="id" headerText="id"></s:GridColumn>
+							<s:GridColumn dataField="sucursal" headerText="sucursal"></s:GridColumn>
+							<s:GridColumn dataField="direccion" headerText="direccion"></s:GridColumn>
+						</s:ArrayList>
+					</s:columns>
+					
+				</s:DataGrid>	
+			</s:VGroup>
+				
+		</components:CustomPanelSpark>
+		
+		
+	</s:Group>
+	
+</s:Scroller>

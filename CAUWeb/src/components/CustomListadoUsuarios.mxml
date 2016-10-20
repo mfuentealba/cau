@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:CustomPanelSpark xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							 xmlns:s="library://ns.adobe.com/flex/spark" 
+							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import model.ModelApp;
+			
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			protected function fnFiltrarCliente(event:*):void
+			{
+				// TODO Auto-generated method stub
+				modelApp.arrUsuarios.refresh();
+			}
+		]]>
+	</fx:Script>
+	<fx:Binding source="txtFiltro.text" destination="modelApp.usuarioFilter" twoWay="true"/>
+	<s:VGroup width="100%" height="100%" paddingLeft="10" paddingRight="10" paddingBottom="10">
+		<s:Group width="100%">
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor color="#333333"/>
+				</s:fill>
+			</s:Rect>
+			<s:HGroup color="#fefefe" verticalAlign="middle" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"><!-- paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"-->
+				<s:Label text="Filtro" fontWeight="bold"/>
+				<s:TextInput id="txtFiltro" change="fnFiltrarCliente(event)"/>
+			</s:HGroup>
+		</s:Group>
+		<s:DataGrid id="dgUsuarios" width="100%" height="100%"
+					requestedRowCount="4" dataProvider="{modelApp.arrUsuarios}"
+					rowHeight="35">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="id" headerText="Id"></s:GridColumn>
+					<s:GridColumn dataField="perfilVO.perfil" headerText="Perfil"></s:GridColumn>
+					<s:GridColumn dataField="username" headerText="Username"></s:GridColumn>
+					<s:GridColumn dataField="email" headerText="Email"></s:GridColumn>
+					<!--<s:GridColumn dataField="password" headerText="Password"></s:GridColumn>-->
+					<s:GridColumn dataField="nombre_completo" headerText="Nombre_completo"></s:GridColumn>
+					<s:GridColumn dataField="tema" headerText="Tema"></s:GridColumn>
+					<s:GridColumn dataField="tipoUsuarioVO.valor" headerText="Tipo Usuario"></s:GridColumn>
+					<s:GridColumn dataField="grupoResolutorVO.nombreGrupoResolutor" headerText="Grupo Resolutor"></s:GridColumn>
+					<s:GridColumn dataField="estado" headerText="Estado"></s:GridColumn>
+				</s:ArrayList>
+			</s:columns>
+			
+		</s:DataGrid>
+	</s:VGroup>	
+</components:CustomPanelSpark>

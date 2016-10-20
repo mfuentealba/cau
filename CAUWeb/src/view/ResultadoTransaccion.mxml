@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:CustomPanelSpark xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							 xmlns:s="library://ns.adobe.com/flex/spark" 
+							 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="components.*" width="100%" height="500" title="{modelApp.tituloTrans}">
+	
+	<fx:Script>
+		<![CDATA[
+			import model.ModelApp;
+
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+	
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:VGroup width="100%" height="100%" paddingBottom="20" paddingLeft="20" paddingRight="20" paddingTop="20">
+		<s:Label id="lblDetalle" text="{modelApp.contenidoTrans}"/>	
+	</s:VGroup>  
+	
+	
+			 
+</components:CustomPanelSpark>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Scroller xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:controllerbd="services.controllerbd.*"
+	xmlns:skins="assets.skins.*" 
+	xmlns:components="components.*"
+	creationComplete="ini()">
+	<fx:Script>
+		<![CDATA[
+			import controller.Controller;
+			
+			import event.ClienteEvent;
+			
+			import model.ModelApp;
+			
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			
+			import spark.events.GridEvent;
+			
+			import vo.ClienteVO;
+			import vo.SucursalVO;
+			
+			[Bindable] public var clienteVO:ClienteVO = new ClienteVO();
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			
+			protected function fnOperarCliente(evento:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var clienteEvent:ClienteEvent;
+				
+				if(formClient.accessibilityName == ''){
+					switch(evento.target){
+						case btnEnviar:
+							if(btnEnviar.label == 'Crear'){
+								clienteEvent = new ClienteEvent(ClienteEvent.CREAR, clienteVO, fnNuevoCliente);						
+							} else {
+								clienteEvent = new ClienteEvent(ClienteEvent.MODIFICAR, clienteVO, fnActualizaGrilla);
+							}
+							
+							break;
+						case btnEliminar:
+							clienteEvent = new ClienteEvent(ClienteEvent.ELIMINAR, clienteVO, fnRemueveGrilla);
+							
+							break;
+					}
+					
+					Controller.getInstance().dispatchEvent(clienteEvent);	
+				} else {
+					Alert.show("Debe corregir errores en el formulario", "Atención");
+				}
+				
+			}			
+			
+			protected function fnNuevoCliente(auxCliente:ClienteVO):void
+			{
+				// TODO Auto-generated method stub
+				clienteVO = new ClienteVO();
+				btnEnviar.label = 'Crear';
+			}
+			
+			protected function fnSelectCliente(evento:GridEvent):void
+			{
+				// TODO Auto-generated method stub
+				//sucursales = dgClientees.selectedItem as ClienteVO;
+				if(evento.rowIndex > -1){
+					var auxCliente:ClienteVO = customClientes.dgClientes.selectedItem as ClienteVO;
+					clienteVO.id = auxCliente.id; 
+					clienteVO.nombres = auxCliente.nombres;
+					clienteVO.apellidos = auxCliente.apellidos;
+					clienteVO.rut = auxCliente.rut;
+					clienteVO.telefono = auxCliente.telefono;
+					clienteVO.anexo = auxCliente.anexo;
+					clienteVO.email = auxCliente.email;
+					clienteVO.sucursal = auxCliente.sucursal;
+					clienteVO.unidad = auxCliente.unidad;
+					clienteVO.rotulo = auxCliente.rotulo;
+					clienteVO.dir_ip = auxCliente.dir_ip;
+					clienteVO.gerencia = auxCliente.gerencia;
+					//clienteVO.password = auxCliente.password;
+					clienteVO.empresa = auxCliente.empresa;
+				}
+				
+			}
+			
+			private function fnActualizaGrilla(item:ClienteVO):void{
+				var auxCliente:ClienteVO = customClientes.dgClientes.selectedItem as ClienteVO;
+				auxCliente.id = item.id; 
+				auxCliente.nombres = item.nombres;
+				auxCliente.apellidos = item.apellidos;
+				auxCliente.rut = item.rut;
+				auxCliente.telefono = item.telefono;
+				auxCliente.anexo = item.anexo;
+				auxCliente.email = item.email;
+				auxCliente.sucursal = item.sucursal;
+				auxCliente.unidad = item.unidad;
+				auxCliente.rotulo = item.rotulo;
+				auxCliente.dir_ip = item.dir_ip;
+				auxCliente.gerencia = item.gerencia;
+				//auxCliente.password = item.password;
+				auxCliente.empresa = item.empresa;	
+			}
+			
+			private function fnRemueveGrilla(id:String):void{
+				clienteVO = new ClienteVO();
+				var auxCliente:ClienteVO = customClientes.dgClientes.selectedItem as ClienteVO;
+				modelApp.arrClientes.removeItemAt(modelApp.arrClientes.getItemIndex(auxCliente));
+			}
+			
+			
+			
+			
+			
+			
+			protected function ini():void
+			{
+				// TODO Auto-generated method stub
+				customClientes.dgClientes.addEventListener(GridEvent.GRID_CLICK, fnSelectCliente);
+			}
+			
+			protected function fnValidaMail(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+				var patronEmail:RegExp = /(^[0-9a-zA-Z]+(?:[._][0-9a-zA-Z]+)*)@([0-9a-zA-Z]+(?:[._-][0-9a-zA-Z]+)*.[0-9a-zA-Z]{2,3})$/;
+			}
+			
+			
+			private function set fnSucursal(item:SucursalVO):void{
+				if(item){
+					clienteVO.sucursal = int(item.id);
+				}
+			}
+			
+			private function set fnSucursalCombo(item:SucursalVO):void{
+				if(item){
+					cmbSucursal.selectedItem = item;
+				} else {
+					cmbSucursal.selectedIndex = -1
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Binding source="idLbl.text" destination="clienteVO.id" twoWay="true"/>
+	<fx:Binding source="txtRut.text" destination="clienteVO.rut" twoWay="true"/>
+	<fx:Binding source="txtNombres.text" destination="clienteVO.nombres" twoWay="true"/>
+	<fx:Binding source="txtApellidos.text" destination="clienteVO.apellidos" twoWay="true"/>
+	<fx:Binding source="txtEmail.text" destination="clienteVO.email" twoWay="true"/>
+	<!--<fx:Binding source="cmbSucursal.selectedItem" destination="clienteVO.sucursalVO"/>-->
+	<fx:Binding source="clienteVO.sucursalVO" destination="fnSucursalCombo"/>
+	<fx:Binding source="cmbSucursal.selectedItem" destination="fnSucursal"/>
+	<fx:Binding source="txtTelefono.text" destination="clienteVO.telefono" twoWay="true"/>
+	<fx:Binding source="txtAnexo.text" destination="clienteVO.anexo" twoWay="true"/>
+	<fx:Binding source="txtUnidad.text" destination="clienteVO.unidad" twoWay="true"/>
+	<fx:Binding source="txtRotulo.text" destination="clienteVO.rotulo" twoWay="true"/>
+	<fx:Binding source="txtIp.text" destination="clienteVO.dir_ip" twoWay="true"/>
+	<fx:Binding source="txtGerencia.text" destination="clienteVO.gerencia" twoWay="true"/>
+	<!--<fx:Binding source="txtPassword.text" destination="clienteVO.password" twoWay="true"/>-->
+	<fx:Binding source="txtEmpresa.text" destination="clienteVO.empresa" twoWay="true"/>
+	<fx:Declarations>
+		<fx:Array id="valArr">
+			<components:RutValidacion id="rvRut" source="{txtRut}" property="text" minLength="3" requiredFieldError="El rut es requerido" tooShortError="Rut debe tener mínimo 3 caracteres" />
+		</fx:Array>
+	</fx:Declarations>
+	<s:Group 
+		width="100%" height="100%"
+		>
+		
+		<s:layout>
+			<s:HorizontalLayout/>
+		</s:layout>
+		<components:CustomPanelSpark title="Clientes" width="400" color="#eeeeee">
+			<s:Form id="formClient" width="100%">
+				<s:FormItem label="ID" width="100%" height="30">
+					<s:Label id="idLbl" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Rut" width="100%" height="30">
+					<s:TextInput id="txtRut" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Nombres" width="100%" height="30">
+					<s:TextInput id="txtNombres" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Apellidos" width="100%" height="30">
+					<s:TextInput id="txtApellidos" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Email" width="100%" height="30">
+					<s:TextInput id="txtEmail" width="100%" height="30" focusOut="fnValidaMail(event)"/>
+				</s:FormItem>
+				<s:FormItem label="Sucursal" width="100%" height="30">
+					<s:ComboBox id="cmbSucursal" color="#333333" skinClass="assets.skins.ComboBoxLVSkin" dataProvider="{modelApp.arrSucursales}" labelField="sucursal" width="100%" height="30"></s:ComboBox>
+				</s:FormItem>
+				<s:FormItem label="Teléfono" width="100%" height="30">
+					<s:TextInput id="txtTelefono" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Anexo" width="100%" height="30">
+					<s:TextInput id="txtAnexo" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Unidad" width="100%" height="30">
+					<s:TextInput id="txtUnidad" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Rótulo" width="100%" height="30">
+					<s:TextInput id="txtRotulo" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Dirección ip" width="100%" height="30">
+					<s:TextInput id="txtIp" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="Gerencia" width="100%" height="30">
+					<s:TextInput id="txtGerencia" width="100%" height="30"/>
+				</s:FormItem>
+				<!--<s:FormItem label="Password" width="100%" height="30">
+					<s:TextInput id="txtPassword" width="100%" height="30"/>
+				</s:FormItem>-->
+				<s:FormItem label="Empresa" width="100%" height="30">
+					<s:TextInput id="txtEmpresa" width="100%" height="30"/>
+				</s:FormItem>
+				<s:FormItem label="" width="100%" height="50">
+					<s:Button id="btnEnviar" color="white" fontWeight="bold" label="{clienteVO.id == '' ? 'Crear' : 'Actualizar'}" click="fnOperarCliente(event)" width="100%" height="50" skinClass="assets.skins.ButtonSendLVSkin"/>
+				</s:FormItem>
+				<s:FormItem label="" width="100%" height="50">
+					<s:Button id="btnNuevo" color="white" fontWeight="bold" label="Nuevo Cliente" click="fnNuevoCliente(null)" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
+				</s:FormItem>
+				<s:FormItem label="" width="100%" height="50">
+					<s:Button id="btnEliminar" color="white" fontWeight="bold" label="Eliminar" click="fnOperarCliente(event)" enabled="false" height="50" width="100%" skinClass="assets.skins.ButtonCleanLVSkin"/>
+				</s:FormItem>
+				
+			</s:Form>	
+		</components:CustomPanelSpark>
+		<components:CustomListadoClientes id="customClientes" title="Lista de clientes generados" width="100%" height="100%">
+			
+		</components:CustomListadoClientes>
+		
+		
+		
+	</s:Group>	
+</s:Scroller>
+
