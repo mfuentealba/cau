@@ -141,6 +141,17 @@ function receiveData(socket, d) {
 				
 				var json = '';
 			break;
+			
+			case "<policy-file-request/>\u0000":
+				/*ticket = JSON.parse(arrOpt[1]);
+				console.log(ticket);
+				console.log('REASIGNACION_TICKET N° ' + ticket.id);*/
+				finStream = arrOpt[arrOpt.length - 1];
+				console.log("CONECTANDO WEB");
+				socket.write('<cross-domain-policy xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.adobe.com/xml/schemas/PolicyFile.xsd"> <allow-access-from domain="*" to-ports="9003"/></cross-domain-policy>\u0000', 'utf8');  
+				
+				var json = '';
+			break;
 
 		}
 	}
